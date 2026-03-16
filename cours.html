@@ -612,6 +612,15 @@ footer a:hover { text-decoration: underline; }
 .case-graph .graph-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem; font-family: var(--font-mono); }
 .op { font-size: 1.5rem; color: var(--text-muted); font-weight: 700; text-align: center; }
 </style>
+
+<style>
+.collapsible-section { cursor: pointer; }
+.collapsible-section:hover { opacity: 0.85; }
+.collapsible-section .collapse-arrow { transition: transform 0.3s; display: inline-block; margin-left: auto; font-size: 0.9rem; color: var(--text-hint); }
+.collapsible-section .collapse-arrow.open { transform: rotate(180deg); }
+.section-content { display: none; }
+.section-content.open { display: block; }
+</style>
 </head>
 <body>
 <script>
@@ -885,9 +894,382 @@ function validateAnswer(inputId, expected, questionId, tolerance) {
   <p style="margin-top:0.75rem;font-size:0.88rem;color:var(--text-muted);"><strong>m</strong> = moyenne &nbsp;|&nbsp; <strong>s</strong> = écart-type</p>
 </div>
 
+<!-- SOMMAIRE -->
+<div class="card" id="sommaire" style="margin-bottom:1.5rem;">
+  <h2 class="section-title" style="margin-bottom:0.75rem;">Sommaire</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem 1.5rem;">
+    <a href="#sec-table-nav" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);">
+      <span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">0.</span> Comment naviguer dans la table
+    </a>
+    <a href="#sec-directe" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);">
+      <span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">1.</span> Table directe — Trouver P sachant z
+    </a>
+    <a href="#sec-inverse" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);">
+      <span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">2.</span> Table inverse — Trouver z sachant P
+    </a>
+    <a href="#sec-atypique" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);">
+      <span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">3.</span> Valeurs atypiques
+    </a>
+    <a href="#sec-symetrie" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);">
+      <span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">4.</span> Propriété de symétrie
+    </a>
+  </div>
+</div>
+
+<!-- SECTION 0 : NAVIGATION DANS LA TABLE -->
+<div class="card" id="sec-table-nav">
+  <h2 class="section-title"><span class="num">0</span> Comment naviguer dans la table</h2>
+  <p style="color:var(--text-muted);margin-bottom:1rem;">
+    Voici les deux tables que tu auras à l'examen. Clique sur chacune pour la déplier, puis entre une valeur pour voir comment la lire.
+  </p>
+
+  <!-- TABLE DIRECTE collapsible -->
+  <div style="margin-bottom:1rem;">
+    <button onclick="toggleTableSection('direct')" id="btn-direct" style="width:100%;text-align:left;padding:0.75rem 1rem;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+      <span>Table directe — P(Z &lt; z) = ? sachant z</span>
+      <span id="arrow-direct" style="transition:transform 0.3s;">▼</span>
+    </button>
+    <div id="panel-direct" style="display:none;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:1rem;">
+      <div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:0.75rem;">
+        <div class="param-group" style="flex:0 0 160px;">
+          <label>Valeur de z (&ge; 0)</label>
+          <input type="number" id="direct-z-input" value="1.25" step="0.01" min="0" max="3.59" style="font-size:1rem;">
+        </div>
+        <button class="btn btn-primary" onclick="highlightDirect()">Chercher</button>
+        <div id="direct-result" style="font-family:var(--font-mono);font-size:1.05rem;font-weight:600;color:var(--accent);padding:0.4rem 0;"></div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;" id="direct-explanation"></p>
+      <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);max-height:420px;overflow-y:auto;">
+        <table id="tbl-direct" style="font-size:0.75rem;margin:0;border-collapse:collapse;">
+          <thead><tr id="tbl-direct-head"></tr></thead>
+          <tbody id="tbl-direct-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE INVERSE collapsible -->
+  <div>
+    <button onclick="toggleTableSection('inverse')" id="btn-inverse" style="width:100%;text-align:left;padding:0.75rem 1rem;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+      <span>Table inverse — z = ? sachant P(Z &lt; z) = P</span>
+      <span id="arrow-inverse" style="transition:transform 0.3s;">▼</span>
+    </button>
+    <div id="panel-inverse" style="display:none;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:1rem;">
+      <div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:0.75rem;">
+        <div class="param-group" style="flex:0 0 200px;">
+          <label>Probabilité P (entre 0 et 1)</label>
+          <input type="number" id="inverse-p-input" value="0.75" step="0.001" min="0.001" max="0.999" style="font-size:1rem;">
+        </div>
+        <button class="btn btn-primary" onclick="highlightInverse()">Chercher</button>
+        <div id="inverse-result" style="font-family:var(--font-mono);font-size:1.05rem;font-weight:600;color:var(--accent);padding:0.4rem 0;"></div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;" id="inverse-explanation"></p>
+      <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);max-height:420px;overflow-y:auto;">
+        <table id="tbl-inverse" style="font-size:0.75rem;margin:0;border-collapse:collapse;">
+          <thead><tr id="tbl-inverse-head"></tr></thead>
+          <tbody id="tbl-inverse-body"></tbody>
+        </table>
+      </div>
+      <p style="font-size:0.82rem;color:var(--text-hint);margin-top:0.5rem;">
+        La dernière colonne (<strong>+</strong>) et la dernière ligne (<strong>−</strong>) servent pour les probabilités &gt; 0.5 et &lt; 0.5 respectivement. Si P &gt; 0.5, lis la colonne de droite et la ligne du bas.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Toggle collapsible sections
+function toggleTableSection(which) {
+  const panel = document.getElementById('panel-' + which);
+  const arrow = document.getElementById('arrow-' + which);
+  if (panel.style.display === 'none') {
+    panel.style.display = 'block';
+    arrow.style.transform = 'rotate(180deg)';
+    // Build table if not yet built
+    if (which === 'direct' && !document.getElementById('tbl-direct').dataset.built) buildDirectTable();
+    if (which === 'inverse' && !document.getElementById('tbl-inverse').dataset.built) buildInverseTable();
+  } else {
+    panel.style.display = 'none';
+    arrow.style.transform = '';
+  }
+}
+
+// ═══ BUILD DIRECT TABLE (exact values from PDF) ═══
+function buildDirectTable() {
+  const head = document.getElementById('tbl-direct-head');
+  const body = document.getElementById('tbl-direct-body');
+  const thStyle = 'padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:52px;position:sticky;top:0;z-index:2;font-weight:600;';
+  const thFirst = 'padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:36px;position:sticky;top:0;left:0;z-index:3;font-weight:600;';
+  
+  // Header: X | 0.00 | 0.01 | ... | 0.09
+  let h = `<th style="${thFirst}">X</th>`;
+  for (let c = 0; c <= 9; c++) h += `<th style="${thStyle}">0,0${c}</th>`;
+  head.innerHTML = h;
+
+  // Rows: 0.0 to 3.5
+  for (let r = 0; r <= 35; r++) {
+    const row = r / 10;
+    const tr = document.createElement('tr');
+    const rowLabel = row.toFixed(1).replace('.', ',');
+    let cells = `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);position:sticky;left:0;z-index:1;border-right:1px solid var(--border);text-align:center;">${rowLabel}</td>`;
+    for (let c = 0; c <= 9; c++) {
+      const z = row + c / 100;
+      const p = normalCDF(z);
+      cells += `<td id="d-${r}-${c}" style="padding:0.35rem 0.4rem;text-align:center;border-bottom:1px solid var(--border);transition:background 0.2s;">${p.toFixed(4).replace('.', ',')}</td>`;
+    }
+    tr.innerHTML = cells;
+    body.appendChild(tr);
+  }
+  document.getElementById('tbl-direct').dataset.built = '1';
+  highlightDirect();
+}
+
+function highlightDirect() {
+  const tbl = document.getElementById('tbl-direct');
+  if (!tbl.dataset.built) return;
+  // Clear
+  tbl.querySelectorAll('td').forEach(td => { td.style.background = ''; td.style.color = ''; td.style.fontWeight = ''; td.style.boxShadow = ''; });
+  tbl.querySelectorAll('tbody td:first-child').forEach(td => { td.style.background = 'var(--bg-accent)'; });
+  
+  const z = parseFloat(document.getElementById('direct-z-input').value);
+  if (isNaN(z) || z < 0 || z > 3.59) return;
+  const r = Math.floor(z * 10);
+  const c = Math.round((z * 100) % 10);
+  const prob = normalCDF(z);
+  
+  // Highlight row
+  const rows = tbl.querySelectorAll('tbody tr');
+  if (rows[r]) {
+    rows[r].querySelector('td:first-child').style.background = 'var(--accent)';
+    rows[r].querySelector('td:first-child').style.color = 'white';
+    rows[r].querySelectorAll('td').forEach((td,i) => { if (i > 0) td.style.background = 'var(--accent-light)'; });
+  }
+  // Highlight column
+  rows.forEach(tr => { const cells = tr.querySelectorAll('td'); if (cells[c+1]) cells[c+1].style.background = 'var(--accent-light)'; });
+  // Highlight header
+  const headers = tbl.querySelectorAll('thead th');
+  if (headers[c+1]) { headers[c+1].style.background = 'var(--accent-hover)'; }
+  
+  // Target cell
+  const cell = document.getElementById('d-' + r + '-' + c);
+  if (cell) {
+    cell.style.background = 'var(--accent)';
+    cell.style.color = 'white';
+    cell.style.fontWeight = '700';
+    cell.style.boxShadow = '0 0 0 2px var(--accent-mid)';
+    cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+  }
+  
+  const zStr = z.toFixed(2).replace('.', ',');
+  document.getElementById('direct-result').innerHTML = `P(Z &lt; ${zStr}) = <span style="font-size:1.2rem;">${prob.toFixed(4).replace('.', ',')}</span>`;
+  document.getElementById('direct-explanation').innerHTML = `Ligne <strong>${(r/10).toFixed(1).replace('.',',')}</strong> (partie entière + 1re décimale) × Colonne <strong>0,0${c}</strong> (2e décimale) → <strong>${prob.toFixed(4).replace('.',',')}</strong>`;
+}
+document.getElementById('direct-z-input').addEventListener('input', highlightDirect);
+
+// ═══ BUILD INVERSE TABLE (matching PDF format with P column left/right) ═══
+function buildInverseTable() {
+  const head = document.getElementById('tbl-inverse-head');
+  const body = document.getElementById('tbl-inverse-body');
+  const thStyle = 'padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:52px;position:sticky;top:0;z-index:2;font-weight:600;';
+  const thFirst = 'padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:36px;position:sticky;top:0;left:0;z-index:3;font-weight:600;';
+  
+  // Header: P | 0.000 | 0.001 | ... | 0.010 | +
+  let h = `<th style="${thFirst}">P</th>`;
+  for (let c = 0; c <= 10; c++) {
+    const label = c === 10 ? '0,010' : ('0,00' + c).replace('.', ',');
+    h += `<th style="${thStyle}">${label}</th>`;
+  }
+  h += `<th style="${thStyle}">+</th>`;
+  head.innerHTML = h;
+
+  // Rows: P from 0.00 to 0.49
+  for (let r = 0; r <= 49; r++) {
+    const pRow = r / 100;
+    const tr = document.createElement('tr');
+    const rowLabel = pRow.toFixed(2).replace('.', ',');
+    let cells = `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);position:sticky;left:0;z-index:1;border-right:1px solid var(--border);text-align:center;">${rowLabel}</td>`;
+    for (let c = 0; c <= 10; c++) {
+      const pVal = pRow + c / 1000;
+      let zVal;
+      if (pVal <= 0) zVal = Infinity;
+      else if (pVal >= 0.5) zVal = 0;
+      else zVal = -normalInvCDF(pVal); // Positive z for the table
+      const display = pVal <= 0 ? '∞' : (pVal >= 0.5 ? '0,0000' : zVal.toFixed(4).replace('.', ','));
+      cells += `<td id="i-${r}-${c}" style="padding:0.35rem 0.4rem;text-align:center;border-bottom:1px solid var(--border);transition:background 0.2s;">${display}</td>`;
+    }
+    // + column: P value for the right side (1 - left P)
+    const pPlus = 1 - pRow / 1 - 0; // Actually it's (1 - P_row starting from bottom)
+    const pRight = (1 - pRow).toFixed(2).replace('.', ',');
+    cells += `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);text-align:center;border-left:1px solid var(--border);">${r === 0 ? '' : pRight}</td>`;
+    tr.innerHTML = cells;
+    body.appendChild(tr);
+  }
+  // Last row: − | 0,01 | 0,009 | ... | 0 | P
+  const lastTr = document.createElement('tr');
+  let lastCells = `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);position:sticky;left:0;z-index:1;border-right:1px solid var(--border);text-align:center;">−</td>`;
+  const lastLabels = ['0,01','0,009','0,008','0,007','0,006','0,005','0,004','0,003','0,002','0,001','0'];
+  lastLabels.forEach(l => { lastCells += `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);text-align:center;border-top:2px solid var(--border);">${l}</td>`; });
+  lastCells += `<td style="padding:0.35rem 0.4rem;font-weight:700;background:var(--accent);color:white;text-align:center;">P</td>`;
+  lastTr.innerHTML = lastCells;
+  body.appendChild(lastTr);
+  
+  document.getElementById('tbl-inverse').dataset.built = '1';
+  highlightInverse();
+}
+
+function highlightInverse() {
+  const tbl = document.getElementById('tbl-inverse');
+  if (!tbl.dataset.built) return;
+  // Reset all styles
+  tbl.querySelectorAll('td').forEach(td => { td.style.background = ''; td.style.color = ''; td.style.fontWeight = ''; td.style.boxShadow = ''; });
+  tbl.querySelectorAll('tbody td:first-child').forEach(td => { td.style.background = 'var(--bg-accent)'; });
+  const allRows = tbl.querySelectorAll('tbody tr');
+  const lastRow = allRows[allRows.length - 1]; // the − row
+  if (lastRow) lastRow.querySelectorAll('td').forEach(td => { td.style.background = 'var(--bg-accent)'; });
+  // Restore + column styling
+  allRows.forEach(tr => { const cells = tr.querySelectorAll('td'); const last = cells[cells.length-1]; if(last) last.style.background='var(--bg-accent)'; });
+
+  const pInput = parseFloat(document.getElementById('inverse-p-input').value);
+  if (isNaN(pInput) || pInput <= 0 || pInput >= 1) return;
+  
+  let pSearch, zResult, useRightSide;
+  if (pInput >= 0.5) {
+    pSearch = 1 - pInput; // e.g. P=0.75 → pSearch=0.25
+    zResult = normalInvCDF(pInput); // positive z
+    useRightSide = true;
+  } else {
+    pSearch = pInput;
+    zResult = normalInvCDF(pInput); // negative z
+    useRightSide = false;
+  }
+  
+  // Find row and column from pSearch
+  const r = Math.floor(pSearch * 100); // e.g. 0.25 → row 25
+  const c = Math.round((pSearch * 1000) % 10); // e.g. 0.253 → col 3
+  
+  const rows = tbl.querySelectorAll('tbody tr');
+  const numDataRows = 50; // rows 0-49
+
+  if (useRightSide) {
+    // P > 0.5: highlight the + column (last col) and the − row (last row)
+    // The student reads: find pInput in the + column, find the thousandths in the − row
+    
+    // Highlight the + column (rightmost) in all data rows
+    for (let ri = 0; ri < numDataRows; ri++) {
+      if (!rows[ri]) continue;
+      const cells = rows[ri].querySelectorAll('td');
+      const plusCell = cells[cells.length - 1]; // + column
+      if (plusCell) plusCell.style.background = 'var(--accent-light)';
+    }
+    
+    // Highlight the − row (last row) 
+    if (lastRow) {
+      lastRow.querySelectorAll('td').forEach(td => { td.style.background = 'var(--accent-light)'; });
+    }
+    
+    // Highlight the specific + cell for this row (where P matches)
+    if (rows[r]) {
+      const cells = rows[r].querySelectorAll('td');
+      const plusCell = cells[cells.length - 1];
+      if (plusCell) {
+        plusCell.style.background = 'var(--accent)';
+        plusCell.style.color = 'white';
+        plusCell.style.fontWeight = '700';
+      }
+      // Also highlight the entire row lightly
+      cells.forEach((td, i) => { if (i > 0 && i <= 11) td.style.background = 'var(--accent-light)'; });
+    }
+    
+    // Highlight the − row cell for the column
+    if (lastRow) {
+      const lastCells = lastRow.querySelectorAll('td');
+      if (lastCells[c + 1]) {
+        lastCells[c + 1].style.background = 'var(--accent)';
+        lastCells[c + 1].style.color = 'white';
+        lastCells[c + 1].style.fontWeight = '700';
+      }
+    }
+    
+    // Highlight the column through all rows
+    for (let ri = 0; ri < numDataRows; ri++) {
+      if (!rows[ri]) continue;
+      const cells = rows[ri].querySelectorAll('td');
+      if (cells[c + 1]) cells[c + 1].style.background = 'var(--accent-light)';
+    }
+    
+    // Highlight target cell
+    const cell = document.getElementById('i-' + r + '-' + c);
+    if (cell) {
+      cell.style.background = 'var(--accent)';
+      cell.style.color = 'white';
+      cell.style.fontWeight = '700';
+      cell.style.boxShadow = '0 0 0 2px var(--accent-mid)';
+      cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    }
+    
+    const zAbs = Math.abs(zResult);
+    document.getElementById('inverse-result').innerHTML = `z = <span style="font-size:1.2rem;">${zResult.toFixed(4).replace('.', ',')}</span>`;
+    document.getElementById('inverse-explanation').innerHTML = 
+      `P = ${pInput.toFixed(4).replace('.',',')} &gt; 0,5 → on utilise la <strong>colonne de droite (+)</strong> et la <strong>dernière ligne (−)</strong>.<br>` +
+      `On cherche <strong>${pInput.toFixed(2).replace('.',',')}</strong> dans la colonne <strong>+</strong> → ligne <strong>${(r/100).toFixed(2).replace('.',',')}</strong>.<br>` +
+      `On cherche la 3e décimale dans la ligne <strong>−</strong> → colonne <strong>${(c/1000).toFixed(3).replace('.',',')}</strong>.<br>` +
+      `L'intersection donne z = <strong>${zAbs.toFixed(4).replace('.',',')}</strong>. Comme P &gt; 0,5, z reste positif → z = <strong>${zResult.toFixed(4).replace('.',',')}</strong>.`;
+      
+  } else {
+    // P < 0.5: use first column and first row (standard reading)
+    
+    // Highlight the P column (first col)
+    for (let ri = 0; ri < numDataRows; ri++) {
+      if (!rows[ri]) continue;
+      const cells = rows[ri].querySelectorAll('td');
+      if (cells[0]) cells[0].style.background = 'var(--accent-light)';
+    }
+    
+    // Highlight row
+    if (rows[r]) {
+      rows[r].querySelector('td:first-child').style.background = 'var(--accent)';
+      rows[r].querySelector('td:first-child').style.color = 'white';
+      rows[r].querySelector('td:first-child').style.fontWeight = '700';
+      rows[r].querySelectorAll('td').forEach((td, i) => { if (i > 0 && i <= 11) td.style.background = 'var(--accent-light)'; });
+    }
+    
+    // Highlight column header
+    const headers = tbl.querySelectorAll('thead th');
+    if (headers[c + 1]) { headers[c + 1].style.background = 'var(--accent-hover)'; }
+    
+    // Highlight column
+    for (let ri = 0; ri < numDataRows; ri++) {
+      if (!rows[ri]) continue;
+      const cells = rows[ri].querySelectorAll('td');
+      if (cells[c + 1]) cells[c + 1].style.background = 'var(--accent-light)';
+    }
+    
+    // Target cell
+    const cell = document.getElementById('i-' + r + '-' + c);
+    if (cell) {
+      cell.style.background = 'var(--accent)';
+      cell.style.color = 'white';
+      cell.style.fontWeight = '700';
+      cell.style.boxShadow = '0 0 0 2px var(--accent-mid)';
+      cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    }
+    
+    const zAbs = Math.abs(zResult);
+    document.getElementById('inverse-result').innerHTML = `z = <span style="font-size:1.2rem;">${zResult.toFixed(4).replace('.', ',')}</span>`;
+    document.getElementById('inverse-explanation').innerHTML = 
+      `P = ${pInput.toFixed(4).replace('.',',')} &lt; 0,5 → on utilise la <strong>première colonne (P)</strong> et la <strong>première ligne</strong>.<br>` +
+      `On cherche P = <strong>${pSearch.toFixed(2).replace('.',',')}</strong> dans la colonne P → ligne <strong>${(r/100).toFixed(2).replace('.',',')}</strong>.<br>` +
+      `On cherche la 3e décimale → colonne <strong>${(c/1000).toFixed(3).replace('.',',')}</strong>.<br>` +
+      `L'intersection donne z = <strong>${zAbs.toFixed(4).replace('.',',')}</strong>. Comme P &lt; 0,5, z est négatif → z = <strong>${zResult.toFixed(4).replace('.',',')}</strong>.`;
+  }
+}
+document.getElementById('inverse-p-input').addEventListener('input', highlightInverse);
+</script>
+
 <!-- TABLE DIRECTE -->
-<div class="card">
-  <h2 class="section-title"><span class="num">1</span> Table directe — Trouver P sachant z</h2>
+<div class="card" id="sec-directe">
+  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-directe-content', this)" style="margin-bottom:0;"><span class="num">1</span> Table directe — Trouver P sachant z <span class="collapse-arrow">▼</span></h2>
+<div id="sec-directe-content" class="section-content" style="margin-top:1rem;">
   <p style="color:var(--text-muted);margin-bottom:1rem;">La table donne toujours <strong>P(Z &lt; z)</strong> pour z &ge; 0. On utilise <strong>z = 1.25</strong> partout pour voir les liens.</p>
 
   <div class="card" style="margin-bottom:1.25rem;">
@@ -941,11 +1323,13 @@ function validateAnswer(inputId, expected, questionId, tolerance) {
       <div class="case-graph"><canvas id="c-cas5c"></canvas><div class="graph-label">P(0.50&lt;Z&lt;1.25)</div></div>
     </div>
   </div>
+</div><!-- close sec-directe-content -->
 </div>
 
 <!-- TABLE INVERSE -->
-<div class="card">
-  <h2 class="section-title"><span class="num">2</span> Table inverse — Trouver z (ou x) sachant P</h2>
+<div class="card" id="sec-inverse">
+  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-inverse-content', this)" style="margin-bottom:0;"><span class="num">2</span> Table inverse — Trouver z (ou x) sachant P <span class="collapse-arrow">▼</span></h2>
+<div id="sec-inverse-content" class="section-content" style="margin-top:1rem;">
   <p style="color:var(--text-muted);margin-bottom:1.5rem;">On connaît l'aire (la probabilité) et on cherche <em>où placer la ligne verticale</em>. On utilise P = 0.75 et P = 0.25 pour montrer les liens.</p>
 
   <div class="card" style="margin-bottom:1.25rem;">
@@ -981,19 +1365,23 @@ function validateAnswer(inputId, expected, questionId, tolerance) {
     <p style="font-size:0.9rem;color:var(--text-muted);">Si l'énoncé demande x (pas z) → formule 2 :</p>
     <div class="formula-box" style="text-align:center;font-size:1rem;">x = (z × s) + m</div>
   </div>
+</div><!-- close sec-inverse-content -->
 </div>
 
 <!-- ATYPIQUE -->
-<div class="card">
-  <h2 class="section-title"><span class="num">3</span> Valeurs atypiques</h2>
+<div class="card" id="sec-atypique">
+  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-atypique-content', this)" style="margin-bottom:0;"><span class="num">3</span> Valeurs atypiques <span class="collapse-arrow">▼</span></h2>
+<div id="sec-atypique-content" class="section-content" style="margin-top:1rem;">
   <div class="formula-box" style="text-align:center;font-size:1.1rem;margin-bottom:1rem;"><strong>|z| &gt; 2</strong> → valeur atypique</div>
   <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:0.75rem;">~4.6% des valeurs tombent dans les zones rouges (2.3% de chaque côté).</p>
   <div class="case-graph"><canvas id="c-atypique"></canvas><div class="graph-label">Zones rouges : |z| &gt; 2 → valeurs atypiques</div></div>
+</div><!-- close sec-atypique-content -->
 </div>
 
 <!-- SYMETRIE -->
-<div class="card">
-  <h2 class="section-title"><span class="num">4</span> Propriété de symétrie</h2>
+<div class="card" id="sec-symetrie">
+  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-symetrie-content', this)" style="margin-bottom:0;"><span class="num">4</span> Propriété de symétrie <span class="collapse-arrow">▼</span></h2>
+<div id="sec-symetrie-content" class="section-content" style="margin-top:1rem;">
   <div class="formula-box">P(Z &lt; −z) = P(Z &gt; z) &nbsp;|&nbsp; P(Z &gt; −z) = P(Z &lt; z)</div>
   <p style="font-size:0.9rem;color:var(--text-muted);margin:1rem 0 0.5rem;">
     <strong>Exemple :</strong> QI ~ N(100, 15). P(100 &lt; X &lt; 110) = P(90 &lt; X &lt; 100) car 110 et 90 sont à 10 points de la moyenne.
@@ -1003,6 +1391,7 @@ function validateAnswer(inputId, expected, questionId, tolerance) {
     <div class="case-graph"><canvas id="c-sym2"></canvas><div class="graph-label">P(90 &lt; X &lt; 100) ≈ 24.86%</div></div>
   </div>
   <p style="font-size:0.85rem;color:var(--accent);font-weight:600;margin-top:0.5rem;text-align:center;">↔ Même écart à la moyenne = même probabilité !</p>
+</div><!-- close sec-symetrie-content -->
 </div>
 
 <div style="text-align:center;margin-top:2rem;">
@@ -1019,6 +1408,19 @@ function validateAnswer(inputId, expected, questionId, tolerance) {
 </div>
 
 <script>
+function toggleSection(id, header) {
+  const el = document.getElementById(id);
+  const arrow = header.querySelector('.collapse-arrow');
+  if (el.classList.contains('open')) {
+    el.classList.remove('open');
+    arrow.classList.remove('open');
+  } else {
+    el.classList.add('open');
+    arrow.classList.add('open');
+    setTimeout(drawAll, 50);
+  }
+}
+
 function drawAll() {
   drawMiniCurve('c-cas1', { fillFrom:-4, fillTo:1.25, probLabel:'0.8944' });
   drawMiniCurve('c-cas2a', { fillFrom:-4, fillTo:1.25, probLabel:'0.8944' });
@@ -1034,7 +1436,8 @@ function drawAll() {
   drawMiniCurve('c-invB', { fillFrom:-4, fillTo:-0.6745, fillColor:'rgba(192,57,43,0.2)', probLabel:'0.25' });
   drawMiniCurve('c-invC', { fillFrom:-0.6745, fillTo:4, probLabel:'0.75' });
   drawMiniCurve('c-invD', { fillFrom:0.6745, fillTo:4, fillColor:'rgba(192,57,43,0.2)', probLabel:'0.25' });
-  // Atypique — draw base then overlay tails
+
+  // Atypique
   drawMiniCurve('c-atypique', { height:200 });
   const canvas = document.getElementById('c-atypique');
   if(!canvas) return;
@@ -1050,10 +1453,12 @@ function drawAll() {
   ctx.setLineDash([4,4]);ctx.strokeStyle='#C0392B';ctx.lineWidth=1.5;
   [[-2],[2]].flat().forEach(z=>{ctx.beginPath();ctx.moveTo(xp(z),pad.top);ctx.lineTo(xp(z),pb);ctx.stroke();});
   ctx.restore();
+
   // Symmetry
   drawMiniCurve('c-sym1', { mu:100, sigma:15, fillFrom:100, fillTo:110, fillColor:'rgba(61,82,160,0.25)', probLabel:'24.86%', showX:true, height:200 });
   drawMiniCurve('c-sym2', { mu:100, sigma:15, fillFrom:90, fillTo:100, fillColor:'rgba(61,82,160,0.25)', probLabel:'24.86%', showX:true, height:200 });
 }
+
 window.addEventListener('load', drawAll);
 window.addEventListener('resize', drawAll);
 </script>
