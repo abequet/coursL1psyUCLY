@@ -6,875 +6,142 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fiches de cours — Loi Normale</title>
 <style>
-/* ═══════════════════════════════════════
-   Loi Normale — Site de révisions L1 Psycho
-   Shared stylesheet
-   ═══════════════════════════════════════ */
-
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&display=swap');
-
 :root {
-  --bg: #FAF9F6;
-  --bg-card: #FFFFFF;
-  --bg-accent: #F0EDE6;
-  --bg-input: #F7F5F0;
-  --text: #1A1A18;
-  --text-muted: #4A4840;
-  --text-hint: #7A7770;
-  --accent: #3D52A0;
-  --accent-hover: #2F4390;
-  --accent-light: #E8ECF8;
-  --accent-mid: #7B8EC8;
-  --teal: #1D7A4E;
-  --teal-light: #E6F4ED;
-  --danger: #C0392B;
-  --danger-light: #FBEAEA;
-  --warning: #B8860B;
-  --warning-light: #FDF5E1;
-  --border: #E2DFD6;
-  --border-strong: #C9C5B8;
-  --shadow: 0 1px 3px rgba(26,26,24,0.06), 0 4px 12px rgba(26,26,24,0.04);
-  --shadow-lg: 0 4px 16px rgba(26,26,24,0.08), 0 12px 40px rgba(26,26,24,0.06);
-  --radius: 10px;
-  --radius-lg: 16px;
-  --font-body: 'DM Sans', sans-serif;
-  --font-heading: 'Fraunces', serif;
-  --font-mono: 'DM Mono', monospace;
+  --bg:#FAF9F6;--bg-card:#FFFFFF;--bg-accent:#F0EDE6;--bg-input:#F7F5F0;
+  --text:#1A1A18;--text-muted:#4A4840;--text-hint:#7A7770;
+  --accent:#3D52A0;--accent-hover:#2F4390;--accent-light:#E8ECF8;--accent-mid:#7B8EC8;
+  --teal:#1D7A4E;--teal-light:#E6F4ED;
+  --danger:#C0392B;--danger-light:#FBEAEA;
+  --warning:#B8860B;--warning-light:#FDF5E1;
+  --border:#E2DFD6;--border-strong:#C9C5B8;
+  --shadow:0 1px 3px rgba(26,26,24,0.06),0 4px 12px rgba(26,26,24,0.04);
+  --shadow-lg:0 4px 16px rgba(26,26,24,0.08),0 12px 40px rgba(26,26,24,0.06);
+  --radius:10px;--radius-lg:16px;
+  --font-body:'DM Sans',sans-serif;--font-heading:'Fraunces',serif;--font-mono:'DM Mono',monospace;
+  --nav-green:#1D7A4E;--nav-green-bg:#E6F4ED;
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.7;
-  min-height: 100vh;
-  font-size: 16px;
-}
-
-/* ── Layout ── */
-.container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-
-/* ── Navigation ── */
-.site-nav {
-  background: white;
-  border-bottom: 1px solid var(--border);
-  padding: 0 1.5rem;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-.site-nav .nav-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  min-height: 56px;
-  flex-wrap: wrap;
-}
-.site-nav .nav-brand {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--accent);
-  text-decoration: none;
-  white-space: nowrap;
-  margin-right: auto;
-}
-.site-nav .nav-links {
-  display: flex;
-  gap: 0.25rem;
-  flex-wrap: wrap;
-  list-style: none;
-}
-.site-nav .nav-links a {
-  display: block;
-  padding: 0.4rem 0.75rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  text-decoration: none;
-  border-radius: var(--radius);
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.site-nav .nav-links a:hover { background: var(--bg-accent); color: var(--text); }
-.site-nav .nav-links a.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
-
-/* ── Page header ── */
-.page-header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-  padding: 2.5rem 2rem;
-  background: linear-gradient(135deg, #3D52A0 0%, #5B6DB5 50%, #7B8EC8 100%);
-  border-radius: var(--radius-lg);
-  color: white;
-  position: relative;
-  overflow: hidden;
-}
-.page-header::before {
-  content: '';
-  position: absolute;
-  top: -50%; right: -20%;
-  width: 400px; height: 400px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-}
-.page-header h1 {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 2rem;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.25rem;
-  position: relative;
-}
-.page-header p { font-size: 0.95rem; opacity: 0.85; position: relative; }
-.page-header .breadcrumb {
-  font-size: 0.82rem;
-  opacity: 0.7;
-  margin-bottom: 0.5rem;
-  position: relative;
-}
-.page-header .breadcrumb a { color: white; text-decoration: underline; }
-
-/* ── Section titles ── */
-.section-title {
-  font-family: var(--font-heading);
-  font-weight: 500;
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.section-title .num {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: white;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 500;
-  flex-shrink: 0;
-}
-
-/* ── Cards ── */
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: var(--shadow);
-}
-.card.card-accent { border-left: 4px solid var(--accent); }
-.card.card-success { border-left: 4px solid var(--teal); }
-.card.card-warning { border-left: 4px solid var(--warning); }
-
-/* ── Formulas ── */
-.formula-card {
-  background: var(--warning-light);
-  border: 1px solid #E8D5A0;
-  border-radius: var(--radius);
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
-}
-.formula-card strong {
-  color: var(--warning);
-  font-family: var(--font-mono);
-}
-
-.formula-box {
-  background: var(--bg-accent);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem 1.25rem;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  line-height: 1.8;
-  margin: 0.75rem 0;
-}
-
-/* ── Buttons ── */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: var(--radius);
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-primary { background: var(--accent); color: white; }
-.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0); }
-.btn-secondary { background: var(--bg-accent); color: var(--text); border: 1px solid var(--border); }
-.btn-secondary:hover { background: var(--border); }
-.btn-success { background: var(--teal); color: white; }
-.btn-success:hover { background: #166B41; }
-.btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
-
-/* ── Form elements ── */
-.param-group label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.35rem;
-}
-.param-group input, .param-group select {
-  width: 100%;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  background: var(--bg-input);
-  color: var(--text);
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.param-group input:focus, .param-group select:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-light);
-}
-
-/* ── Tables ── */
-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-thead th {
-  background: var(--bg-accent);
-  padding: 0.7rem 1rem;
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
-  border-bottom: 2px solid var(--border);
-  white-space: nowrap;
-}
-tbody td {
-  padding: 0.65rem 1rem;
-  border-bottom: 1px solid var(--border);
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-}
-tbody tr:hover { background: var(--bg-accent); }
-
-/* ── Badges ── */
-.badge {
-  display: inline-block;
-  padding: 0.15rem 0.6rem;
-  border-radius: 99px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: var(--font-body);
-}
-.badge-ok { background: var(--teal-light); color: var(--teal); }
-.badge-extreme { background: var(--danger-light); color: var(--danger); }
-.badge-info { background: var(--accent-light); color: var(--accent); }
-
-/* ── Exercise components ── */
-.exercise-block {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: var(--shadow);
-}
-.exercise-block .exercise-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border);
-}
-.exercise-block .exercise-num {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: white;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-.exercise-block .exercise-label {
-  font-family: var(--font-heading);
-  font-weight: 500;
-  font-size: 1.1rem;
-}
-.exercise-block .exercise-difficulty {
-  margin-left: auto;
-}
-.exercise-block .exercise-context {
-  background: var(--bg-accent);
-  border-radius: var(--radius);
-  padding: 1rem 1.25rem;
-  margin-bottom: 1rem;
-  font-size: 0.92rem;
-  line-height: 1.7;
-}
-.exercise-block .question-block {
-  margin: 1rem 0;
-  padding: 0.75rem 0;
-}
-.exercise-block .question-text {
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 0.5rem;
-}
-.exercise-block .answer-input {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  margin: 0.5rem 0;
-}
-.exercise-block .answer-input input {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  background: var(--bg-input);
-  flex: 1;
-  max-width: 300px;
-}
-.exercise-block .answer-input input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-light);
-}
-
-/* ── Correction / solution reveal ── */
-.solution {
-  display: none;
-  margin-top: 0.75rem;
-  padding: 1rem 1.25rem;
-  background: var(--teal-light);
-  border: 1px solid #B8E0CC;
-  border-radius: var(--radius);
-  animation: slideDown 0.3s ease;
-}
-.solution.visible { display: block; }
-.solution .step {
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  margin: 0.3rem 0;
-  padding: 0.2rem 0;
-  color: var(--text);
-}
-.solution .step-label {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--teal);
-  margin-top: 0.5rem;
-  margin-bottom: 0.15rem;
-}
-.solution .result {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--teal);
-  font-family: var(--font-mono);
-  margin-top: 0.5rem;
-}
-.solution .explanation {
-  font-family: var(--font-body);
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  margin-top: 0.25rem;
-  font-style: italic;
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Feedback ── */
-.feedback-correct {
-  color: var(--teal);
-  font-weight: 600;
-  font-size: 0.88rem;
-}
-.feedback-incorrect {
-  color: var(--danger);
-  font-weight: 600;
-  font-size: 0.88rem;
-}
-
-/* ── Grid layouts ── */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-
-@media (max-width: 768px) {
-  .grid-2, .grid-3 { grid-template-columns: 1fr; }
-  .page-header h1 { font-size: 1.5rem; }
-  .site-nav .nav-links { gap: 0; }
-  .site-nav .nav-links a { padding: 0.3rem 0.5rem; font-size: 0.78rem; }
-}
-
-/* ── Home page cards ── */
-.nav-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  text-decoration: none;
-  color: var(--text);
-  transition: all 0.25s;
-  display: block;
-  box-shadow: var(--shadow);
-}
-.nav-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--accent-mid);
-}
-.nav-card .card-icon {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  margin-bottom: 0.75rem;
-  font-weight: 700;
-}
-.nav-card h3 {
-  font-family: var(--font-heading);
-  font-weight: 500;
-  font-size: 1.1rem;
-  margin-bottom: 0.3rem;
-}
-.nav-card p {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-/* ── Mini curve (canvas) ── */
-.mini-curve {
-  position: relative;
-  width: 100%;
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.mini-curve canvas { display: block; width: 100%; }
-
-/* ── Reveal btn ── */
-.btn-reveal {
-  background: none;
-  border: 1px dashed var(--border-strong);
-  color: var(--text-muted);
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius);
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.btn-reveal:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-
-/* ── Progress indicator ── */
-.progress-bar {
-  width: 100%;
-  height: 6px;
-  background: var(--bg-accent);
-  border-radius: 3px;
-  margin: 1rem 0;
-  overflow: hidden;
-}
-.progress-bar .progress-fill {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 3px;
-  transition: width 0.4s ease;
-}
-
-/* ── Score tracker ── */
-.score-tracker {
-  position: sticky;
-  top: 60px;
-  z-index: 50;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0.5rem 1rem;
-  margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  box-shadow: var(--shadow);
-  flex-wrap: wrap;
-}
-.score-tracker .score-label {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.score-tracker .score-value {
-  font-family: var(--font-mono);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--accent);
-}
-.score-tracker .score-bar {
-  flex: 1;
-  min-width: 100px;
-  height: 8px;
-  background: var(--bg-accent);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.score-tracker .score-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--teal));
-  border-radius: 4px;
-  transition: width 0.4s ease;
-}
-
-/* ── Footer ── */
-footer {
-  text-align: center;
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
-  font-size: 0.82rem;
-  color: var(--text-hint);
-}
-footer a { color: var(--accent); text-decoration: none; }
-footer a:hover { text-decoration: underline; }
-
-/* ── Tooltip style for rules ── */
-.rule-tag {
-  display: inline-block;
-  padding: 0.1rem 0.5rem;
-  background: var(--accent-light);
-  color: var(--accent);
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: var(--font-mono);
-  margin-left: 0.25rem;
-}
-
-/* ── Table input for z-score exercises ── */
-.z-table-input {
-  width: 80px;
-  padding: 0.35rem 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  text-align: center;
-  background: var(--bg-input);
-}
-.z-table-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-light);
-}
-.z-table-input.correct { border-color: var(--teal); background: var(--teal-light); }
-.z-table-input.incorrect { border-color: var(--danger); background: var(--danger-light); }
-
-</style>
-<style>
-.case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 0.75rem 0; }
-.encadrement-grid { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 0.5rem; align-items: center; margin: 0.75rem 0; }
-@media (max-width: 700px) { .case-grid { grid-template-columns: 1fr; } .encadrement-grid { grid-template-columns: 1fr; } .encadrement-grid .op { display: none; } }
-.case-graph { background: var(--bg-accent); border-radius: var(--radius); padding: 0.5rem; text-align: center; }
-.case-graph canvas { display: block; width: 100%; }
-.case-graph .graph-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem; font-family: var(--font-mono); }
-.op { font-size: 1.5rem; color: var(--text-muted); font-weight: 700; text-align: center; }
-</style>
-
-<style>
-.collapsible-section { cursor: pointer; }
-.collapsible-section:hover { opacity: 0.85; }
-.collapsible-section .collapse-arrow { transition: transform 0.3s; display: inline-block; margin-left: auto; font-size: 0.9rem; color: var(--text-hint); }
-.collapsible-section .collapse-arrow.open { transform: rotate(180deg); }
-.section-content { display: none; }
-.section-content.open { display: block; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;font-size:16px}
+.container{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.site-nav{background:white;border-bottom:1px solid var(--border);padding:0 1.5rem;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.site-nav .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:1rem;min-height:56px;flex-wrap:wrap}
+.site-nav .nav-brand{font-family:var(--font-heading);font-weight:700;font-size:1.1rem;color:var(--accent);text-decoration:none;white-space:nowrap;margin-right:auto}
+.site-nav .nav-links{display:flex;gap:0.25rem;flex-wrap:wrap;list-style:none}
+.site-nav .nav-links a{display:block;padding:0.4rem 0.75rem;font-size:0.85rem;font-weight:500;color:var(--text-muted);text-decoration:none;border-radius:var(--radius);transition:all 0.2s;white-space:nowrap}
+.site-nav .nav-links a:hover{background:var(--bg-accent);color:var(--text)}
+.site-nav .nav-links a.active{background:var(--accent-light);color:var(--accent);font-weight:600}
+.page-header{text-align:center;margin-bottom:2.5rem;padding:2.5rem 2rem;background:linear-gradient(135deg,#3D52A0 0%,#5B6DB5 50%,#7B8EC8 100%);border-radius:var(--radius-lg);color:white;position:relative;overflow:hidden}
+.page-header::before{content:'';position:absolute;top:-50%;right:-20%;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,0.06)}
+.page-header h1{font-family:var(--font-heading);font-weight:700;font-size:2rem;letter-spacing:-0.02em;margin-bottom:0.25rem;position:relative}
+.page-header p{font-size:0.95rem;opacity:0.85;position:relative}
+.page-header .breadcrumb{font-size:0.82rem;opacity:0.7;margin-bottom:0.5rem;position:relative}
+.page-header .breadcrumb a{color:white;text-decoration:underline}
+.section-title{font-family:var(--font-heading);font-weight:500;font-size:1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+.section-title .num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--accent);color:white;font-family:var(--font-mono);font-size:0.8rem;font-weight:500;flex-shrink:0}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
+.card.card-accent{border-left:4px solid var(--accent)}.card.card-success{border-left:4px solid var(--teal)}.card.card-warning{border-left:4px solid var(--warning)}
+.formula-box{background:var(--bg-accent);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;font-family:var(--font-mono);font-size:0.9rem;line-height:1.8;margin:0.75rem 0}
+.btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1.2rem;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-primary{background:var(--accent);color:white}.btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.btn-secondary{background:var(--bg-accent);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{background:var(--border)}
+.btn-success{background:var(--teal);color:white}.btn-success:hover{background:#166B41}
+.btn-row{display:flex;gap:0.75rem;margin-top:1rem;flex-wrap:wrap}
+.param-group label{display:block;font-size:0.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.35rem}
+.param-group input,.param-group select{width:100%;padding:0.6rem 0.8rem;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font-mono);font-size:1rem;background:var(--bg-input);color:var(--text);transition:border-color 0.2s,box-shadow 0.2s}
+.param-group input:focus,.param-group select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+table{width:100%;border-collapse:collapse;font-size:0.9rem}
+thead th{background:var(--bg-accent);padding:0.7rem 1rem;text-align:left;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);border-bottom:2px solid var(--border);white-space:nowrap}
+tbody td{padding:0.65rem 1rem;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:0.88rem}
+.badge{display:inline-block;padding:0.15rem 0.6rem;border-radius:99px;font-size:0.75rem;font-weight:600;font-family:var(--font-body)}
+.badge-ok{background:var(--teal-light);color:var(--teal)}.badge-extreme{background:var(--danger-light);color:var(--danger)}.badge-info{background:var(--accent-light);color:var(--accent)}
+.exercise-block{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem;box-shadow:var(--shadow)}
+.exercise-block .exercise-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
+.exercise-block .exercise-num{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--accent);color:white;font-family:var(--font-mono);font-size:0.9rem;font-weight:600;flex-shrink:0}
+.exercise-block .exercise-label{font-family:var(--font-heading);font-weight:500;font-size:1.1rem}
+.exercise-block .exercise-context{background:var(--bg-accent);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1rem;font-size:0.92rem;line-height:1.7}
+.exercise-block .answer-input{display:flex;gap:0.5rem;align-items:center;margin:0.5rem 0}
+.exercise-block .answer-input input{padding:0.5rem 0.75rem;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font-mono);font-size:0.95rem;background:var(--bg-input);flex:1;max-width:300px}
+.exercise-block .answer-input input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.solution{display:none;margin-top:0.75rem;padding:1rem 1.25rem;background:var(--teal-light);border:1px solid #B8E0CC;border-radius:var(--radius);animation:slideDown 0.3s ease}
+.solution.visible{display:block}
+.solution .step{font-family:var(--font-mono);font-size:0.88rem;margin:0.3rem 0;padding:0.2rem 0;color:var(--text)}
+.solution .step-label{font-family:var(--font-body);font-weight:600;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.04em;color:var(--teal);margin-top:0.5rem;margin-bottom:0.15rem}
+.solution .result{font-size:1.2rem;font-weight:700;color:var(--teal);font-family:var(--font-mono);margin-top:0.5rem}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.feedback-correct{color:var(--teal);font-weight:600;font-size:0.88rem}
+.feedback-incorrect{color:var(--danger);font-weight:600;font-size:0.88rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+@media(max-width:768px){.grid-2,.grid-3{grid-template-columns:1fr}.page-header h1{font-size:1.5rem}.site-nav .nav-links{gap:0}.site-nav .nav-links a{padding:0.3rem 0.5rem;font-size:0.78rem}}
+.nav-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-decoration:none;color:var(--text);transition:all 0.25s;display:block;box-shadow:var(--shadow)}
+.nav-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--accent-mid)}
+.nav-card h3{font-family:var(--font-heading);font-weight:500;font-size:1.1rem;margin-bottom:0.3rem}
+.nav-card p{font-size:0.85rem;color:var(--text-muted);line-height:1.5}
+.btn-reveal{background:none;border:1px dashed var(--border-strong);color:var(--text-muted);padding:0.5rem 1rem;border-radius:var(--radius);font-family:var(--font-body);font-size:0.85rem;font-weight:500;cursor:pointer;transition:all 0.2s}
+.btn-reveal:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+.progress-bar{width:100%;height:6px;background:var(--bg-accent);border-radius:3px;margin:1rem 0;overflow:hidden}
+.progress-bar .progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.4s ease}
+.score-tracker{position:sticky;top:60px;z-index:50;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:0.5rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;box-shadow:var(--shadow);flex-wrap:wrap}
+.score-tracker .score-label{font-size:0.82rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em}
+.score-tracker .score-value{font-family:var(--font-mono);font-size:1.1rem;font-weight:700;color:var(--accent)}
+.score-tracker .score-bar{flex:1;min-width:100px;height:8px;background:var(--bg-accent);border-radius:4px;overflow:hidden}
+.score-tracker .score-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--teal));border-radius:4px;transition:width 0.4s ease}
+footer{text-align:center;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);font-size:0.82rem;color:var(--text-hint)}
+footer a{color:var(--accent);text-decoration:none}footer a:hover{text-decoration:underline}
+.rule-tag{display:inline-block;padding:0.1rem 0.5rem;background:var(--accent-light);color:var(--accent);border-radius:4px;font-size:0.75rem;font-weight:600;font-family:var(--font-mono);margin-left:0.25rem}
+.z-table-input{width:80px;padding:0.35rem 0.5rem;border:1px solid var(--border);border-radius:6px;font-family:var(--font-mono);font-size:0.88rem;text-align:center;background:var(--bg-input)}
+.z-table-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.z-table-input.correct{border-color:var(--teal);background:var(--teal-light)}.z-table-input.incorrect{border-color:var(--danger);background:var(--danger-light)}
+.case-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:0.75rem 0}
+.encadrement-grid{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0.5rem;align-items:center;margin:0.75rem 0}
+@media(max-width:700px){.case-grid{grid-template-columns:1fr}.encadrement-grid{grid-template-columns:1fr}.encadrement-grid .op{display:none}}
+.case-graph{background:var(--bg-accent);border-radius:var(--radius);padding:0.5rem;text-align:center}
+.case-graph canvas{display:block;width:100%}
+.case-graph .graph-label{font-size:0.78rem;color:var(--text-muted);margin-top:0.25rem;font-family:var(--font-mono)}
+.op{font-size:1.5rem;color:var(--text-muted);font-weight:700;text-align:center}
+.collapsible-section{cursor:pointer}.collapsible-section:hover{opacity:0.85}
+.collapsible-section .collapse-arrow{transition:transform 0.3s;display:inline-block;margin-left:auto;font-size:0.9rem;color:var(--text-hint)}
+.collapsible-section .collapse-arrow.open{transform:rotate(180deg)}
+.section-content{display:none}.section-content.open{display:block}
+.inv-legend{display:flex;gap:1.25rem;flex-wrap:wrap;margin:0.75rem 0;font-size:0.82rem;align-items:center}
+.inv-legend-item{display:inline-flex;align-items:center;gap:0.35rem}
+.inv-legend-swatch{display:inline-block;width:16px;height:16px;border-radius:3px;border:1px solid rgba(0,0,0,0.15)}
 </style>
 </head>
 <body>
 <script>
-/* ═══════════════════════════════════════
-   Shared JS — Normal distribution math & UI utils
-   ═══════════════════════════════════════ */
+function normalPDF(z){return Math.exp(-0.5*z*z)/Math.sqrt(2*Math.PI)}
+function normalCDF(z){const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;const s=z<0?-1:1;const x=Math.abs(z)/Math.sqrt(2);const t=1/(1+p*x);const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);return 0.5*(1+s*y)}
+function normalInvCDF(p){if(p<=0)return-Infinity;if(p>=1)return Infinity;if(p<0.5)return-normalInvCDF(1-p);const a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00],b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01],c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00],d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00];const pL=0.02425,pH=1-pL;let q,r;if(p<pL){q=Math.sqrt(-2*Math.log(p));return(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}else if(p<=pH){q=p-0.5;r=q*q;return(((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1)}else{q=Math.sqrt(-2*Math.log(1-p));return-(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}}
+function R(v,n){n=n||4;return Math.round(v*Math.pow(10,n))/Math.pow(10,n)}
 
-// ── Normal distribution functions ──
-function normalPDF(z) {
-  return Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
-}
-
-function normalCDF(z) {
-  const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
-  const s = z < 0 ? -1 : 1;
-  const x = Math.abs(z) / Math.sqrt(2);
-  const t = 1 / (1 + p * x);
-  const y = 1 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t * Math.exp(-x*x);
-  return 0.5 * (1 + s * y);
-}
-
-function normalInvCDF(p) {
-  if (p <= 0) return -Infinity;
-  if (p >= 1) return Infinity;
-  if (p < 0.5) return -normalInvCDF(1 - p);
-  const a = [-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02,
-             1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00];
-  const b = [-5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02,
-             6.680131188771972e+01, -1.328068155288572e+01];
-  const c = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00,
-             -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
-  const d = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00, 3.754408661907416e+00];
-  const pL = 0.02425, pH = 1 - pL;
-  let q, r;
-  if (p < pL) {
-    q = Math.sqrt(-2 * Math.log(p));
-    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
-  } else if (p <= pH) {
-    q = p - 0.5; r = q * q;
-    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
-  } else {
-    q = Math.sqrt(-2 * Math.log(1 - p));
-    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
-  }
-}
-
-// ── Round to n decimals ──
-function R(val, n = 4) {
-  return Math.round(val * Math.pow(10, n)) / Math.pow(10, n);
-}
-function R2(val) { return R(val, 2); }
-
-// ── Navigation component ──
-function renderNav(activePage) {
-  const pages = [
-    { id: 'index', label: 'Accueil', href: 'index.html' },
-    { id: 'cours', label: 'Fiches', href: 'cours.html' },
-    { id: 'exercices-table', label: 'Exos table', href: 'exercices-table.html' },
-    { id: 'exercices-contexte', label: 'Exos contexte', href: 'exercices-contexte.html' },
-    { id: 'exercices-zscore', label: 'Exos z-scores', href: 'exercices-zscore.html' },
-    { id: 'outil', label: 'Outil courbe', href: 'outil.html' },
-  ];
-
-  const nav = document.createElement('nav');
-  nav.className = 'site-nav';
-  nav.innerHTML = `
-    <div class="nav-inner">
-      <a href="index.html" class="nav-brand">Loi Normale L1</a>
-      <ul class="nav-links">
-        ${pages.map(p => `<li><a href="${p.href}" class="${p.id === activePage ? 'active' : ''}">${p.label}</a></li>`).join('')}
-      </ul>
-    </div>
-  `;
+function renderNav(activePage){
+  const pages=[{id:'index',label:'Accueil',href:'index.html'},{id:'cours',label:'Fiches',href:'cours.html'},{id:'exercices-table',label:'Exos table',href:'exercices-table.html'},{id:'exercices-contexte',label:'Exos contexte',href:'exercices-contexte.html'},{id:'exercices-zscore',label:'Exos z-scores',href:'exercices-zscore.html'},{id:'outil',label:'Outil courbe',href:'outil.html'}];
+  const nav=document.createElement('nav');nav.className='site-nav';
+  nav.innerHTML='<div class="nav-inner"><a href="index.html" class="nav-brand">Loi Normale L1</a><ul class="nav-links">'+pages.map(function(p){return'<li><a href="'+p.href+'" class="'+(p.id===activePage?'active':'')+'">'+p.label+'</a></li>'}).join('')+'</ul></div>';
   document.body.prepend(nav);
 }
-
-// ── Solution toggle ──
-function toggleSolution(btn, solutionId) {
-  const sol = document.getElementById(solutionId);
-  if (sol.classList.contains('visible')) {
-    sol.classList.remove('visible');
-    btn.textContent = 'Voir le corrigé';
-  } else {
-    sol.classList.add('visible');
-    btn.textContent = 'Masquer le corrigé';
-  }
+function toggleSolution(btn,solutionId){var sol=document.getElementById(solutionId);if(sol.classList.contains('visible')){sol.classList.remove('visible');btn.textContent='Voir le corrigé'}else{sol.classList.add('visible');btn.textContent='Masquer le corrigé'}}
+function drawMiniCurve(canvasId,options){
+  options=options||{};var canvas=document.getElementById(canvasId);if(!canvas)return;
+  var rect=canvas.parentElement.getBoundingClientRect(),dpr=window.devicePixelRatio||1,w=rect.width,h=options.height||180;
+  canvas.width=w*dpr;canvas.height=h*dpr;canvas.style.width=w+'px';canvas.style.height=h+'px';
+  var ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+  var mu=options.mu||0,sigma=options.sigma||1,zRange=4,pad={top:20,right:20,bottom:40,left:20};
+  var xMin=mu-zRange*sigma,xMax=mu+zRange*sigma,yMax=normalPDF(0)*1.15,plotBottom=h-pad.bottom;
+  function xToPx(v){return pad.left+((v-xMin)/(xMax-xMin))*(w-pad.left-pad.right)}
+  function yToPx(v){return pad.top+(1-v/yMax)*(h-pad.top-pad.bottom)}
+  ctx.clearRect(0,0,w,h);
+  if(options.fillFrom!==undefined&&options.fillTo!==undefined){var lo=Math.max(options.fillFrom,xMin),hi=Math.min(options.fillTo,xMax);ctx.save();ctx.beginPath();for(var i=0;i<=150;i++){var xv=lo+(hi-lo)*i/150,z=(xv-mu)/sigma;if(i===0)ctx.moveTo(xToPx(xv),plotBottom);ctx.lineTo(xToPx(xv),yToPx(normalPDF(z)))}ctx.lineTo(xToPx(hi),plotBottom);ctx.closePath();ctx.fillStyle=options.fillColor||'rgba(61,82,160,0.18)';ctx.fill();ctx.restore()}
+  ctx.save();ctx.beginPath();for(var i=0;i<=300;i++){var xv=xMin+(xMax-xMin)*i/300,z=(xv-mu)/sigma,px=xToPx(xv),py=yToPx(normalPDF(z));if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py)}ctx.strokeStyle='#3D52A0';ctx.lineWidth=2.5;ctx.stroke();ctx.restore();
+  ctx.save();ctx.beginPath();ctx.moveTo(pad.left,plotBottom);ctx.lineTo(w-pad.right,plotBottom);ctx.strokeStyle='#1A1A18';ctx.lineWidth=1;ctx.stroke();
+  ctx.font="500 11px 'DM Mono',monospace";ctx.textAlign='center';ctx.fillStyle='#3D52A0';
+  for(var z=-zRange;z<=zRange;z++){var xv=mu+z*sigma,px=xToPx(xv);ctx.beginPath();ctx.moveTo(px,plotBottom);ctx.lineTo(px,plotBottom+5);ctx.strokeStyle='#6B6960';ctx.lineWidth=1;ctx.stroke();if(options.showX){ctx.fillStyle='#1A1A18';ctx.fillText(Number.isInteger(xv)?xv.toString():xv.toFixed(1),px,plotBottom+18);ctx.fillStyle='#3D52A0';ctx.fillText('z='+z,px,plotBottom+30)}else{ctx.fillText(''+z,px,plotBottom+18)}}ctx.restore();
+  if(options.probLabel){var midX=((options.fillFrom||0)+(options.fillTo||0))/2,px=xToPx(midX),py=yToPx(normalPDF((midX-mu)/sigma))-10;ctx.save();ctx.font="600 13px 'DM Mono',monospace";ctx.textAlign='center';ctx.fillStyle='#3D52A0';ctx.fillText(options.probLabel,px,Math.max(py,pad.top+15));ctx.restore()}
 }
-
-// ── Mini curve drawing ──
-function drawMiniCurve(canvasId, options = {}) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
-  const w = rect.width;
-  const h = options.height || 180;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  const ctx = canvas.getContext('2d');
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  const mu = options.mu || 0;
-  const sigma = options.sigma || 1;
-  const zRange = 4;
-  const pad = { top: 20, right: 20, bottom: 40, left: 20 };
-  const xMin = mu - zRange * sigma;
-  const xMax = mu + zRange * sigma;
-  const yMax = normalPDF(0) * 1.15;
-  const plotBottom = h - pad.bottom;
-
-  function xToPx(xVal) { return pad.left + ((xVal - xMin) / (xMax - xMin)) * (w - pad.left - pad.right); }
-  function yToPx(yVal) { return pad.top + (1 - yVal / yMax) * (h - pad.top - pad.bottom); }
-
-  ctx.clearRect(0, 0, w, h);
-
-  // Fill area if specified
-  if (options.fillFrom !== undefined && options.fillTo !== undefined) {
-    const lo = Math.max(options.fillFrom, xMin);
-    const hi = Math.min(options.fillTo, xMax);
-    ctx.save();
-    ctx.beginPath();
-    const steps = 150;
-    for (let i = 0; i <= steps; i++) {
-      const xv = lo + (hi - lo) * i / steps;
-      const z = (xv - mu) / sigma;
-      if (i === 0) ctx.moveTo(xToPx(xv), plotBottom);
-      ctx.lineTo(xToPx(xv), yToPx(normalPDF(z)));
-    }
-    ctx.lineTo(xToPx(hi), plotBottom);
-    ctx.closePath();
-    ctx.fillStyle = options.fillColor || 'rgba(61, 82, 160, 0.18)';
-    ctx.fill();
-    ctx.restore();
-  }
-
-  // Curve
-  ctx.save();
-  ctx.beginPath();
-  for (let i = 0; i <= 300; i++) {
-    const xv = xMin + (xMax - xMin) * i / 300;
-    const z = (xv - mu) / sigma;
-    const px = xToPx(xv), py = yToPx(normalPDF(z));
-    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-  }
-  ctx.strokeStyle = '#3D52A0';
-  ctx.lineWidth = 2.5;
-  ctx.stroke();
-  ctx.restore();
-
-  // Axis
-  ctx.save();
-  ctx.beginPath();
-  ctx.moveTo(pad.left, plotBottom);
-  ctx.lineTo(w - pad.right, plotBottom);
-  ctx.strokeStyle = '#1A1A18';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-
-  // Ticks
-  ctx.font = "500 11px 'DM Mono', monospace";
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#3D52A0';
-  for (let z = -zRange; z <= zRange; z++) {
-    const xv = mu + z * sigma;
-    const px = xToPx(xv);
-    ctx.beginPath(); ctx.moveTo(px, plotBottom); ctx.lineTo(px, plotBottom + 5);
-    ctx.strokeStyle = '#6B6960'; ctx.lineWidth = 1; ctx.stroke();
-    if (options.showX) {
-      const label = Number.isInteger(xv) ? xv.toString() : xv.toFixed(1);
-      ctx.fillStyle = '#1A1A18';
-      ctx.fillText(label, px, plotBottom + 18);
-      ctx.fillStyle = '#3D52A0';
-      ctx.fillText(`z=${z}`, px, plotBottom + 30);
-    } else {
-      ctx.fillText(`${z}`, px, plotBottom + 18);
-    }
-  }
-  ctx.restore();
-
-  // Probability label if specified
-  if (options.probLabel) {
-    const midX = ((options.fillFrom || 0) + (options.fillTo || 0)) / 2;
-    const px = xToPx(midX);
-    const py = yToPx(normalPDF((midX - mu) / sigma)) - 10;
-    ctx.save();
-    ctx.font = "600 13px 'DM Mono', monospace";
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#3D52A0';
-    ctx.fillText(options.probLabel, px, Math.max(py, pad.top + 15));
-    ctx.restore();
-  }
-}
-
-// ── Check numeric answer ──
-function checkAnswer(inputId, expected, tolerance) {
-  const input = document.getElementById(inputId);
-  const val = parseFloat(input.value.replace(',', '.'));
-  const tol = tolerance || 0.02;
-  if (isNaN(val)) return null;
-  return Math.abs(val - expected) <= tol;
-}
-
-// ── Score tracker ──
-const ScoreTracker = {
-  total: 0,
-  correct: 0,
-  answered: new Set(),
-
-  init(totalQuestions) {
-    this.total = totalQuestions;
-    this.correct = 0;
-    this.answered = new Set();
-  },
-
-  record(questionId, isCorrect) {
-    if (this.answered.has(questionId)) return;
-    this.answered.add(questionId);
-    if (isCorrect) this.correct++;
-    this.update();
-  },
-
-  update() {
-    const valEl = document.getElementById('score-value');
-    const barEl = document.getElementById('score-bar-fill');
-    if (valEl) valEl.textContent = `${this.correct} / ${this.total}`;
-    if (barEl) barEl.style.width = `${(this.answered.size / this.total) * 100}%`;
-  },
-
-  renderWidget() {
-    return `<div class="score-tracker">
-      <span class="score-label">Score</span>
-      <span class="score-value" id="score-value">0 / ${this.total}</span>
-      <div class="score-bar"><div class="score-bar-fill" id="score-bar-fill" style="width:0%"></div></div>
-      <span style="font-size:0.78rem;color:var(--text-hint);">${this.total} questions</span>
-    </div>`;
-  }
-};
-
-// ── Validate answer with visual feedback + score ──
-function validateAnswer(inputId, expected, questionId, tolerance) {
-  const input = document.getElementById(inputId);
-  const val = parseFloat(input.value.replace(',', '.'));
-  const tol = tolerance || 0.025;
-  if (isNaN(val)) { input.style.borderColor = 'var(--warning)'; return; }
-  const correct = Math.abs(val - expected) <= tol;
-  input.classList.remove('correct', 'incorrect');
-  input.classList.add(correct ? 'correct' : 'incorrect');
-  input.style.borderColor = correct ? 'var(--teal)' : 'var(--danger)';
-  ScoreTracker.record(questionId, correct);
-  return correct;
-}
-
+var ScoreTracker={total:0,correct:0,answered:new Set(),init:function(t){this.total=t;this.correct=0;this.answered=new Set()},record:function(q,ok){if(this.answered.has(q))return;this.answered.add(q);if(ok)this.correct++;this.update()},update:function(){var v=document.getElementById('score-value'),b=document.getElementById('score-bar-fill');if(v)v.textContent=this.correct+' / '+this.total;if(b)b.style.width=(this.answered.size/this.total)*100+'%'},renderWidget:function(){return'<div class="score-tracker"><span class="score-label">Score</span><span class="score-value" id="score-value">0 / '+this.total+'</span><div class="score-bar"><div class="score-bar-fill" id="score-bar-fill" style="width:0%"></div></div><span style="font-size:0.78rem;color:var(--text-hint);">'+this.total+' questions</span></div>'}};
+function validateAnswer(inputId,expected,questionId,tolerance){var input=document.getElementById(inputId),val=parseFloat(input.value.replace(',','.')),tol=tolerance||0.025;if(isNaN(val)){input.style.borderColor='var(--warning)';return}var correct=Math.abs(val-expected)<=tol;input.classList.remove('correct','incorrect');input.classList.add(correct?'correct':'incorrect');input.style.borderColor=correct?'var(--teal)':'var(--danger)';ScoreTracker.record(questionId,correct);return correct}
 </script>
 <script>renderNav('cours');</script>
 
@@ -885,583 +152,465 @@ function validateAnswer(inputId, expected, questionId, tolerance) {
   <p>Tous les cas de figure que tu dois connaître pour l'examen</p>
 </div>
 
-<div class="card card-warning" style="border-left: 4px solid var(--warning);">
-  <h2 class="section-title" style="color: var(--warning);">Les deux formules à connaître par cœur</h2>
+<div class="card card-warning" style="border-left:4px solid var(--warning);">
+  <h2 class="section-title" style="color:var(--warning);">Les deux formules à connaître par cœur</h2>
   <div class="grid-2">
     <div class="formula-box" style="text-align:center;font-size:1.1rem;"><div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.3rem;">FORMULE 1 — Transformer x en z</div><strong>z = (x − m) / s</strong></div>
     <div class="formula-box" style="text-align:center;font-size:1.1rem;"><div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.3rem;">FORMULE 2 — Transformer z en x</div><strong>x = (z × s) + m</strong></div>
   </div>
-  <p style="margin-top:0.75rem;font-size:0.88rem;color:var(--text-muted);"><strong>m</strong> = moyenne &nbsp;|&nbsp; <strong>s</strong> = écart-type</p>
+  <p style="margin-top:0.75rem;font-size:0.88rem;color:var(--text-muted);"><strong>m</strong> = moyenne | <strong>s</strong> = écart-type</p>
+</div>
+<!-- INTRODUCTION — Pourquoi la loi normale ? -->
+<div class="card" id="sec-intro" style="margin-bottom:1.5rem;">
+  <h2 class="section-title" style="margin-bottom:0.75rem;"><span style="font-size:1.3rem;margin-right:0.3rem;">🔔</span> Pourquoi la loi normale ?</h2>
+  <p style="color:var(--text-muted);font-size:0.92rem;line-height:1.8;margin-bottom:1rem;">
+    En psychologie, beaucoup de variables mesurées (eg., le QI, les scores d'anxiété, les temps de réaction, la durée de sommeil…) se répartissent selon une <strong>courbe en cloche</strong> : la majorité des individus se concentre autour de la moyenne, et plus on s'en éloigne, plus les valeurs deviennent rares. C'est cette forme régulière qu'on appelle la <strong>loi normale</strong>.
+  </p>
+  <p style="color:var(--text-muted);font-size:0.92rem;line-height:1.8;margin-bottom:1rem;">
+    Grâce à cette propriété, il suffit de connaître la <strong>moyenne</strong> (m) et l'<strong>écart-type</strong> (s) d'une distribution pour pouvoir répondre à des questions très concrètes : <em>« Quel pourcentage de la population dépasse tel score ? »</em>, <em>« En dessous de quelle valeur se trouvent les 10 % les plus faibles ? »</em>, <em>« Ce résultat est-il atypique ? »</em>.
+    C'est exactement ce que nous avons appris à faire avec les <strong>tables</strong> de la loi normale.
+  </p>
+  <div class="case-graph" style="margin-top:0.5rem;"><canvas id="c-intro-bell"></canvas><div class="graph-label">Exemple : QI ~ N(100, 15) — ~68 % des personnes entre 85 et 115, ~95 % entre 70 et 130</div></div>
 </div>
 
-<!-- SOMMAIRE -->
+<script>
+// Draw the intro bell curve with 68-95-99.7 zones
+function drawIntroBell() {
+  const canvas = document.getElementById('c-intro-bell');
+  if (!canvas) return;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const w = rect.width, h = 220;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const mu = 100, sigma = 15, zR = 4;
+  const pad = { top: 20, right: 20, bottom: 50, left: 20 };
+  const xMin = mu - zR * sigma, xMax = mu + zR * sigma;
+  const yMax = normalPDF(0) * 1.15, pb = h - pad.bottom;
+  function xp(v) { return pad.left + ((v - xMin) / (xMax - xMin)) * (w - pad.left - pad.right); }
+  function yp(v) { return pad.top + (1 - v / yMax) * (h - pad.top - pad.bottom); }
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Fill zones: ±3σ, ±2σ, ±1σ (back to front)
+  const zones = [
+    { lo: mu - 3 * sigma, hi: mu + 3 * sigma, color: 'rgba(123, 142, 200, 0.08)' },
+    { lo: mu - 2 * sigma, hi: mu + 2 * sigma, color: 'rgba(61, 82, 160, 0.10)' },
+    { lo: mu - 1 * sigma, hi: mu + 1 * sigma, color: 'rgba(61, 82, 160, 0.14)' }
+  ];
+  zones.forEach(z => {
+    ctx.save(); ctx.beginPath();
+    for (let i = 0; i <= 120; i++) {
+      const xv = z.lo + (z.hi - z.lo) * i / 120, zz = (xv - mu) / sigma;
+      if (i === 0) ctx.moveTo(xp(xv), pb); ctx.lineTo(xp(xv), yp(normalPDF(zz)));
+    }
+    ctx.lineTo(xp(z.hi), pb); ctx.closePath();
+    ctx.fillStyle = z.color; ctx.fill(); ctx.restore();
+  });
+
+  // Curve
+  ctx.save(); ctx.beginPath();
+  for (let i = 0; i <= 400; i++) {
+    const xv = xMin + (xMax - xMin) * i / 400, zz = (xv - mu) / sigma;
+    const px = xp(xv), py = yp(normalPDF(zz));
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = '#3D52A0'; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore();
+
+  // Dashed lines at ±1σ and ±2σ
+  ctx.save(); ctx.setLineDash([4, 4]); ctx.lineWidth = 1;
+  [[-2, 'rgba(61,82,160,0.25)'], [-1, 'rgba(61,82,160,0.35)'], [1, 'rgba(61,82,160,0.35)'], [2, 'rgba(61,82,160,0.25)']].forEach(([z, col]) => {
+    ctx.strokeStyle = col; ctx.beginPath();
+    ctx.moveTo(xp(mu + z * sigma), pad.top + 10); ctx.lineTo(xp(mu + z * sigma), pb);
+    ctx.stroke();
+  });
+  ctx.setLineDash([]); ctx.restore();
+
+  // Axis
+  ctx.save(); ctx.beginPath();
+  ctx.moveTo(pad.left, pb); ctx.lineTo(w - pad.right, pb);
+  ctx.strokeStyle = '#1A1A18'; ctx.lineWidth = 1; ctx.stroke();
+
+  // Ticks and labels — x values
+  ctx.font = "500 11px 'DM Mono', monospace"; ctx.textAlign = 'center';
+  for (let z = -zR; z <= zR; z++) {
+    const xv = mu + z * sigma, px = xp(xv);
+    ctx.beginPath(); ctx.moveTo(px, pb); ctx.lineTo(px, pb + 5);
+    ctx.strokeStyle = '#6B6960'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#1A1A18'; ctx.fillText(xv.toString(), px, pb + 18);
+    if (z !== 0) { ctx.fillStyle = '#3D52A0'; ctx.fillText('z=' + z, px, pb + 32); }
+    else { ctx.fillStyle = '#3D52A0'; ctx.fillText('μ', px, pb + 32); }
+  }
+  ctx.restore();
+
+  // Percentage annotations
+  ctx.save(); ctx.textAlign = 'center';
+  const peakY = yp(normalPDF(0));
+  // ~68%
+  ctx.font = "600 13px 'DM Sans', sans-serif"; ctx.fillStyle = '#3D52A0';
+  const y68 = peakY + 25;
+  ctx.fillText('≈ 68 %', xp(mu), y68);
+  // Bracket for 68%
+  ctx.strokeStyle = '#3D52A0'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(xp(mu - sigma), y68 + 4); ctx.lineTo(xp(mu + sigma), y68 + 4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(xp(mu - sigma), y68 + 1); ctx.lineTo(xp(mu - sigma), y68 + 7); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(xp(mu + sigma), y68 + 1); ctx.lineTo(xp(mu + sigma), y68 + 7); ctx.stroke();
+
+  // ~95%
+  ctx.font = "500 11px 'DM Sans', sans-serif"; ctx.fillStyle = '#7B8EC8';
+  const y95 = y68 + 20;
+  ctx.fillText('≈ 95 %', xp(mu), y95);
+  ctx.strokeStyle = '#7B8EC8'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(xp(mu - 2 * sigma), y95 + 4); ctx.lineTo(xp(mu + 2 * sigma), y95 + 4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(xp(mu - 2 * sigma), y95 + 1); ctx.lineTo(xp(mu - 2 * sigma), y95 + 7); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(xp(mu + 2 * sigma), y95 + 1); ctx.lineTo(xp(mu + 2 * sigma), y95 + 7); ctx.stroke();
+
+  ctx.restore();
+}
+
+// Draw on load and resize
+window.addEventListener('load', drawIntroBell);
+window.addEventListener('resize', drawIntroBell);
+</script>
+   
+
 <div class="card" id="sommaire" style="margin-bottom:1.5rem;">
   <h2 class="section-title" style="margin-bottom:0.75rem;">Sommaire</h2>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem 1.5rem;">
-    <a href="#sec-table-nav" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);">
-      <span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">0.</span> Comment naviguer dans la table
-    </a>
-    <a href="#sec-directe" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);">
-      <span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">1.</span> Table directe — Trouver P sachant z
-    </a>
-    <a href="#sec-inverse" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);">
-      <span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">2.</span> Table inverse — Trouver z sachant P
-    </a>
-    <a href="#sec-atypique" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);">
-      <span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">3.</span> Valeurs atypiques
-    </a>
-    <a href="#sec-symetrie" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);">
-      <span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">4.</span> Propriété de symétrie
-    </a>
+    <a href="#sec-table-nav" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);"><span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">0.</span> Comment naviguer dans la table</a>
+    <a href="#sec-directe" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);"><span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">1.</span> Table directe</a>
+    <a href="#sec-inverse" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);"><span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">2.</span> Table inverse</a>
+    <a href="#sec-atypique" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);"><span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">3.</span> Valeurs atypiques</a>
+    <a href="#sec-symetrie" style="color:var(--accent);text-decoration:none;font-size:0.92rem;padding:0.3rem 0;border-bottom:1px solid var(--border);"><span style="font-family:var(--font-mono);font-weight:600;margin-right:0.4rem;">4.</span> Propriété de symétrie</a>
   </div>
 </div>
 
-<!-- SECTION 0 : NAVIGATION DANS LA TABLE -->
+<!-- ═══ SECTION 0 : NAVIGATION DANS LA TABLE ═══ -->
 <div class="card" id="sec-table-nav">
   <h2 class="section-title"><span class="num">0</span> Comment naviguer dans la table</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;">
-    Voici les deux tables que tu auras à l'examen. Clique sur chacune pour la déplier, puis entre une valeur pour voir comment la lire.
-  </p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;">Voici les deux tables que tu auras à l'examen. Clique sur chacune pour la déplier, puis entre une valeur pour voir comment la lire.</p>
 
-  <!-- TABLE DIRECTE collapsible -->
+  <!-- TABLE DIRECTE -->
   <div style="margin-bottom:1rem;">
-    <button onclick="toggleTableSection('direct')" id="btn-direct" style="width:100%;text-align:left;padding:0.75rem 1rem;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
-      <span>Table directe — P(Z &lt; z) = ? sachant z</span>
-      <span id="arrow-direct" style="transition:transform 0.3s;">▼</span>
+    <button onclick="toggleTableSection('direct')" style="width:100%;text-align:left;padding:0.75rem 1rem;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+      <span>Table directe — P(Z &lt; z) = ? sachant z</span><span id="arrow-direct" style="transition:transform 0.3s;">▼</span>
     </button>
     <div id="panel-direct" style="display:none;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:1rem;">
       <div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:0.75rem;">
-        <div class="param-group" style="flex:0 0 160px;">
-          <label>Valeur de z (&ge; 0)</label>
-          <input type="number" id="direct-z-input" value="1.25" step="0.01" min="0" max="3.59" style="font-size:1rem;">
-        </div>
+        <div class="param-group" style="flex:0 0 160px;"><label>Valeur de z (≥ 0)</label><input type="number" id="direct-z-input" value="1.25" step="0.01" min="0" max="3.59"></div>
         <button class="btn btn-primary" onclick="highlightDirect()">Chercher</button>
         <div id="direct-result" style="font-family:var(--font-mono);font-size:1.05rem;font-weight:600;color:var(--accent);padding:0.4rem 0;"></div>
       </div>
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;" id="direct-explanation"></p>
       <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);max-height:420px;overflow-y:auto;">
-        <table id="tbl-direct" style="font-size:0.75rem;margin:0;border-collapse:collapse;">
-          <thead><tr id="tbl-direct-head"></tr></thead>
-          <tbody id="tbl-direct-body"></tbody>
-        </table>
+        <table id="tbl-direct" style="font-size:0.75rem;margin:0;border-collapse:collapse;"><thead><tr id="tbl-direct-head"></tr></thead><tbody id="tbl-direct-body"></tbody></table>
       </div>
     </div>
   </div>
 
-  <!-- TABLE INVERSE collapsible -->
+  <!-- TABLE INVERSE -->
   <div>
-    <button onclick="toggleTableSection('inverse')" id="btn-inverse" style="width:100%;text-align:left;padding:0.75rem 1rem;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
-      <span>Table inverse — z = ? sachant P(Z &lt; z) = P</span>
-      <span id="arrow-inverse" style="transition:transform 0.3s;">▼</span>
+    <button onclick="toggleTableSection('inverse')" style="width:100%;text-align:left;padding:0.75rem 1rem;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">
+      <span>Table inverse — z = ? sachant P(Z &lt; z) = P</span><span id="arrow-inverse" style="transition:transform 0.3s;">▼</span>
     </button>
     <div id="panel-inverse" style="display:none;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:1rem;">
       <div style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;margin-bottom:0.75rem;">
-        <div class="param-group" style="flex:0 0 200px;">
-          <label>Probabilité P (entre 0 et 1)</label>
-          <input type="number" id="inverse-p-input" value="0.75" step="0.001" min="0.001" max="0.999" style="font-size:1rem;">
-        </div>
+        <div class="param-group" style="flex:0 0 200px;"><label>Probabilité P (entre 0 et 1)</label><input type="number" id="inverse-p-input" value="0.75" step="0.001" min="0.001" max="0.999"></div>
         <button class="btn btn-primary" onclick="highlightInverse()">Chercher</button>
         <div id="inverse-result" style="font-family:var(--font-mono);font-size:1.05rem;font-weight:600;color:var(--accent);padding:0.4rem 0;"></div>
       </div>
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;" id="inverse-explanation"></p>
-      <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);max-height:420px;overflow-y:auto;">
-        <table id="tbl-inverse" style="font-size:0.75rem;margin:0;border-collapse:collapse;">
-          <thead><tr id="tbl-inverse-head"></tr></thead>
-          <tbody id="tbl-inverse-body"></tbody>
-        </table>
+      <div class="inv-legend">
+        <span style="font-weight:600;font-size:0.82rem;color:var(--text-muted);">Légende :</span>
+        <span class="inv-legend-item"><span class="inv-legend-swatch" style="background:#1D7A4E;"></span> Entrée dans la table</span>
+        <span class="inv-legend-item"><span class="inv-legend-swatch" style="background:var(--nav-green-bg);"></span> Projection vers le résultat</span>
+        <span class="inv-legend-item"><span class="inv-legend-swatch" style="background:var(--accent);"></span> Cellule résultat (z)</span>
       </div>
-      <p style="font-size:0.82rem;color:var(--text-hint);margin-top:0.5rem;">
-        La dernière colonne (<strong>+</strong>) et la dernière ligne (<strong>−</strong>) servent pour les probabilités &gt; 0.5 et &lt; 0.5 respectivement. Si P &gt; 0.5, lis la colonne de droite et la ligne du bas.
-      </p>
+      <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);max-height:420px;overflow-y:auto;">
+        <table id="tbl-inverse" style="font-size:0.75rem;margin:0;border-collapse:collapse;"><thead><tr id="tbl-inverse-head"></tr></thead><tbody id="tbl-inverse-body"></tbody></table>
+      </div>
+      <p style="font-size:0.82rem;color:var(--text-hint);margin-top:0.5rem;">La dernière colonne (<strong>+</strong>) et la dernière ligne (<strong>−</strong>) servent pour les probabilités &gt; 0.5 et &lt; 0.5 respectivement.</p>
     </div>
   </div>
 </div>
 
 <script>
-// Toggle collapsible sections
-function toggleTableSection(which) {
-  const panel = document.getElementById('panel-' + which);
-  const arrow = document.getElementById('arrow-' + which);
-  if (panel.style.display === 'none') {
-    panel.style.display = 'block';
-    arrow.style.transform = 'rotate(180deg)';
-    // Build table if not yet built
-    if (which === 'direct' && !document.getElementById('tbl-direct').dataset.built) buildDirectTable();
-    if (which === 'inverse' && !document.getElementById('tbl-inverse').dataset.built) buildInverseTable();
+function toggleTableSection(which){
+  var panel=document.getElementById('panel-'+which),arrow=document.getElementById('arrow-'+which);
+  if(panel.style.display==='none'){panel.style.display='block';arrow.style.transform='rotate(180deg)';
+    if(which==='direct'&&!document.getElementById('tbl-direct').dataset.built)buildDirectTable();
+    if(which==='inverse'&&!document.getElementById('tbl-inverse').dataset.built)buildInverseTable();
+  }else{panel.style.display='none';arrow.style.transform=''}
+}
+
+/* ═══ DIRECT TABLE ═══ */
+function buildDirectTable(){
+  var head=document.getElementById('tbl-direct-head'),body=document.getElementById('tbl-direct-body');
+  var ths='padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:52px;position:sticky;top:0;z-index:2;font-weight:600;';
+  var thf='padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:36px;position:sticky;top:0;left:0;z-index:3;font-weight:600;';
+  var h='<th style="'+thf+'">X</th>';
+  for(var c=0;c<=9;c++)h+='<th style="'+ths+'">0,0'+c+'</th>';
+  head.innerHTML=h;
+  for(var r=0;r<=35;r++){var row=r/10,tr=document.createElement('tr'),rl=row.toFixed(1).replace('.',',');
+    var cells='<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);position:sticky;left:0;z-index:1;border-right:1px solid var(--border);text-align:center;">'+rl+'</td>';
+    for(var c=0;c<=9;c++){var z=row+c/100,p=normalCDF(z);cells+='<td id="d-'+r+'-'+c+'" style="padding:0.35rem 0.4rem;text-align:center;border-bottom:1px solid var(--border);transition:background 0.2s;">'+p.toFixed(4).replace('.',',')+'</td>'}
+    tr.innerHTML=cells;body.appendChild(tr)}
+  document.getElementById('tbl-direct').dataset.built='1';highlightDirect();
+}
+function highlightDirect(){
+  var tbl=document.getElementById('tbl-direct');if(!tbl.dataset.built)return;
+  tbl.querySelectorAll('td').forEach(function(td){td.style.background='';td.style.color='';td.style.fontWeight='';td.style.boxShadow=''});
+  tbl.querySelectorAll('tbody td:first-child').forEach(function(td){td.style.background='var(--bg-accent)'});
+  var z=parseFloat(document.getElementById('direct-z-input').value);if(isNaN(z)||z<0||z>3.59)return;
+  var r=Math.floor(z*10),c=Math.round((z*100)%10),prob=normalCDF(z),rows=tbl.querySelectorAll('tbody tr');
+  if(rows[r]){rows[r].querySelector('td:first-child').style.background='var(--accent)';rows[r].querySelector('td:first-child').style.color='white';rows[r].querySelectorAll('td').forEach(function(td,i){if(i>0)td.style.background='var(--accent-light)'})}
+  rows.forEach(function(tr){var cells=tr.querySelectorAll('td');if(cells[c+1])cells[c+1].style.background='var(--accent-light)'});
+  var headers=tbl.querySelectorAll('thead th');if(headers[c+1])headers[c+1].style.background='var(--accent-hover)';
+  var cell=document.getElementById('d-'+r+'-'+c);
+  if(cell){cell.style.background='var(--accent)';cell.style.color='white';cell.style.fontWeight='700';cell.style.boxShadow='0 0 0 2px var(--accent-mid)';cell.scrollIntoView({behavior:'smooth',block:'center',inline:'center'})}
+  document.getElementById('direct-result').innerHTML='P(Z &lt; '+z.toFixed(2).replace('.',',')+') = <span style="font-size:1.2rem;">'+prob.toFixed(4).replace('.',',')+'</span>';
+  document.getElementById('direct-explanation').innerHTML='Ligne <strong>'+(r/10).toFixed(1).replace('.',',')+'</strong> × Colonne <strong>0,0'+c+'</strong> → <strong>'+prob.toFixed(4).replace('.',',')+'</strong>';
+}
+document.getElementById('direct-z-input').addEventListener('input',highlightDirect);
+
+/* ═══ INVERSE TABLE ═══ */
+function buildInverseTable(){
+  var head=document.getElementById('tbl-inverse-head'),body=document.getElementById('tbl-inverse-body');
+  var ths='padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:52px;position:sticky;top:0;z-index:2;font-weight:600;';
+  var thf='padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:36px;position:sticky;top:0;left:0;z-index:3;font-weight:600;';
+  var h='<th id="ih-first" style="'+thf+'">P</th>';
+  for(var c=0;c<=10;c++){var label=c===10?'0,010':('0,00'+c);h+='<th id="ih-'+c+'" style="'+ths+'">'+label+'</th>'}
+  h+='<th id="ih-plus" style="'+ths+'">+</th>';head.innerHTML=h;
+  for(var r=0;r<=49;r++){var pRow=r/100,tr=document.createElement('tr'),rl=pRow.toFixed(2).replace('.',',');
+    var cells='<td id="ip-'+r+'" style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);position:sticky;left:0;z-index:1;border-right:1px solid var(--border);text-align:center;">'+rl+'</td>';
+    for(var c=0;c<=10;c++){var pVal=pRow+c/1000,zVal;if(pVal<=0)zVal=Infinity;else if(pVal>=0.5)zVal=0;else zVal=-normalInvCDF(pVal);
+      var display=pVal<=0?'∞':(pVal>=0.5?'0,0000':zVal.toFixed(4).replace('.',','));
+      cells+='<td id="i-'+r+'-'+c+'" style="padding:0.35rem 0.4rem;text-align:center;border-bottom:1px solid var(--border);transition:background 0.2s;">'+display+'</td>'}
+    var pRight;if(r===49)pRight='0,5';else if(r===0)pRight='0,99';else pRight=(1-pRow-0.01).toFixed(2).replace('.',',');
+    cells+='<td id="iplus-'+r+'" style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);text-align:center;border-left:1px solid var(--border);">'+pRight+'</td>';
+    tr.innerHTML=cells;body.appendChild(tr)}
+  var lastTr=document.createElement('tr');lastTr.id='inv-minus-row';
+  var lastCells='<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);position:sticky;left:0;z-index:1;border-right:1px solid var(--border);text-align:center;">−</td>';
+  var lastLabels=['0,01','0,009','0,008','0,007','0,006','0,005','0,004','0,003','0,002','0,001','0'];
+  lastLabels.forEach(function(l,idx){lastCells+='<td id="iminus-'+idx+'" style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);text-align:center;border-top:2px solid var(--border);">'+l+'</td>'});
+  lastCells+='<td style="padding:0.35rem 0.4rem;font-weight:700;background:var(--accent);color:white;text-align:center;">P</td>';
+  lastTr.innerHTML=lastCells;body.appendChild(lastTr);
+  document.getElementById('tbl-inverse').dataset.built='1';highlightInverse();
+}
+
+/* ═══ HIGHLIGHT INVERSE — FULLY CORRECTED ═══ */
+function highlightInverse(){
+  var tbl=document.getElementById('tbl-inverse');if(!tbl.dataset.built)return;
+  // Reset all
+  tbl.querySelectorAll('td').forEach(function(td){td.style.background='';td.style.color='';td.style.fontWeight='';td.style.boxShadow=''});
+  for(var ri=0;ri<=49;ri++){var pc=document.getElementById('ip-'+ri);if(pc)pc.style.background='var(--bg-accent)';var pl=document.getElementById('iplus-'+ri);if(pl){pl.style.background='var(--bg-accent)';pl.style.fontWeight='600'}}
+  var lastRow=document.getElementById('inv-minus-row');if(lastRow)lastRow.querySelectorAll('td').forEach(function(td){td.style.background='var(--bg-accent)'});
+  tbl.querySelectorAll('thead th').forEach(function(th){th.style.background='var(--accent)';th.style.color='white';th.style.fontWeight='600';th.style.boxShadow=''});
+
+  var pInput=parseFloat(document.getElementById('inverse-p-input').value);
+  if(isNaN(pInput)||pInput<=0||pInput>=1)return;
+  var zResult=normalInvCDF(pInput);
+  var useRightSide=pInput>=0.5;
+  var r,c; // row and column indices into the z-value cells
+
+  if(useRightSide){
+    // ═══ P ≥ 0.5: decompose from P directly ═══
+    // P_hundredths = floor(P*100)/100 → find this in + column
+    // P_thousandths = P - P_hundredths → find complement in - row
+    var P_hund=Math.floor(pInput*100)/100;           // e.g. 0.789→0.78, 0.75→0.75, 0.60→0.60
+    var P_thou=Math.round((pInput-P_hund)*1000)/1000; // e.g. 0.789→0.009, 0.75→0, 0.60→0
+
+    // Row where + column = P_hund: +col = 1 - r/100 - 0.01
+    // → r = round((0.99 - P_hund) * 100)
+    r=Math.round((0.99-P_hund)*100);
+
+    // Column where - row matches P_thou:
+    // -row values: col0=0.01, col1=0.009, ..., col9=0.001, col10=0
+    // -row at col c = (10-c)/1000  → c = 10 - P_thou*1000
+    c=Math.round(10-P_thou*1000);
+
+    var rows=tbl.querySelectorAll('tbody tr');
+
+    // 1) Green band on entire + column
+    for(var ri=0;ri<50;ri++){var pc=document.getElementById('iplus-'+ri);if(pc)pc.style.background='var(--nav-green-bg)'}
+    var plusH=document.getElementById('ih-plus');if(plusH){plusH.style.background='var(--nav-green)';plusH.style.color='white';plusH.style.fontWeight='700'}
+
+    // 2) Green band on entire − row
+    if(lastRow)lastRow.querySelectorAll('td').forEach(function(td){td.style.background='var(--nav-green-bg)'});
+
+    // 3) Solid green on the specific + cell (entry point for row)
+    var targetPlus=document.getElementById('iplus-'+r);
+    if(targetPlus){targetPlus.style.background='var(--nav-green)';targetPlus.style.color='white';targetPlus.style.fontWeight='700';targetPlus.style.boxShadow='0 0 0 2px rgba(29,122,78,0.4)'}
+
+    // 4) Solid green on the specific − cell (entry point for column)
+    var targetMinus=document.getElementById('iminus-'+c);
+    if(targetMinus){targetMinus.style.background='var(--nav-green)';targetMinus.style.color='white';targetMinus.style.fontWeight='700';targetMinus.style.boxShadow='0 0 0 2px rgba(29,122,78,0.4)'}
+
+    // 5) Green projection: entire row r (from + cell towards result)
+    if(rows[r])rows[r].querySelectorAll('td').forEach(function(td,i){if(i>0&&i<=11)td.style.background='var(--nav-green-bg)'});
+
+    // 6) Green projection: entire column c (from − cell upwards towards result)
+    for(var ri=0;ri<50;ri++){if(!rows[ri])continue;var cells=rows[ri].querySelectorAll('td');if(cells[c+1])cells[c+1].style.background='var(--nav-green-bg)'}
+
+    // 7) Blue result cell at intersection
+    var cell=document.getElementById('i-'+r+'-'+c);
+    if(cell){cell.style.background='var(--accent)';cell.style.color='white';cell.style.fontWeight='700';cell.style.boxShadow='0 0 0 2px var(--accent-mid)';cell.scrollIntoView({behavior:'smooth',block:'center',inline:'center'})}
+
+    // Explanation text
+    var zAbs=Math.abs(zResult);
+    var plusStr=P_hund.toFixed(2).replace('.',',');
+    var minusLabels=['0,01','0,009','0,008','0,007','0,006','0,005','0,004','0,003','0,002','0,001','0'];
+    var minusStr=minusLabels[c]||'?';
+    var pRowStr=(r/100).toFixed(2).replace('.',',');
+
+    document.getElementById('inverse-result').innerHTML='z = <span style="font-size:1.2rem;">'+zResult.toFixed(4).replace('.',',')+'</span>';
+    document.getElementById('inverse-explanation').innerHTML=
+      'P = '+pInput.toFixed(4).replace('.',',')+' &gt; 0,5 → on utilise la <strong style="color:var(--nav-green);">colonne +</strong> et la <strong style="color:var(--nav-green);">ligne −</strong>.<br>'+
+      'On cherche <strong style="color:var(--nav-green);">'+plusStr+'</strong> dans la colonne <strong style="color:var(--nav-green);">+</strong> → ligne <strong>'+pRowStr+'</strong>.<br>'+
+      'On cherche <strong style="color:var(--nav-green);">'+minusStr+'</strong> dans la ligne <strong style="color:var(--nav-green);">−</strong> → colonne correspondante.<br>'+
+      'L\'intersection donne z = <strong style="color:var(--accent);">'+zAbs.toFixed(4).replace('.',',')+'</strong>. Comme P &gt; 0,5 → z = <strong>'+zResult.toFixed(4).replace('.',',')+'</strong>.';
+
   } else {
-    panel.style.display = 'none';
-    arrow.style.transform = '';
+    // ═══ P < 0.5: use first column (P) and header row ═══
+    // Decompose pInput: hundredths → row, thousandths → column
+    var P_hund=Math.floor(pInput*100)/100;
+    var P_thou=Math.round((pInput-P_hund)*1000)/1000;
+    r=Math.round(P_hund*100);
+    c=Math.round(P_thou*1000);
+
+    var rows=tbl.querySelectorAll('tbody tr');
+
+    // 1) Green band on P column
+    for(var ri=0;ri<50;ri++){var pc=document.getElementById('ip-'+ri);if(pc)pc.style.background='var(--nav-green-bg)'}
+    var pH=document.getElementById('ih-first');if(pH){pH.style.background='var(--nav-green)';pH.style.color='white';pH.style.fontWeight='700'}
+
+    // 2) Green band on header row
+    tbl.querySelectorAll('thead th').forEach(function(th){th.style.background='var(--nav-green-bg)';th.style.color='var(--nav-green)';th.style.fontWeight='600'});
+    if(pH){pH.style.background='var(--nav-green)';pH.style.color='white';pH.style.fontWeight='700'}
+
+    // 3) Solid green on specific P cell
+    var targetP=document.getElementById('ip-'+r);
+    if(targetP){targetP.style.background='var(--nav-green)';targetP.style.color='white';targetP.style.fontWeight='700';targetP.style.boxShadow='0 0 0 2px rgba(29,122,78,0.4)'}
+
+    // 4) Solid green on specific header cell
+    var targetH=document.getElementById('ih-'+c);
+    if(targetH){targetH.style.background='var(--nav-green)';targetH.style.color='white';targetH.style.fontWeight='700';targetH.style.boxShadow='0 0 0 2px rgba(29,122,78,0.4)'}
+
+    // 5) Green projection: entire row r
+    if(rows[r])rows[r].querySelectorAll('td').forEach(function(td,i){if(i>0&&i<=11)td.style.background='var(--nav-green-bg)'});
+
+    // 6) Green projection: entire column c
+    for(var ri=0;ri<50;ri++){if(!rows[ri])continue;var cells=rows[ri].querySelectorAll('td');if(cells[c+1])cells[c+1].style.background='var(--nav-green-bg)'}
+
+    // 7) Blue result cell
+    var cell=document.getElementById('i-'+r+'-'+c);
+    if(cell){cell.style.background='var(--accent)';cell.style.color='white';cell.style.fontWeight='700';cell.style.boxShadow='0 0 0 2px var(--accent-mid)';cell.scrollIntoView({behavior:'smooth',block:'center',inline:'center'})}
+
+    var zAbs=Math.abs(zResult);
+    var pRowStr=(r/100).toFixed(2).replace('.',',');
+    var colStr=(c/1000).toFixed(3).replace('.',',');
+
+    document.getElementById('inverse-result').innerHTML='z = <span style="font-size:1.2rem;">'+zResult.toFixed(4).replace('.',',')+'</span>';
+    document.getElementById('inverse-explanation').innerHTML=
+      'P = '+pInput.toFixed(4).replace('.',',')+' &lt; 0,5 → on utilise la <strong style="color:var(--nav-green);">colonne P</strong> et la <strong style="color:var(--nav-green);">première ligne</strong>.<br>'+
+      'On cherche <strong style="color:var(--nav-green);">'+pRowStr+'</strong> dans la colonne <strong style="color:var(--nav-green);">P</strong> → ligne <strong>'+pRowStr+'</strong>.<br>'+
+      'On cherche <strong style="color:var(--nav-green);">'+colStr+'</strong> dans la première ligne → colonne correspondante.<br>'+
+      'L\'intersection donne z = <strong style="color:var(--accent);">'+zAbs.toFixed(4).replace('.',',')+'</strong>. Comme P &lt; 0,5, z est négatif → z = <strong>'+zResult.toFixed(4).replace('.',',')+'</strong>.';
   }
 }
-
-// ═══ BUILD DIRECT TABLE (exact values from PDF) ═══
-function buildDirectTable() {
-  const head = document.getElementById('tbl-direct-head');
-  const body = document.getElementById('tbl-direct-body');
-  const thStyle = 'padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:52px;position:sticky;top:0;z-index:2;font-weight:600;';
-  const thFirst = 'padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:36px;position:sticky;top:0;left:0;z-index:3;font-weight:600;';
-  
-  // Header: X | 0.00 | 0.01 | ... | 0.09
-  let h = `<th style="${thFirst}">X</th>`;
-  for (let c = 0; c <= 9; c++) h += `<th style="${thStyle}">0,0${c}</th>`;
-  head.innerHTML = h;
-
-  // Rows: 0.0 to 3.5
-  for (let r = 0; r <= 35; r++) {
-    const row = r / 10;
-    const tr = document.createElement('tr');
-    const rowLabel = row.toFixed(1).replace('.', ',');
-    let cells = `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);position:sticky;left:0;z-index:1;border-right:1px solid var(--border);text-align:center;">${rowLabel}</td>`;
-    for (let c = 0; c <= 9; c++) {
-      const z = row + c / 100;
-      const p = normalCDF(z);
-      cells += `<td id="d-${r}-${c}" style="padding:0.35rem 0.4rem;text-align:center;border-bottom:1px solid var(--border);transition:background 0.2s;">${p.toFixed(4).replace('.', ',')}</td>`;
-    }
-    tr.innerHTML = cells;
-    body.appendChild(tr);
-  }
-  document.getElementById('tbl-direct').dataset.built = '1';
-  highlightDirect();
-}
-
-function highlightDirect() {
-  const tbl = document.getElementById('tbl-direct');
-  if (!tbl.dataset.built) return;
-  // Clear
-  tbl.querySelectorAll('td').forEach(td => { td.style.background = ''; td.style.color = ''; td.style.fontWeight = ''; td.style.boxShadow = ''; });
-  tbl.querySelectorAll('tbody td:first-child').forEach(td => { td.style.background = 'var(--bg-accent)'; });
-  
-  const z = parseFloat(document.getElementById('direct-z-input').value);
-  if (isNaN(z) || z < 0 || z > 3.59) return;
-  const r = Math.floor(z * 10);
-  const c = Math.round((z * 100) % 10);
-  const prob = normalCDF(z);
-  
-  // Highlight row
-  const rows = tbl.querySelectorAll('tbody tr');
-  if (rows[r]) {
-    rows[r].querySelector('td:first-child').style.background = 'var(--accent)';
-    rows[r].querySelector('td:first-child').style.color = 'white';
-    rows[r].querySelectorAll('td').forEach((td,i) => { if (i > 0) td.style.background = 'var(--accent-light)'; });
-  }
-  // Highlight column
-  rows.forEach(tr => { const cells = tr.querySelectorAll('td'); if (cells[c+1]) cells[c+1].style.background = 'var(--accent-light)'; });
-  // Highlight header
-  const headers = tbl.querySelectorAll('thead th');
-  if (headers[c+1]) { headers[c+1].style.background = 'var(--accent-hover)'; }
-  
-  // Target cell
-  const cell = document.getElementById('d-' + r + '-' + c);
-  if (cell) {
-    cell.style.background = 'var(--accent)';
-    cell.style.color = 'white';
-    cell.style.fontWeight = '700';
-    cell.style.boxShadow = '0 0 0 2px var(--accent-mid)';
-    cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-  }
-  
-  const zStr = z.toFixed(2).replace('.', ',');
-  document.getElementById('direct-result').innerHTML = `P(Z &lt; ${zStr}) = <span style="font-size:1.2rem;">${prob.toFixed(4).replace('.', ',')}</span>`;
-  document.getElementById('direct-explanation').innerHTML = `Ligne <strong>${(r/10).toFixed(1).replace('.',',')}</strong> (partie entière + 1re décimale) × Colonne <strong>0,0${c}</strong> (2e décimale) → <strong>${prob.toFixed(4).replace('.',',')}</strong>`;
-}
-document.getElementById('direct-z-input').addEventListener('input', highlightDirect);
-
-// ═══ BUILD INVERSE TABLE (matching PDF format with P column left/right) ═══
-function buildInverseTable() {
-  const head = document.getElementById('tbl-inverse-head');
-  const body = document.getElementById('tbl-inverse-body');
-  const thStyle = 'padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:52px;position:sticky;top:0;z-index:2;font-weight:600;';
-  const thFirst = 'padding:0.35rem 0.4rem;background:var(--accent);color:white;text-align:center;min-width:36px;position:sticky;top:0;left:0;z-index:3;font-weight:600;';
-  
-  // Header: P | 0.000 | 0.001 | ... | 0.010 | +
-  let h = `<th style="${thFirst}">P</th>`;
-  for (let c = 0; c <= 10; c++) {
-    const label = c === 10 ? '0,010' : ('0,00' + c).replace('.', ',');
-    h += `<th style="${thStyle}">${label}</th>`;
-  }
-  h += `<th style="${thStyle}">+</th>`;
-  head.innerHTML = h;
-
-  // Rows: P from 0.00 to 0.49
-  for (let r = 0; r <= 49; r++) {
-    const pRow = r / 100;
-    const tr = document.createElement('tr');
-    const rowLabel = pRow.toFixed(2).replace('.', ',');
-    let cells = `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);position:sticky;left:0;z-index:1;border-right:1px solid var(--border);text-align:center;">${rowLabel}</td>`;
-    for (let c = 0; c <= 10; c++) {
-      const pVal = pRow + c / 1000;
-      let zVal;
-      if (pVal <= 0) zVal = Infinity;
-      else if (pVal >= 0.5) zVal = 0;
-      else zVal = -normalInvCDF(pVal); // Positive z for the table
-      const display = pVal <= 0 ? '∞' : (pVal >= 0.5 ? '0,0000' : zVal.toFixed(4).replace('.', ','));
-      cells += `<td id="i-${r}-${c}" style="padding:0.35rem 0.4rem;text-align:center;border-bottom:1px solid var(--border);transition:background 0.2s;">${display}</td>`;
-    }
-    // + column: complement probability (matching PDF format)
-    // Row 0.00 → + = 0.99, Row 0.01 → + = 0.98, ..., Row 0.49 → + = 0.5
-    const pRight = (1 - pRow - 0.01).toFixed(2).replace('.', ',');
-    const pRightDisplay = r === 49 ? '0,5' : (r === 0 ? '0,99' : pRight);
-    cells += `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);text-align:center;border-left:1px solid var(--border);">${pRightDisplay}</td>`;
-    tr.innerHTML = cells;
-    body.appendChild(tr);
-  }
-  // Last row: − | 0,01 | 0,009 | ... | 0 | P
-  const lastTr = document.createElement('tr');
-  let lastCells = `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);position:sticky;left:0;z-index:1;border-right:1px solid var(--border);text-align:center;">−</td>`;
-  const lastLabels = ['0,01','0,009','0,008','0,007','0,006','0,005','0,004','0,003','0,002','0,001','0'];
-  lastLabels.forEach(l => { lastCells += `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);text-align:center;border-top:2px solid var(--border);">${l}</td>`; });
-  lastCells += `<td style="padding:0.35rem 0.4rem;font-weight:700;background:var(--accent);color:white;text-align:center;">P</td>`;
-  lastTr.innerHTML = lastCells;
-  body.appendChild(lastTr);
-  
-  document.getElementById('tbl-inverse').dataset.built = '1';
-  highlightInverse();
-}
-
-function highlightInverse() {
-  const tbl = document.getElementById('tbl-inverse');
-  if (!tbl.dataset.built) return;
-  // Reset all styles
-  tbl.querySelectorAll('td').forEach(td => { td.style.background = ''; td.style.color = ''; td.style.fontWeight = ''; td.style.boxShadow = ''; });
-  tbl.querySelectorAll('tbody td:first-child').forEach(td => { td.style.background = 'var(--bg-accent)'; });
-  const allRows = tbl.querySelectorAll('tbody tr');
-  const lastRow = allRows[allRows.length - 1]; // the − row
-  if (lastRow) lastRow.querySelectorAll('td').forEach(td => { td.style.background = 'var(--bg-accent)'; });
-  // Restore + column styling
-  allRows.forEach(tr => { const cells = tr.querySelectorAll('td'); const last = cells[cells.length-1]; if(last) last.style.background='var(--bg-accent)'; });
-
-  const pInput = parseFloat(document.getElementById('inverse-p-input').value);
-  if (isNaN(pInput) || pInput <= 0 || pInput >= 1) return;
-  
-  let pSearch, zResult, useRightSide;
-  if (pInput >= 0.5) {
-    pSearch = 1 - pInput; // e.g. P=0.75 → pSearch=0.25
-    zResult = normalInvCDF(pInput); // positive z
-    useRightSide = true;
-  } else {
-    pSearch = pInput;
-    zResult = normalInvCDF(pInput); // negative z
-    useRightSide = false;
-  }
-  
-  // Find row and column from pSearch
-  const r = Math.floor(pSearch * 100); // e.g. 0.25 → row 25
-  const c = Math.round((pSearch * 1000) % 10); // e.g. 0.253 → col 3
-  
-  const rows = tbl.querySelectorAll('tbody tr');
-  const numDataRows = 50; // rows 0-49
-
-  if (useRightSide) {
-    // P > 0.5: highlight the + column (last col) and the − row (last row)
-    // The student reads: find pInput in the + column, find the thousandths in the − row
-    
-    // Highlight the + column (rightmost) in all data rows
-    for (let ri = 0; ri < numDataRows; ri++) {
-      if (!rows[ri]) continue;
-      const cells = rows[ri].querySelectorAll('td');
-      const plusCell = cells[cells.length - 1]; // + column
-      if (plusCell) plusCell.style.background = 'var(--accent-light)';
-    }
-    
-    // Highlight the − row (last row) 
-    if (lastRow) {
-      lastRow.querySelectorAll('td').forEach(td => { td.style.background = 'var(--accent-light)'; });
-    }
-    
-    // Highlight the specific + cell for this row (where P matches)
-    if (rows[r]) {
-      const cells = rows[r].querySelectorAll('td');
-      const plusCell = cells[cells.length - 1];
-      if (plusCell) {
-        plusCell.style.background = 'var(--accent)';
-        plusCell.style.color = 'white';
-        plusCell.style.fontWeight = '700';
-      }
-      // Also highlight the entire row lightly
-      cells.forEach((td, i) => { if (i > 0 && i <= 11) td.style.background = 'var(--accent-light)'; });
-    }
-    
-    // Highlight the − row cell for the column
-    if (lastRow) {
-      const lastCells = lastRow.querySelectorAll('td');
-      if (lastCells[c + 1]) {
-        lastCells[c + 1].style.background = 'var(--accent)';
-        lastCells[c + 1].style.color = 'white';
-        lastCells[c + 1].style.fontWeight = '700';
-      }
-    }
-    
-    // Highlight the column through all rows
-    for (let ri = 0; ri < numDataRows; ri++) {
-      if (!rows[ri]) continue;
-      const cells = rows[ri].querySelectorAll('td');
-      if (cells[c + 1]) cells[c + 1].style.background = 'var(--accent-light)';
-    }
-    
-    // Highlight target cell
-    const cell = document.getElementById('i-' + r + '-' + c);
-    if (cell) {
-      cell.style.background = 'var(--accent)';
-      cell.style.color = 'white';
-      cell.style.fontWeight = '700';
-      cell.style.boxShadow = '0 0 0 2px var(--accent-mid)';
-      cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-    }
-    
-    const zAbs = Math.abs(zResult);
-    document.getElementById('inverse-result').innerHTML = `z = <span style="font-size:1.2rem;">${zResult.toFixed(4).replace('.', ',')}</span>`;
-    document.getElementById('inverse-explanation').innerHTML = 
-      `P = ${pInput.toFixed(4).replace('.',',')} &gt; 0,5 → on utilise la <strong>colonne de droite (+)</strong> et la <strong>dernière ligne (−)</strong>.<br>` +
-      `On cherche <strong>${pInput.toFixed(2).replace('.',',')}</strong> dans la colonne <strong>+</strong> → ligne <strong>${(r/100).toFixed(2).replace('.',',')}</strong>.<br>` +
-      `On cherche la 3e décimale dans la ligne <strong>−</strong> → colonne <strong>${(c/1000).toFixed(3).replace('.',',')}</strong>.<br>` +
-      `L'intersection donne z = <strong>${zAbs.toFixed(4).replace('.',',')}</strong>. Comme P &gt; 0,5, z reste positif → z = <strong>${zResult.toFixed(4).replace('.',',')}</strong>.`;
-      
-  } else {
-    // P < 0.5: use first column and first row (standard reading)
-    
-    // Highlight the P column (first col)
-    for (let ri = 0; ri < numDataRows; ri++) {
-      if (!rows[ri]) continue;
-      const cells = rows[ri].querySelectorAll('td');
-      if (cells[0]) cells[0].style.background = 'var(--accent-light)';
-    }
-    
-    // Highlight row
-    if (rows[r]) {
-      rows[r].querySelector('td:first-child').style.background = 'var(--accent)';
-      rows[r].querySelector('td:first-child').style.color = 'white';
-      rows[r].querySelector('td:first-child').style.fontWeight = '700';
-      rows[r].querySelectorAll('td').forEach((td, i) => { if (i > 0 && i <= 11) td.style.background = 'var(--accent-light)'; });
-    }
-    
-    // Highlight column header
-    const headers = tbl.querySelectorAll('thead th');
-    if (headers[c + 1]) { headers[c + 1].style.background = 'var(--accent-hover)'; }
-    
-    // Highlight column
-    for (let ri = 0; ri < numDataRows; ri++) {
-      if (!rows[ri]) continue;
-      const cells = rows[ri].querySelectorAll('td');
-      if (cells[c + 1]) cells[c + 1].style.background = 'var(--accent-light)';
-    }
-    
-    // Target cell
-    const cell = document.getElementById('i-' + r + '-' + c);
-    if (cell) {
-      cell.style.background = 'var(--accent)';
-      cell.style.color = 'white';
-      cell.style.fontWeight = '700';
-      cell.style.boxShadow = '0 0 0 2px var(--accent-mid)';
-      cell.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-    }
-    
-    const zAbs = Math.abs(zResult);
-    document.getElementById('inverse-result').innerHTML = `z = <span style="font-size:1.2rem;">${zResult.toFixed(4).replace('.', ',')}</span>`;
-    document.getElementById('inverse-explanation').innerHTML = 
-      `P = ${pInput.toFixed(4).replace('.',',')} &lt; 0,5 → on utilise la <strong>première colonne (P)</strong> et la <strong>première ligne</strong>.<br>` +
-      `On cherche P = <strong>${pSearch.toFixed(2).replace('.',',')}</strong> dans la colonne P → ligne <strong>${(r/100).toFixed(2).replace('.',',')}</strong>.<br>` +
-      `On cherche la 3e décimale → colonne <strong>${(c/1000).toFixed(3).replace('.',',')}</strong>.<br>` +
-      `L'intersection donne z = <strong>${zAbs.toFixed(4).replace('.',',')}</strong>. Comme P &lt; 0,5, z est négatif → z = <strong>${zResult.toFixed(4).replace('.',',')}</strong>.`;
-  }
-}
-document.getElementById('inverse-p-input').addEventListener('input', highlightInverse);
+document.getElementById('inverse-p-input').addEventListener('input',highlightInverse);
 </script>
 
-<!-- TABLE DIRECTE -->
+<!-- ═══ SECTION 1 : TABLE DIRECTE ═══ -->
 <div class="card" id="sec-directe">
-  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-directe-content', this)" style="margin-bottom:0;"><span class="num">1</span> Table directe — Trouver P sachant z <span class="collapse-arrow">▼</span></h2>
+  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-directe-content',this)" style="margin-bottom:0;"><span class="num">1</span> Table directe — Trouver P sachant z <span class="collapse-arrow">▼</span></h2>
 <div id="sec-directe-content" class="section-content" style="margin-top:1rem;">
-  <p style="color:var(--text-muted);margin-bottom:1rem;">La table donne toujours <strong>P(Z &lt; z)</strong> pour z &ge; 0. On utilise <strong>z = 1.25</strong> partout pour voir les liens.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;">La table donne toujours <strong>P(Z &lt; z)</strong> pour z ≥ 0. On utilise <strong>z = 1.25</strong> partout.</p>
+  <div class="card" style="margin-bottom:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas 1</span><strong>P(Z &lt; z)</strong> avec z positif <span class="rule-tag">lecture directe</span></div><p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">Le plus simple : tu lis directement dans la table.</p><div class="formula-box">P(Z &lt; 1.25) → lecture directe → <strong>0.8944</strong></div><div class="case-graph"><canvas id="c-cas1"></canvas><div class="graph-label">Aire bleue = P(Z &lt; 1.25) = 0.8944</div></div></div>
+  <div class="card" style="margin-bottom:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas 2</span><strong>P(Z &gt; z)</strong> avec z positif <span class="rule-tag">1 − P(Z &lt; z)</span></div><p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">On veut l'aire à droite. Comme l'aire totale = 1 :</p><div class="formula-box">P(Z &gt; 1.25) = 1 − P(Z &lt; 1.25) = 1 − 0.8944 = <strong>0.1056</strong></div><div class="case-grid"><div class="case-graph"><canvas id="c-cas2a"></canvas><div class="graph-label">P(Z &lt; 1.25) = 0.8944</div></div><div class="case-graph"><canvas id="c-cas2b"></canvas><div class="graph-label">1 − 0.8944 = 0.1056</div></div></div><p style="font-size:0.85rem;color:var(--text-hint);margin-top:0.25rem;text-align:center;">Bleue + rouge = 1</p></div>
+  <div class="card" style="margin-bottom:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas 3</span><strong>P(Z &lt; −z)</strong> z négatif <span class="rule-tag">= P(Z &gt; z) = 1 − P(Z &lt; z)</span></div><p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">Pas de z négatif dans la table ! On utilise la <strong>symétrie</strong>.</p><div class="formula-box">P(Z &lt; −1.25) = P(Z &gt; 1.25) = 1 − 0.8944 = <strong>0.1056</strong></div><div class="case-grid"><div class="case-graph"><canvas id="c-cas3a"></canvas><div class="graph-label">P(Z &lt; −1.25)</div></div><div class="case-graph"><canvas id="c-cas3b"></canvas><div class="graph-label">P(Z &gt; 1.25) — même aire !</div></div></div><p style="font-size:0.85rem;color:var(--accent);font-weight:600;margin-top:0.5rem;text-align:center;">↔ Les deux aires rouges sont identiques (symétrie)</p></div>
+  <div class="card" style="margin-bottom:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas 4</span><strong>P(Z &gt; −z)</strong> <span class="rule-tag">= P(Z &lt; z) → lecture directe</span></div><p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">Symétrie : l'aire à droite de −1.25 = l'aire à gauche de +1.25.</p><div class="formula-box">P(Z &gt; −1.25) = P(Z &lt; 1.25) = <strong>0.8944</strong></div><div class="case-grid"><div class="case-graph"><canvas id="c-cas4a"></canvas><div class="graph-label">P(Z &gt; −1.25)</div></div><div class="case-graph"><canvas id="c-cas4b"></canvas><div class="graph-label">P(Z &lt; 1.25) — même aire !</div></div></div></div>
+  <div class="card" style="margin-bottom:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas 5</span><strong>P(z1 &lt; Z &lt; z2)</strong> encadrement <span class="rule-tag">P(Z &lt; z2) − P(Z &lt; z1)</span></div><p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">On prend l'aire à gauche de z2, puis on retire l'aire à gauche de z1 :</p><div class="formula-box">P(0.50 &lt; Z &lt; 1.25) = P(Z &lt; 1.25) − P(Z &lt; 0.50) = 0.8944 − 0.6915 = <strong>0.2029</strong></div><div class="encadrement-grid"><div class="case-graph"><canvas id="c-cas5a"></canvas><div class="graph-label">P(Z &lt; 1.25)</div></div><div class="op">−</div><div class="case-graph"><canvas id="c-cas5b"></canvas><div class="graph-label">P(Z &lt; 0.50)</div></div><div class="op">=</div><div class="case-graph"><canvas id="c-cas5c"></canvas><div class="graph-label">P(0.50&lt;Z&lt;1.25)</div></div></div></div>
+</div></div>
 
-  <div class="card" style="margin-bottom:1.25rem;">
-    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas 1</span><strong>P(Z &lt; z)</strong> avec z positif <span class="rule-tag">lecture directe</span></div>
-    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">Le plus simple : tu lis directement dans la table. L'aire bleue = probabilité cherchée.</p>
-    <div class="formula-box">P(Z &lt; 1.25) → lecture directe → <strong>0.8944</strong></div>
-    <div class="case-graph"><canvas id="c-cas1"></canvas><div class="graph-label">Aire bleue = P(Z &lt; 1.25) = 0.8944</div></div>
-  </div>
-
-  <div class="card" style="margin-bottom:1.25rem;">
-    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas 2</span><strong>P(Z &gt; z)</strong> avec z positif <span class="rule-tag">1 − P(Z &lt; z)</span></div>
-    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">On veut l'aire à droite. Comme l'aire totale = 1 :</p>
-    <div class="formula-box">P(Z &gt; 1.25) = 1 − P(Z &lt; 1.25) = 1 − 0.8944 = <strong>0.1056</strong></div>
-    <div class="case-grid">
-      <div class="case-graph"><canvas id="c-cas2a"></canvas><div class="graph-label">Aire bleue = P(Z &lt; 1.25) = 0.8944</div></div>
-      <div class="case-graph"><canvas id="c-cas2b"></canvas><div class="graph-label">Aire rouge = 1 − 0.8944 = 0.1056</div></div>
-    </div>
-    <p style="font-size:0.85rem;color:var(--text-hint);margin-top:0.25rem;text-align:center;">Bleue + rouge = 1 (toute l'aire sous la courbe)</p>
-  </div>
-
-  <div class="card" style="margin-bottom:1.25rem;">
-    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas 3</span><strong>P(Z &lt; −z)</strong> z négatif <span class="rule-tag">= P(Z &gt; z) = 1 − P(Z &lt; z)</span></div>
-    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">Pas de z négatif dans la table ! On utilise la <strong>symétrie</strong> : l'aire à gauche de −1.25 = l'aire à droite de +1.25.</p>
-    <div class="formula-box">P(Z &lt; −1.25) = P(Z &gt; 1.25) = 1 − 0.8944 = <strong>0.1056</strong></div>
-    <div class="case-grid">
-      <div class="case-graph"><canvas id="c-cas3a"></canvas><div class="graph-label">P(Z &lt; −1.25) — aire à gauche</div></div>
-      <div class="case-graph"><canvas id="c-cas3b"></canvas><div class="graph-label">P(Z &gt; 1.25) — même aire par symétrie !</div></div>
-    </div>
-    <p style="font-size:0.85rem;color:var(--accent);font-weight:600;margin-top:0.5rem;text-align:center;">↔ Les deux aires rouges sont identiques (symétrie)</p>
-  </div>
-
-  <div class="card" style="margin-bottom:1.25rem;">
-    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas 4</span><strong>P(Z &gt; −z)</strong> <span class="rule-tag">= P(Z &lt; z) → lecture directe</span></div>
-    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">Symétrie encore : l'aire à droite de −1.25 = l'aire à gauche de +1.25.</p>
-    <div class="formula-box">P(Z &gt; −1.25) = P(Z &lt; 1.25) = <strong>0.8944</strong></div>
-    <div class="case-grid">
-      <div class="case-graph"><canvas id="c-cas4a"></canvas><div class="graph-label">P(Z &gt; −1.25) — aire à droite</div></div>
-      <div class="case-graph"><canvas id="c-cas4b"></canvas><div class="graph-label">P(Z &lt; 1.25) — même aire !</div></div>
-    </div>
-  </div>
-
-  <div class="card" style="margin-bottom:1.25rem;">
-    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas 5</span><strong>P(z1 &lt; Z &lt; z2)</strong> encadrement <span class="rule-tag">P(Z &lt; z2) − P(Z &lt; z1)</span></div>
-    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">On prend l'aire à gauche de z2, puis on retire l'aire à gauche de z1 :</p>
-    <div class="formula-box">P(0.50 &lt; Z &lt; 1.25) = P(Z &lt; 1.25) − P(Z &lt; 0.50) = 0.8944 − 0.6915 = <strong>0.2029</strong></div>
-    <div class="encadrement-grid">
-      <div class="case-graph"><canvas id="c-cas5a"></canvas><div class="graph-label">P(Z &lt; 1.25)</div></div>
-      <div class="op">−</div>
-      <div class="case-graph"><canvas id="c-cas5b"></canvas><div class="graph-label">P(Z &lt; 0.50)</div></div>
-      <div class="op">=</div>
-      <div class="case-graph"><canvas id="c-cas5c"></canvas><div class="graph-label">P(0.50&lt;Z&lt;1.25)</div></div>
-    </div>
-  </div>
-</div><!-- close sec-directe-content -->
-</div>
-
-<!-- TABLE INVERSE -->
+<!-- ═══ SECTION 2 : TABLE INVERSE ═══ -->
 <div class="card" id="sec-inverse">
-  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-inverse-content', this)" style="margin-bottom:0;"><span class="num">2</span> Table inverse — Trouver z (ou x) sachant P <span class="collapse-arrow">▼</span></h2>
+  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-inverse-content',this)" style="margin-bottom:0;"><span class="num">2</span> Table inverse — Trouver z (ou x) sachant P <span class="collapse-arrow">▼</span></h2>
 <div id="sec-inverse-content" class="section-content" style="margin-top:1rem;">
-  <p style="color:var(--text-muted);margin-bottom:1.5rem;">On connaît l'aire (la probabilité) et on cherche <em>où placer la ligne verticale</em>. On utilise P = 0.75 et P = 0.25 pour montrer les liens.</p>
+  <p style="color:var(--text-muted);margin-bottom:1.5rem;">On connaît l'aire (la probabilité) et on cherche <em>où placer la ligne verticale</em>.</p>
+  <div class="card" style="margin-bottom:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas A</span><strong>P(Z &lt; z) = P &gt; 0.5</strong><span class="rule-tag">lecture directe</span></div><p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">P &gt; 0.5 → z est positif.</p><div class="formula-box">P(Z &lt; z) = 0.75 → table inverse → z = <strong>0.6745</strong></div><div class="case-graph"><canvas id="c-invA"></canvas><div class="graph-label">Aire (0.75) → z = 0.67</div></div></div>
+  <div class="card" style="margin-bottom:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas B</span><strong>P(Z &lt; z) = P &lt; 0.5</strong><span class="rule-tag">lecture puis −z</span></div><p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">P &lt; 0.5 → z est négatif. On lit dans la table puis on met −.</p><div class="formula-box">P(Z &lt; z) = 0.25 → table : 0.6745 → z = <strong>−0.6745</strong></div><div class="case-graph"><canvas id="c-invB"></canvas><div class="graph-label">Aire = 0.25 → z négatif = −0.67</div></div></div>
+  <div class="card" style="margin-bottom:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas C</span><strong>P(Z &gt; z) = P &gt; 0.5</strong><span class="rule-tag">lecture puis −z</span></div><p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">75% au-dessus de z → z à gauche de 0 → négatif.</p><div class="formula-box">P(Z &gt; z) = 0.75 → table : 0.6745 → z = <strong>−0.6745</strong></div><div class="case-graph"><canvas id="c-invC"></canvas><div class="graph-label">75% au-dessus → z = −0.67</div></div></div>
+  <div class="card" style="margin-bottom:1.25rem;"><div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas D</span><strong>P(Z &gt; z) = P &lt; 0.5</strong><span class="rule-tag">z positif</span></div><p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">On changerait le signe 2 fois → ça s'annule. z reste positif.</p><div class="formula-box">P(Z &gt; z) = 0.25 → table : 0.6745 → z = <strong>0.6745</strong></div><div class="case-graph"><canvas id="c-invD"></canvas><div class="graph-label">25% au-dessus → z = 0.67</div></div></div>
+  <div class="card card-warning" style="margin-top:1.5rem;"><h3 style="font-family:var(--font-heading);font-weight:500;color:var(--warning);margin-bottom:0.5rem;">N'oublie pas de retransformer z en x !</h3><p style="font-size:0.9rem;color:var(--text-muted);">Si l'énoncé demande x (pas z) → formule 2 :</p><div class="formula-box" style="text-align:center;font-size:1rem;">x = (z × s) + m</div></div>
+</div></div>
 
-  <div class="card" style="margin-bottom:1.25rem;">
-    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas A</span><strong>P(Z &lt; z) = P &gt; 0.5</strong><span class="rule-tag">lecture directe</span></div>
-    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">P &gt; 0.5 → z est positif (à droite de 0).</p>
-    <div class="formula-box">P(Z &lt; z) = 0.75 → table inverse → z = <strong>0.6745</strong></div>
-    <div class="case-graph"><canvas id="c-invA"></canvas><div class="graph-label">On connaît l'aire (0.75) → z = 0.67</div></div>
-  </div>
-
-  <div class="card" style="margin-bottom:1.25rem;">
-    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas B</span><strong>P(Z &lt; z) = P &lt; 0.5</strong><span class="rule-tag">lecture puis −z</span></div>
-    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">P &lt; 0.5 → z est négatif (à gauche de 0). On lit dans la table puis on met −.</p>
-    <div class="formula-box">P(Z &lt; z) = 0.25 → table : 0.6745 → z = <strong>−0.6745</strong></div>
-    <div class="case-graph"><canvas id="c-invB"></canvas><div class="graph-label">Aire = 0.25 à gauche → z est négatif = −0.67</div></div>
-  </div>
-
-  <div class="card" style="margin-bottom:1.25rem;">
-    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas C</span><strong>P(Z &gt; z) = P &gt; 0.5</strong><span class="rule-tag">lecture puis −z</span></div>
-    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">75% au-dessus de z → z doit être à gauche de 0 → négatif.</p>
-    <div class="formula-box">P(Z &gt; z) = 0.75 → table : 0.6745 → z = <strong>−0.6745</strong></div>
-    <div class="case-graph"><canvas id="c-invC"></canvas><div class="graph-label">75% au-dessus → z est à gauche = −0.67</div></div>
-  </div>
-
-  <div class="card" style="margin-bottom:1.25rem;">
-    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;"><span class="badge badge-info">Cas D</span><strong>P(Z &gt; z) = P &lt; 0.5</strong><span class="rule-tag">z positif (2 changements s'annulent)</span></div>
-    <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:0.5rem;">On changerait le signe 2 fois → ça s'annule. z reste positif.</p>
-    <div class="formula-box">P(Z &gt; z) = 0.25 → table : 0.6745 → z = <strong>0.6745</strong></div>
-    <div class="case-graph"><canvas id="c-invD"></canvas><div class="graph-label">25% au-dessus → z est à droite = 0.67</div></div>
-  </div>
-
-  <div class="card card-warning" style="margin-top:1.5rem;">
-    <h3 style="font-family:var(--font-heading);font-weight:500;color:var(--warning);margin-bottom:0.5rem;">N'oublie pas de retransformer z en x !</h3>
-    <p style="font-size:0.9rem;color:var(--text-muted);">Si l'énoncé demande x (pas z) → formule 2 :</p>
-    <div class="formula-box" style="text-align:center;font-size:1rem;">x = (z × s) + m</div>
-  </div>
-</div><!-- close sec-inverse-content -->
-</div>
-
-<!-- ATYPIQUE -->
+<!-- ═══ SECTION 3 : ATYPIQUE ═══ -->
 <div class="card" id="sec-atypique">
-  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-atypique-content', this)" style="margin-bottom:0;"><span class="num">3</span> Valeurs atypiques <span class="collapse-arrow">▼</span></h2>
+  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-atypique-content',this)" style="margin-bottom:0;"><span class="num">3</span> Valeurs atypiques <span class="collapse-arrow">▼</span></h2>
 <div id="sec-atypique-content" class="section-content" style="margin-top:1rem;">
   <div class="formula-box" style="text-align:center;font-size:1.1rem;margin-bottom:1rem;"><strong>|z| &gt; 2</strong> → valeur atypique</div>
   <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:0.75rem;">~4.6% des valeurs tombent dans les zones rouges (2.3% de chaque côté).</p>
   <div class="case-graph"><canvas id="c-atypique"></canvas><div class="graph-label">Zones rouges : |z| &gt; 2 → valeurs atypiques</div></div>
-</div><!-- close sec-atypique-content -->
-</div>
+</div></div>
 
-<!-- SYMETRIE -->
+<!-- ═══ SECTION 4 : SYMETRIE ═══ -->
 <div class="card" id="sec-symetrie">
-  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-symetrie-content', this)" style="margin-bottom:0;"><span class="num">4</span> Propriété de symétrie <span class="collapse-arrow">▼</span></h2>
+  <h2 class="section-title collapsible-section" onclick="toggleSection('sec-symetrie-content',this)" style="margin-bottom:0;"><span class="num">4</span> Propriété de symétrie <span class="collapse-arrow">▼</span></h2>
 <div id="sec-symetrie-content" class="section-content" style="margin-top:1rem;">
   <div class="formula-box">P(Z &lt; −z) = P(Z &gt; z) &nbsp;|&nbsp; P(Z &gt; −z) = P(Z &lt; z)</div>
-  <p style="font-size:0.9rem;color:var(--text-muted);margin:1rem 0 0.5rem;">
-    <strong>Exemple :</strong> QI ~ N(100, 15). P(100 &lt; X &lt; 110) = P(90 &lt; X &lt; 100) car 110 et 90 sont à 10 points de la moyenne.
-  </p>
+  <p style="font-size:0.9rem;color:var(--text-muted);margin:1rem 0 0.5rem;"><strong>Exemple :</strong> QI ~ N(100, 15). P(100 &lt; X &lt; 110) = P(90 &lt; X &lt; 100) car 110 et 90 sont à 10 points de la moyenne.</p>
   <div class="case-grid">
     <div class="case-graph"><canvas id="c-sym1"></canvas><div class="graph-label">P(100 &lt; X &lt; 110) ≈ 24.86%</div></div>
     <div class="case-graph"><canvas id="c-sym2"></canvas><div class="graph-label">P(90 &lt; X &lt; 100) ≈ 24.86%</div></div>
   </div>
   <p style="font-size:0.85rem;color:var(--accent);font-weight:600;margin-top:0.5rem;text-align:center;">↔ Même écart à la moyenne = même probabilité !</p>
-</div><!-- close sec-symetrie-content -->
-</div>
+</div></div>
 
-<div style="text-align:center;margin-top:2rem;">
-  <a href="exercices-table.html" class="btn btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Passer aux exercices →</a>
-</div>
+<div style="text-align:center;margin-top:2rem;"><a href="exercices-table.html" class="btn btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Passer aux exercices →</a></div>
 
 <footer>
   Outil pédagogique — Statistiques L1 Psychologie — UCLy<br>
   Dr Adolphe Béquet · <a href="mailto:abequet@univ-catholyon.fr">abequet@univ-catholyon.fr</a><br>
   <a href="https://github.com/abequet/coursL1psyUCLY">Code source sur GitHub</a> · Licence MIT<br>
-  <img src="chat.jpg" alt="Le chat du prof" style="margin-top: 1rem; border-radius: 12px; max-width: 200px;">
+  <img src="chat.jpg" alt="Le chat du prof" style="margin-top:1rem;border-radius:12px;max-width:200px;">
 </footer>
-   
 </div>
 
 <script>
-function toggleSection(id, header) {
-  const el = document.getElementById(id);
-  const arrow = header.querySelector('.collapse-arrow');
-  if (el.classList.contains('open')) {
-    el.classList.remove('open');
-    arrow.classList.remove('open');
-  } else {
-    el.classList.add('open');
-    arrow.classList.add('open');
-    setTimeout(drawAll, 50);
-  }
-}
-
-function drawAll() {
-  drawMiniCurve('c-cas1', { fillFrom:-4, fillTo:1.25, probLabel:'0.8944' });
-  drawMiniCurve('c-cas2a', { fillFrom:-4, fillTo:1.25, probLabel:'0.8944' });
-  drawMiniCurve('c-cas2b', { fillFrom:1.25, fillTo:4, fillColor:'rgba(192,57,43,0.2)', probLabel:'0.1056' });
-  drawMiniCurve('c-cas3a', { fillFrom:-4, fillTo:-1.25, fillColor:'rgba(192,57,43,0.2)', probLabel:'0.1056' });
-  drawMiniCurve('c-cas3b', { fillFrom:1.25, fillTo:4, fillColor:'rgba(192,57,43,0.2)', probLabel:'0.1056' });
-  drawMiniCurve('c-cas4a', { fillFrom:-1.25, fillTo:4, probLabel:'0.8944' });
-  drawMiniCurve('c-cas4b', { fillFrom:-4, fillTo:1.25, probLabel:'0.8944' });
-  drawMiniCurve('c-cas5a', { fillFrom:-4, fillTo:1.25, probLabel:'0.8944', height:140 });
-  drawMiniCurve('c-cas5b', { fillFrom:-4, fillTo:0.50, probLabel:'0.6915', height:140 });
-  drawMiniCurve('c-cas5c', { fillFrom:0.50, fillTo:1.25, fillColor:'rgba(29,122,78,0.25)', probLabel:'0.2029', height:140 });
-  drawMiniCurve('c-invA', { fillFrom:-4, fillTo:0.6745, probLabel:'0.75' });
-  drawMiniCurve('c-invB', { fillFrom:-4, fillTo:-0.6745, fillColor:'rgba(192,57,43,0.2)', probLabel:'0.25' });
-  drawMiniCurve('c-invC', { fillFrom:-0.6745, fillTo:4, probLabel:'0.75' });
-  drawMiniCurve('c-invD', { fillFrom:0.6745, fillTo:4, fillColor:'rgba(192,57,43,0.2)', probLabel:'0.25' });
-
-  // Atypique
-  drawMiniCurve('c-atypique', { height:200 });
-  const canvas = document.getElementById('c-atypique');
-  if(!canvas) return;
-  const dpr=window.devicePixelRatio||1, w=canvas.width/dpr, h=canvas.height/dpr;
-  const pad={top:20,right:20,bottom:40,left:20}, yMax=normalPDF(0)*1.15, pb=h-pad.bottom;
-  function xp(z){return pad.left+((z+4)/8)*(w-pad.left-pad.right);}
-  function yp(y){return pad.top+(1-y/yMax)*(h-pad.top-pad.bottom);}
-  const ctx=canvas.getContext('2d');
-  ctx.save(); ctx.setTransform(dpr,0,0,dpr,0,0);
-  [[-4,-2],[2,4]].forEach(([a,b])=>{ctx.beginPath();for(let i=0;i<=60;i++){const z=a+(b-a)*i/60;if(i===0)ctx.moveTo(xp(z),pb);ctx.lineTo(xp(z),yp(normalPDF(z)));}ctx.lineTo(xp(b),pb);ctx.closePath();ctx.fillStyle='rgba(192,57,43,0.25)';ctx.fill();});
+function toggleSection(id,header){var el=document.getElementById(id),arrow=header.querySelector('.collapse-arrow');if(el.classList.contains('open')){el.classList.remove('open');arrow.classList.remove('open')}else{el.classList.add('open');arrow.classList.add('open');setTimeout(drawAll,50)}}
+function drawAll(){
+  drawMiniCurve('c-cas1',{fillFrom:-4,fillTo:1.25,probLabel:'0.8944'});
+  drawMiniCurve('c-cas2a',{fillFrom:-4,fillTo:1.25,probLabel:'0.8944'});
+  drawMiniCurve('c-cas2b',{fillFrom:1.25,fillTo:4,fillColor:'rgba(192,57,43,0.2)',probLabel:'0.1056'});
+  drawMiniCurve('c-cas3a',{fillFrom:-4,fillTo:-1.25,fillColor:'rgba(192,57,43,0.2)',probLabel:'0.1056'});
+  drawMiniCurve('c-cas3b',{fillFrom:1.25,fillTo:4,fillColor:'rgba(192,57,43,0.2)',probLabel:'0.1056'});
+  drawMiniCurve('c-cas4a',{fillFrom:-1.25,fillTo:4,probLabel:'0.8944'});
+  drawMiniCurve('c-cas4b',{fillFrom:-4,fillTo:1.25,probLabel:'0.8944'});
+  drawMiniCurve('c-cas5a',{fillFrom:-4,fillTo:1.25,probLabel:'0.8944',height:140});
+  drawMiniCurve('c-cas5b',{fillFrom:-4,fillTo:0.50,probLabel:'0.6915',height:140});
+  drawMiniCurve('c-cas5c',{fillFrom:0.50,fillTo:1.25,fillColor:'rgba(29,122,78,0.25)',probLabel:'0.2029',height:140});
+  drawMiniCurve('c-invA',{fillFrom:-4,fillTo:0.6745,probLabel:'0.75'});
+  drawMiniCurve('c-invB',{fillFrom:-4,fillTo:-0.6745,fillColor:'rgba(192,57,43,0.2)',probLabel:'0.25'});
+  drawMiniCurve('c-invC',{fillFrom:-0.6745,fillTo:4,probLabel:'0.75'});
+  drawMiniCurve('c-invD',{fillFrom:0.6745,fillTo:4,fillColor:'rgba(192,57,43,0.2)',probLabel:'0.25'});
+  drawMiniCurve('c-atypique',{height:200});
+  var canvas=document.getElementById('c-atypique');if(!canvas)return;
+  var dpr=window.devicePixelRatio||1,w=canvas.width/dpr,h=canvas.height/dpr,pad={top:20,right:20,bottom:40,left:20},yMax=normalPDF(0)*1.15,pb=h-pad.bottom;
+  function xp(z){return pad.left+((z+4)/8)*(w-pad.left-pad.right)}function yp(y){return pad.top+(1-y/yMax)*(h-pad.top-pad.bottom)}
+  var ctx=canvas.getContext('2d');ctx.save();ctx.setTransform(dpr,0,0,dpr,0,0);
+  [[-4,-2],[2,4]].forEach(function(ab){var a=ab[0],b=ab[1];ctx.beginPath();for(var i=0;i<=60;i++){var z=a+(b-a)*i/60;if(i===0)ctx.moveTo(xp(z),pb);ctx.lineTo(xp(z),yp(normalPDF(z)))}ctx.lineTo(xp(b),pb);ctx.closePath();ctx.fillStyle='rgba(192,57,43,0.25)';ctx.fill()});
   ctx.font="600 12px 'DM Sans',sans-serif";ctx.textAlign='center';ctx.fillStyle='#3D52A0';ctx.fillText('~95.4%',xp(0),yp(normalPDF(0))+20);
   ctx.fillStyle='#C0392B';ctx.font="600 11px 'DM Mono',monospace";ctx.fillText('2.3%',xp(-3),yp(normalPDF(-3))-5);ctx.fillText('2.3%',xp(3),yp(normalPDF(3))-5);
   ctx.setLineDash([4,4]);ctx.strokeStyle='#C0392B';ctx.lineWidth=1.5;
-  [[-2],[2]].flat().forEach(z=>{ctx.beginPath();ctx.moveTo(xp(z),pad.top);ctx.lineTo(xp(z),pb);ctx.stroke();});
-  ctx.restore();
-
-  // Symmetry
-  drawMiniCurve('c-sym1', { mu:100, sigma:15, fillFrom:100, fillTo:110, fillColor:'rgba(61,82,160,0.25)', probLabel:'24.86%', showX:true, height:200 });
-  drawMiniCurve('c-sym2', { mu:100, sigma:15, fillFrom:90, fillTo:100, fillColor:'rgba(61,82,160,0.25)', probLabel:'24.86%', showX:true, height:200 });
+  [-2,2].forEach(function(z){ctx.beginPath();ctx.moveTo(xp(z),pad.top);ctx.lineTo(xp(z),pb);ctx.stroke()});ctx.restore();
+  drawMiniCurve('c-sym1',{mu:100,sigma:15,fillFrom:100,fillTo:110,fillColor:'rgba(61,82,160,0.25)',probLabel:'24.86%',showX:true,height:200});
+  drawMiniCurve('c-sym2',{mu:100,sigma:15,fillFrom:90,fillTo:100,fillColor:'rgba(61,82,160,0.25)',probLabel:'24.86%',showX:true,height:200});
 }
-
-window.addEventListener('load', drawAll);
-window.addEventListener('resize', drawAll);
+window.addEventListener('load',drawAll);window.addEventListener('resize',drawAll);
 </script>
 </body>
 </html>
