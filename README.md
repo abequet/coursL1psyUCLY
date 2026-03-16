@@ -18,6 +18,7 @@ Le site est organisé en 6 pages HTML autonomes :
 - Navigation vers toutes les sections
 
 ### 2. Fiches de cours (`cours.html`)
+- **Navigation dans les tables directe et inverse** : Illustration dynamique de la façon dont on trouve une valeur dans les tables directe et inverse et explications associées
 - **Table directe** : les 5 cas de figure (P(Z<z), P(Z>z), P(Z<−z), P(Z>−z), encadrement), chacun illustré par des mini-graphiques de la courbe normale avec les aires colorées
 - **Table inverse** : les 4 cas (P<0.5 / P>0.5 × P(<) / P(>)), avec graphiques montrant "on connaît l'aire, on cherche z"
 - **Valeurs atypiques** : critère |z| > 2, illustration avec zones rouges
