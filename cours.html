@@ -1097,10 +1097,11 @@ function buildInverseTable() {
       const display = pVal <= 0 ? '∞' : (pVal >= 0.5 ? '0,0000' : zVal.toFixed(4).replace('.', ','));
       cells += `<td id="i-${r}-${c}" style="padding:0.35rem 0.4rem;text-align:center;border-bottom:1px solid var(--border);transition:background 0.2s;">${display}</td>`;
     }
-    // + column: P value for the right side (1 - left P)
-    const pPlus = 1 - pRow / 1 - 0; // Actually it's (1 - P_row starting from bottom)
-    const pRight = (1 - pRow).toFixed(2).replace('.', ',');
-    cells += `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);text-align:center;border-left:1px solid var(--border);">${r === 0 ? '' : pRight}</td>`;
+    // + column: complement probability (matching PDF format)
+    // Row 0.00 → + = 0.99, Row 0.01 → + = 0.98, ..., Row 0.49 → + = 0.5
+    const pRight = (1 - pRow - 0.01).toFixed(2).replace('.', ',');
+    const pRightDisplay = r === 49 ? '0,5' : (r === 0 ? '0,99' : pRight);
+    cells += `<td style="padding:0.35rem 0.4rem;font-weight:600;background:var(--bg-accent);text-align:center;border-left:1px solid var(--border);">${pRightDisplay}</td>`;
     tr.innerHTML = cells;
     body.appendChild(tr);
   }
