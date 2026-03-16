@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercices — Problèmes contextualisés</title>
+<style>
+/* ═══════════════════════════════════════
+   Loi Normale — Site de révisions L1 Psycho
+   Shared stylesheet
+   ═══════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&display=swap');
+
+:root {
+  --bg: #FAF9F6;
+  --bg-card: #FFFFFF;
+  --bg-accent: #F0EDE6;
+  --bg-input: #F7F5F0;
+  --text: #1A1A18;
+  --text-muted: #4A4840;
+  --text-hint: #7A7770;
+  --accent: #3D52A0;
+  --accent-hover: #2F4390;
+  --accent-light: #E8ECF8;
+  --accent-mid: #7B8EC8;
+  --teal: #1D7A4E;
+  --teal-light: #E6F4ED;
+  --danger: #C0392B;
+  --danger-light: #FBEAEA;
+  --warning: #B8860B;
+  --warning-light: #FDF5E1;
+  --border: #E2DFD6;
+  --border-strong: #C9C5B8;
+  --shadow: 0 1px 3px rgba(26,26,24,0.06), 0 4px 12px rgba(26,26,24,0.04);
+  --shadow-lg: 0 4px 16px rgba(26,26,24,0.08), 0 12px 40px rgba(26,26,24,0.06);
+  --radius: 10px;
+  --radius-lg: 16px;
+  --font-body: 'DM Sans', sans-serif;
+  --font-heading: 'Fraunces', serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  font-size: 16px;
+}
+
+/* ── Layout ── */
+.container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+/* ── Navigation ── */
+.site-nav {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.site-nav .nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 56px;
+  flex-wrap: wrap;
+}
+.site-nav .nav-brand {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+  margin-right: auto;
+}
+.site-nav .nav-links {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  list-style: none;
+}
+.site-nav .nav-links a {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: var(--radius);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.site-nav .nav-links a:hover { background: var(--bg-accent); color: var(--text); }
+.site-nav .nav-links a.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+
+/* ── Page header ── */
+.page-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, #3D52A0 0%, #5B6DB5 50%, #7B8EC8 100%);
+  border-radius: var(--radius-lg);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+.page-header h1 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+  position: relative;
+}
+.page-header p { font-size: 0.95rem; opacity: 0.85; position: relative; }
+.page-header .breadcrumb {
+  font-size: 0.82rem;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+.page-header .breadcrumb a { color: white; text-decoration: underline; }
+
+/* ── Section titles ── */
+.section-title {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.section-title .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+}
+.card.card-accent { border-left: 4px solid var(--accent); }
+.card.card-success { border-left: 4px solid var(--teal); }
+.card.card-warning { border-left: 4px solid var(--warning); }
+
+/* ── Formulas ── */
+.formula-card {
+  background: var(--warning-light);
+  border: 1px solid #E8D5A0;
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+.formula-card strong {
+  color: var(--warning);
+  font-family: var(--font-mono);
+}
+
+.formula-box {
+  background: var(--bg-accent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  margin: 0.75rem 0;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-secondary { background: var(--bg-accent); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+.btn-success { background: var(--teal); color: white; }
+.btn-success:hover { background: #166B41; }
+.btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+
+/* ── Form elements ── */
+.param-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+.param-group input, .param-group select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  background: var(--bg-input);
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.param-group input:focus, .param-group select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+/* ── Tables ── */
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+thead th {
+  background: var(--bg-accent);
+  padding: 0.7rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+tbody td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+}
+tbody tr:hover { background: var(--bg-accent); }
+
+/* ── Badges ── */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+}
+.badge-ok { background: var(--teal-light); color: var(--teal); }
+.badge-extreme { background: var(--danger-light); color: var(--danger); }
+.badge-info { background: var(--accent-light); color: var(--accent); }
+
+/* ── Exercise components ── */
+.exercise-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+.exercise-block .exercise-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.exercise-block .exercise-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.exercise-block .exercise-label {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+.exercise-block .exercise-difficulty {
+  margin-left: auto;
+}
+.exercise-block .exercise-context {
+  background: var(--bg-accent);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.exercise-block .question-block {
+  margin: 1rem 0;
+  padding: 0.75rem 0;
+}
+.exercise-block .question-text {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.exercise-block .answer-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+.exercise-block .answer-input input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  background: var(--bg-input);
+  flex: 1;
+  max-width: 300px;
+}
+.exercise-block .answer-input input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+/* ── Correction / solution reveal ── */
+.solution {
+  display: none;
+  margin-top: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--teal-light);
+  border: 1px solid #B8E0CC;
+  border-radius: var(--radius);
+  animation: slideDown 0.3s ease;
+}
+.solution.visible { display: block; }
+.solution .step {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  margin: 0.3rem 0;
+  padding: 0.2rem 0;
+  color: var(--text);
+}
+.solution .step-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--teal);
+  margin-top: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+.solution .result {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--teal);
+  font-family: var(--font-mono);
+  margin-top: 0.5rem;
+}
+.solution .explanation {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Feedback ── */
+.feedback-correct {
+  color: var(--teal);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+.feedback-incorrect {
+  color: var(--danger);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+/* ── Grid layouts ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .page-header h1 { font-size: 1.5rem; }
+  .site-nav .nav-links { gap: 0; }
+  .site-nav .nav-links a { padding: 0.3rem 0.5rem; font-size: 0.78rem; }
+}
+
+/* ── Home page cards ── */
+.nav-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.25s;
+  display: block;
+  box-shadow: var(--shadow);
+}
+.nav-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-mid);
+}
+.nav-card .card-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+.nav-card h3 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+.nav-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── Mini curve (canvas) ── */
+.mini-curve {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.mini-curve canvas { display: block; width: 100%; }
+
+/* ── Reveal btn ── */
+.btn-reveal {
+  background: none;
+  border: 1px dashed var(--border-strong);
+  color: var(--text-muted);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-reveal:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* ── Progress indicator ── */
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-accent);
+  border-radius: 3px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+.progress-bar .progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+/* ── Score tracker ── */
+.score-tracker {
+  position: sticky;
+  top: 60px;
+  z-index: 50;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+}
+.score-tracker .score-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.score-tracker .score-value {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.score-tracker .score-bar {
+  flex: 1;
+  min-width: 100px;
+  height: 8px;
+  background: var(--bg-accent);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.score-tracker .score-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+/* ── Footer ── */
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--text-hint);
+}
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* ── Tooltip style for rules ── */
+.rule-tag {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  margin-left: 0.25rem;
+}
+
+/* ── Table input for z-score exercises ── */
+.z-table-input {
+  width: 80px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  text-align: center;
+  background: var(--bg-input);
+}
+.z-table-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+.z-table-input.correct { border-color: var(--teal); background: var(--teal-light); }
+.z-table-input.incorrect { border-color: var(--danger); background: var(--danger-light); }
+
+</style>
+<style>
+.sol-graph { background: var(--bg-accent); border-radius: var(--radius); padding: 0.4rem; margin: 0.5rem 0; }
+.sol-graph canvas { display: block; width: 100%; }
+.sol-graph .graph-label { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.2rem; font-family: var(--font-mono); }
+</style>
+</head>
+<body>
+<script>
+/* ═══════════════════════════════════════
+   Shared JS — Normal distribution math & UI utils
+   ═══════════════════════════════════════ */
+
+// ── Normal distribution functions ──
+function normalPDF(z) {
+  return Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
+}
+
+function normalCDF(z) {
+  const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
+  const s = z < 0 ? -1 : 1;
+  const x = Math.abs(z) / Math.sqrt(2);
+  const t = 1 / (1 + p * x);
+  const y = 1 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t * Math.exp(-x*x);
+  return 0.5 * (1 + s * y);
+}
+
+function normalInvCDF(p) {
+  if (p <= 0) return -Infinity;
+  if (p >= 1) return Infinity;
+  if (p < 0.5) return -normalInvCDF(1 - p);
+  const a = [-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02,
+             1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00];
+  const b = [-5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02,
+             6.680131188771972e+01, -1.328068155288572e+01];
+  const c = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00,
+             -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
+  const d = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00, 3.754408661907416e+00];
+  const pL = 0.02425, pH = 1 - pL;
+  let q, r;
+  if (p < pL) {
+    q = Math.sqrt(-2 * Math.log(p));
+    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  } else if (p <= pH) {
+    q = p - 0.5; r = q * q;
+    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+  } else {
+    q = Math.sqrt(-2 * Math.log(1 - p));
+    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  }
+}
+
+// ── Round to n decimals ──
+function R(val, n = 4) {
+  return Math.round(val * Math.pow(10, n)) / Math.pow(10, n);
+}
+function R2(val) { return R(val, 2); }
+
+// ── Navigation component ──
+function renderNav(activePage) {
+  const pages = [
+    { id: 'index', label: 'Accueil', href: 'index.html' },
+    { id: 'cours', label: 'Fiches', href: 'cours.html' },
+    { id: 'exercices-table', label: 'Exos table', href: 'exercices-table.html' },
+    { id: 'exercices-contexte', label: 'Exos contexte', href: 'exercices-contexte.html' },
+    { id: 'exercices-zscore', label: 'Exos z-scores', href: 'exercices-zscore.html' },
+    { id: 'outil', label: 'Outil courbe', href: 'outil.html' },
+  ];
+
+  const nav = document.createElement('nav');
+  nav.className = 'site-nav';
+  nav.innerHTML = `
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Loi Normale L1</a>
+      <ul class="nav-links">
+        ${pages.map(p => `<li><a href="${p.href}" class="${p.id === activePage ? 'active' : ''}">${p.label}</a></li>`).join('')}
+      </ul>
+    </div>
+  `;
+  document.body.prepend(nav);
+}
+
+// ── Solution toggle ──
+function toggleSolution(btn, solutionId) {
+  const sol = document.getElementById(solutionId);
+  if (sol.classList.contains('visible')) {
+    sol.classList.remove('visible');
+    btn.textContent = 'Voir le corrigé';
+  } else {
+    sol.classList.add('visible');
+    btn.textContent = 'Masquer le corrigé';
+  }
+}
+
+// ── Mini curve drawing ──
+function drawMiniCurve(canvasId, options = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const w = rect.width;
+  const h = options.height || 180;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const mu = options.mu || 0;
+  const sigma = options.sigma || 1;
+  const zRange = 4;
+  const pad = { top: 20, right: 20, bottom: 40, left: 20 };
+  const xMin = mu - zRange * sigma;
+  const xMax = mu + zRange * sigma;
+  const yMax = normalPDF(0) * 1.15;
+  const plotBottom = h - pad.bottom;
+
+  function xToPx(xVal) { return pad.left + ((xVal - xMin) / (xMax - xMin)) * (w - pad.left - pad.right); }
+  function yToPx(yVal) { return pad.top + (1 - yVal / yMax) * (h - pad.top - pad.bottom); }
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Fill area if specified
+  if (options.fillFrom !== undefined && options.fillTo !== undefined) {
+    const lo = Math.max(options.fillFrom, xMin);
+    const hi = Math.min(options.fillTo, xMax);
+    ctx.save();
+    ctx.beginPath();
+    const steps = 150;
+    for (let i = 0; i <= steps; i++) {
+      const xv = lo + (hi - lo) * i / steps;
+      const z = (xv - mu) / sigma;
+      if (i === 0) ctx.moveTo(xToPx(xv), plotBottom);
+      ctx.lineTo(xToPx(xv), yToPx(normalPDF(z)));
+    }
+    ctx.lineTo(xToPx(hi), plotBottom);
+    ctx.closePath();
+    ctx.fillStyle = options.fillColor || 'rgba(61, 82, 160, 0.18)';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Curve
+  ctx.save();
+  ctx.beginPath();
+  for (let i = 0; i <= 300; i++) {
+    const xv = xMin + (xMax - xMin) * i / 300;
+    const z = (xv - mu) / sigma;
+    const px = xToPx(xv), py = yToPx(normalPDF(z));
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = '#3D52A0';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  ctx.restore();
+
+  // Axis
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(pad.left, plotBottom);
+  ctx.lineTo(w - pad.right, plotBottom);
+  ctx.strokeStyle = '#1A1A18';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Ticks
+  ctx.font = "500 11px 'DM Mono', monospace";
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#3D52A0';
+  for (let z = -zRange; z <= zRange; z++) {
+    const xv = mu + z * sigma;
+    const px = xToPx(xv);
+    ctx.beginPath(); ctx.moveTo(px, plotBottom); ctx.lineTo(px, plotBottom + 5);
+    ctx.strokeStyle = '#6B6960'; ctx.lineWidth = 1; ctx.stroke();
+    if (options.showX) {
+      const label = Number.isInteger(xv) ? xv.toString() : xv.toFixed(1);
+      ctx.fillStyle = '#1A1A18';
+      ctx.fillText(label, px, plotBottom + 18);
+      ctx.fillStyle = '#3D52A0';
+      ctx.fillText(`z=${z}`, px, plotBottom + 30);
+    } else {
+      ctx.fillText(`${z}`, px, plotBottom + 18);
+    }
+  }
+  ctx.restore();
+
+  // Probability label if specified
+  if (options.probLabel) {
+    const midX = ((options.fillFrom || 0) + (options.fillTo || 0)) / 2;
+    const px = xToPx(midX);
+    const py = yToPx(normalPDF((midX - mu) / sigma)) - 10;
+    ctx.save();
+    ctx.font = "600 13px 'DM Mono', monospace";
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#3D52A0';
+    ctx.fillText(options.probLabel, px, Math.max(py, pad.top + 15));
+    ctx.restore();
+  }
+}
+
+// ── Check numeric answer ──
+function checkAnswer(inputId, expected, tolerance) {
+  const input = document.getElementById(inputId);
+  const val = parseFloat(input.value.replace(',', '.'));
+  const tol = tolerance || 0.02;
+  if (isNaN(val)) return null;
+  return Math.abs(val - expected) <= tol;
+}
+
+// ── Score tracker ──
+const ScoreTracker = {
+  total: 0,
+  correct: 0,
+  answered: new Set(),
+
+  init(totalQuestions) {
+    this.total = totalQuestions;
+    this.correct = 0;
+    this.answered = new Set();
+  },
+
+  record(questionId, isCorrect) {
+    if (this.answered.has(questionId)) return;
+    this.answered.add(questionId);
+    if (isCorrect) this.correct++;
+    this.update();
+  },
+
+  update() {
+    const valEl = document.getElementById('score-value');
+    const barEl = document.getElementById('score-bar-fill');
+    if (valEl) valEl.textContent = `${this.correct} / ${this.total}`;
+    if (barEl) barEl.style.width = `${(this.answered.size / this.total) * 100}%`;
+  },
+
+  renderWidget() {
+    return `<div class="score-tracker">
+      <span class="score-label">Score</span>
+      <span class="score-value" id="score-value">0 / ${this.total}</span>
+      <div class="score-bar"><div class="score-bar-fill" id="score-bar-fill" style="width:0%"></div></div>
+      <span style="font-size:0.78rem;color:var(--text-hint);">${this.total} questions</span>
+    </div>`;
+  }
+};
+
+// ── Validate answer with visual feedback + score ──
+function validateAnswer(inputId, expected, questionId, tolerance) {
+  const input = document.getElementById(inputId);
+  const val = parseFloat(input.value.replace(',', '.'));
+  const tol = tolerance || 0.025;
+  if (isNaN(val)) { input.style.borderColor = 'var(--warning)'; return; }
+  const correct = Math.abs(val - expected) <= tol;
+  input.classList.remove('correct', 'incorrect');
+  input.classList.add(correct ? 'correct' : 'incorrect');
+  input.style.borderColor = correct ? 'var(--teal)' : 'var(--danger)';
+  ScoreTracker.record(questionId, correct);
+  return correct;
+}
+
+</script>
+<script>renderNav('exercices-contexte');</script>
+
+<div class="container">
+
+<div class="page-header">
+  <div class="breadcrumb"><a href="index.html">Accueil</a> → Exercices contextualisés</div>
+  <h1>Exercices — Problèmes contextualisés</h1>
+  <p>Des mises en situation comme à l'examen — avec corrigé détaillé</p>
+</div>
+
+<div class="formula-card">
+  Rappel : <strong>z = (x − m) / s</strong> &nbsp;|&nbsp; <strong>x = (z × s) + m</strong> &nbsp;|&nbsp;
+  Pense à bien identifier ce qu'on cherche (P ou x ?) et les paramètres (m et s) avant de commencer !
+</div>
+
+<script>ScoreTracker.init(13); document.write(ScoreTracker.renderWidget());</script>
+
+<!-- ═══ EXERCICE 1: Stress au travail ═══ -->
+<div class="exercise-block">
+  <div class="exercise-header">
+    <span class="exercise-num">1</span>
+    <span class="exercise-label">Stress au travail</span>
+    <span class="badge badge-info exercise-difficulty">Table directe</span>
+  </div>
+
+  <div class="exercise-context">
+    Un psychologue du travail étudie le niveau de stress professionnel à l'aide d'un questionnaire standardisé (échelle de 0 à 100). 
+    Dans la population étudiée, les scores suivent une <strong>loi normale de moyenne 55 et d'écart-type 12</strong>.
+  </div>
+
+  <!-- Q1 -->
+  <div class="question-block">
+    <div class="question-text">1) Quel pourcentage de salariés obtient un score de stress supérieur à 70 ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex1q1" placeholder="Ta réponse en %">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex1q1')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex1q1">
+      <div class="step-label">Ce qu'on cherche</div>
+      <div class="step">P(X &gt; 70) → on cherche une probabilité → table directe</div>
+      <div class="step-label">Étape 1 — Transformation de x en z</div>
+      <div class="step">z = (x − m) / s = (70 − 55) / 12 = 15 / 12 = 1.25</div>
+      <div class="step-label">Étape 2 — Identifier le cas</div>
+      <div class="step">On cherche P(Z &gt; 1.25) → <span class="rule-tag">1 − P(Z &lt; 1.25)</span></div>
+      <div class="step-label">Étape 3 — Lecture table + calcul</div>
+      <div class="step">P(Z &lt; 1.25) = 0.8944 (table)</div>
+      <div class="step">P(Z &gt; 1.25) = 1 − 0.8944 = 0.1056</div>
+      <div class="result">≈ 10.56 % des salariés ont un score &gt; 70</div>
+      <div class="sol-graph"><canvas id="gex1q1"></canvas><div class="graph-label">X ~ N(55, 12) — Aire rouge = P(X > 70)</div></div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-block">
+    <div class="question-text">2) Quel pourcentage de salariés obtient un score compris entre 40 et 65 ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex1q2" placeholder="Ta réponse en %">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex1q2')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex1q2">
+      <div class="step-label">Ce qu'on cherche</div>
+      <div class="step">P(40 &lt; X &lt; 65) → encadrement → table directe</div>
+      <div class="step-label">Étape 1 — Transformation des deux bornes</div>
+      <div class="step">z₁ = (40 − 55) / 12 = −15/12 = −1.25</div>
+      <div class="step">z₂ = (65 − 55) / 12 = 10/12 = 0.83</div>
+      <div class="step-label">Étape 2 — Calcul</div>
+      <div class="step">P(−1.25 &lt; Z &lt; 0.83) = P(Z &lt; 0.83) − P(Z &lt; −1.25)</div>
+      <div class="step">P(Z &lt; 0.83) = 0.7967</div>
+      <div class="step">P(Z &lt; −1.25) = 1 − P(Z &lt; 1.25) = 1 − 0.8944 = 0.1056</div>
+      <div class="step">= 0.7967 − 0.1056 = 0.6911</div>
+      <div class="result">≈ 69.11 % des salariés ont un score entre 40 et 65</div>
+      <div class="sol-graph"><canvas id="gex1q2"></canvas><div class="graph-label">X ~ N(55, 12) — Aire verte = P(40 < X < 65)</div></div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-block">
+    <div class="question-text">3) Au-dessus de quel score se situent les 15% de salariés les plus stressés ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex1q3" placeholder="Score = ?">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex1q3')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex1q3">
+      <div class="step-label">Ce qu'on cherche</div>
+      <div class="step">x ? ; P(X &gt; x) = 0.15 → on cherche une valeur → table inverse</div>
+      <div class="step-label">Étape 1 — Identifier le cas</div>
+      <div class="step">P(Z &gt; z) = 0.15 → P &lt; 0.5 et P(&gt;) → <span class="rule-tag">z reste positif (2 changements s'annulent)</span></div>
+      <div class="step-label">Étape 2 — Lecture table inverse</div>
+      <div class="step">P = 0.15 → z = 1.0364</div>
+      <div class="step-label">Étape 3 — Retransformation en x</div>
+      <div class="step">x = (z × s) + m = (1.0364 × 12) + 55 = 12.44 + 55</div>
+      <div class="result">x ≈ 67.44 — Les 15% les plus stressés ont un score &gt; 67</div>
+      <div class="sol-graph"><canvas id="gex1q3"></canvas><div class="graph-label">X ~ N(55, 12) — Seuil des 15% supérieurs</div></div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-block">
+    <div class="question-text">4) Un salarié obtenant un score de 30 fait-il partie des 5% les moins stressés ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex1q4" placeholder="Oui ou Non + justification">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex1q4')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex1q4">
+      <div class="step-label">Stratégie</div>
+      <div class="step">On cherche le seuil x en-dessous duquel on trouve 5% de la pop → table inverse</div>
+      <div class="step-label">Étape 1 — Trouver z pour P(Z &lt; z) = 0.05</div>
+      <div class="step">P &lt; 0.5 → z négatif → table inverse : 1.6449 → z = −1.6449</div>
+      <div class="step-label">Étape 2 — Retransformation en x</div>
+      <div class="step">x = (−1.6449 × 12) + 55 = −19.74 + 55 = 35.26</div>
+      <div class="step-label">Étape 3 — Comparaison</div>
+      <div class="step">30 &lt; 35.26</div>
+      <div class="result">Oui, un score de 30 est inférieur au seuil de 35.26, donc ce salarié fait bien partie des 5% les moins stressés.</div>
+      <div class="sol-graph"><canvas id="gex1q4"></canvas><div class="graph-label">X ~ N(55, 12) — Seuil 5% inférieurs et position du score 30</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EXERCICE 2: Sommeil des adolescents ═══ -->
+<div class="exercise-block">
+  <div class="exercise-header">
+    <span class="exercise-num">2</span>
+    <span class="exercise-label">Sommeil des adolescents</span>
+    <span class="badge badge-info exercise-difficulty">Table directe + inverse</span>
+  </div>
+
+  <div class="exercise-context">
+    Une étude en psychologie du développement s'intéresse à la durée de sommeil nocturne (en heures) des adolescents de 15 ans.
+    Les données montrent que la durée de sommeil suit une <strong>loi normale de moyenne 7.5 heures et d'écart-type 1.2 heures</strong>.
+  </div>
+
+  <div class="question-block">
+    <div class="question-text">1) Quel pourcentage d'adolescents dort moins de 6 heures ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex2q1" placeholder="Réponse en %">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex2q1')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex2q1">
+      <div class="step-label">Transformation</div>
+      <div class="step">z = (6 − 7.5) / 1.2 = −1.5 / 1.2 = −1.25</div>
+      <div class="step-label">Calcul</div>
+      <div class="step">P(Z &lt; −1.25) = 1 − P(Z &lt; 1.25) = 1 − 0.8944 = 0.1056</div>
+      <div class="result">≈ 10.56 % des adolescents dorment moins de 6h</div>
+      <div class="sol-graph"><canvas id="gex2q1"></canvas><div class="graph-label">X ~ N(7.5, 1.2) — P(X < 6)</div></div>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-text">2) Quel pourcentage dort entre 7 et 9 heures ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex2q2" placeholder="Réponse en %">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex2q2')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex2q2">
+      <div class="step-label">Transformation des bornes</div>
+      <div class="step">z₁ = (7 − 7.5) / 1.2 = −0.42</div>
+      <div class="step">z₂ = (9 − 7.5) / 1.2 = 1.25</div>
+      <div class="step-label">Calcul</div>
+      <div class="step">P(−0.42 &lt; Z &lt; 1.25) = P(Z &lt; 1.25) − P(Z &lt; −0.42)</div>
+      <div class="step">P(Z &lt; −0.42) = 1 − P(Z &lt; 0.42) = 1 − 0.6628 = 0.3372</div>
+      <div class="step">= 0.8944 − 0.3372 = 0.5572</div>
+      <div class="result">≈ 55.72 % dorment entre 7h et 9h</div>
+      <div class="sol-graph"><canvas id="gex2q2"></canvas><div class="graph-label">X ~ N(7.5, 1.2) — P(7 < X < 9)</div></div>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-text">3) Si on étudie 200 adolescents, combien dorment plus de 9 heures ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex2q3" placeholder="Nombre d'ados">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex2q3')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex2q3">
+      <div class="step-label">Calcul de la proportion</div>
+      <div class="step">z = (9 − 7.5) / 1.2 = 1.25</div>
+      <div class="step">P(Z &gt; 1.25) = 1 − 0.8944 = 0.1056</div>
+      <div class="step-label">Application à l'échantillon</div>
+      <div class="step">200 × 0.1056 = 21.12</div>
+      <div class="result">≈ 21 adolescents dorment plus de 9h</div>
+      <div class="sol-graph"><canvas id="gex2q3"></canvas><div class="graph-label">X ~ N(7.5, 1.2) — P(X > 9)</div></div>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-text">4) En dessous de quelle durée se trouvent les 20% d'adolescents qui dorment le moins ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex2q4" placeholder="Durée en heures">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex2q4')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex2q4">
+      <div class="step-label">Table inverse</div>
+      <div class="step">P(Z &lt; z) = 0.20 → P &lt; 0.5 → z négatif</div>
+      <div class="step">Table inverse : 0.8416 → z = −0.8416</div>
+      <div class="step-label">Retransformation</div>
+      <div class="step">x = (−0.8416 × 1.2) + 7.5 = −1.01 + 7.5</div>
+      <div class="result">x ≈ 6.49 h — Les 20% qui dorment le moins dorment moins de 6h29</div>
+      <div class="sol-graph"><canvas id="gex2q4"></canvas><div class="graph-label">X ~ N(7.5, 1.2) — Seuil 20% inférieurs</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EXERCICE 3: Performance scolaire ═══ -->
+<div class="exercise-block">
+  <div class="exercise-header">
+    <span class="exercise-num">3</span>
+    <span class="exercise-label">Performance scolaire</span>
+    <span class="badge badge-info exercise-difficulty">Complet</span>
+  </div>
+
+  <div class="exercise-context">
+    Un test de compréhension en lecture est administré à des élèves de CE2. Les résultats suivent une <strong>loi normale de moyenne 65 et d'écart-type 10</strong> (score sur 100).
+  </div>
+
+  <div class="question-block">
+    <div class="question-text">1) Quel pourcentage d'élèves obtient au moins 80 ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex3q1" placeholder="%">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex3q1')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex3q1">
+      <div class="step">z = (80 − 65) / 10 = 1.50</div>
+      <div class="step">P(Z &gt; 1.50) = 1 − P(Z &lt; 1.50) = 1 − 0.9332 = 0.0668</div>
+      <div class="result">≈ 6.68 % des élèves obtiennent au moins 80</div>
+      <div class="sol-graph"><canvas id="gex3q1"></canvas><div class="graph-label">X ~ N(65, 10) — P(X ≥ 80)</div></div>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-text">2) Quel pourcentage obtient entre 50 et 75 ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex3q2" placeholder="%">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex3q2')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex3q2">
+      <div class="step">z₁ = (50 − 65)/10 = −1.50 ; z₂ = (75 − 65)/10 = 1.00</div>
+      <div class="step">P(Z &lt; −1.50) = 1 − 0.9332 = 0.0668</div>
+      <div class="step">P(−1.50 &lt; Z &lt; 1.00) = P(Z &lt; 1.00) − P(Z &lt; −1.50) = 0.8413 − 0.0668</div>
+      <div class="result">≈ 77.45 %</div>
+      <div class="sol-graph"><canvas id="gex3q2"></canvas><div class="graph-label">X ~ N(65, 10) — P(50 < X < 75)</div></div>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-text">3) À quel score faut-il fixer le seuil pour identifier les 10% d'élèves en difficulté (les plus bas) ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex3q3" placeholder="Score">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex3q3')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex3q3">
+      <div class="step">P(Z &lt; z) = 0.10 → P &lt; 0.5 → z négatif</div>
+      <div class="step">Table inverse : 1.2816 → z = −1.2816</div>
+      <div class="step">x = (−1.2816 × 10) + 65 = −12.82 + 65</div>
+      <div class="result">x ≈ 52.18 — Les 10% les plus faibles ont un score &lt; 52</div>
+      <div class="sol-graph"><canvas id="gex3q3"></canvas><div class="graph-label">X ~ N(65, 10) — Seuil 10% inférieurs</div></div>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-text">4) Un élève avec un score de 42 fait-il partie des 5% les plus faibles ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex3q4" placeholder="Oui / Non">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex3q4')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex3q4">
+      <div class="step">Seuil des 5% : P(Z &lt; z) = 0.05 → z = −1.6449</div>
+      <div class="step">x = (−1.6449 × 10) + 65 = 48.55</div>
+      <div class="step">42 &lt; 48.55</div>
+      <div class="result">Oui, un score de 42 est inférieur au seuil de 48.55, il fait partie des 5% les plus faibles.</div>
+      <div class="sol-graph"><canvas id="gex3q4"></canvas><div class="graph-label">X ~ N(65, 10) — Seuil 5% inférieurs et score 42</div></div>
+    </div>
+  </div>
+
+  <div class="question-block">
+    <div class="question-text">5) Sur une classe de 30 élèves, combien obtiennent entre 50 et 75 ?</div>
+    <div class="answer-input">
+      <input type="text" id="ex3q5" placeholder="Nombre">
+      <button class="btn-reveal" onclick="toggleSolution(this, 'sol-ex3q5')">Voir le corrigé</button>
+    </div>
+    <div class="solution" id="sol-ex3q5">
+      <div class="step">On a trouvé à la question 2 que 77.45% sont entre 50 et 75</div>
+      <div class="step">30 × 0.7745 = 23.24</div>
+      <div class="result">≈ 23 élèves</div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align: center; margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+  <a href="exercices-table.html" class="btn btn-secondary">← Exercices table</a>
+  <a href="exercices-zscore.html" class="btn btn-primary">Exercices z-scores →</a>
+</div>
+
+<footer>
+  Outil pédagogique — Statistiques L1 Psychologie — UCLy<br>
+  Dr Adolphe Béquet · <a href="mailto:abequet@univ-catholyon.fr">abequet@univ-catholyon.fr</a>
+</footer>
+
+</div>
+
+<script>
+// Draw solution graphs when revealed
+const solObserver = new MutationObserver((mutations) => {
+  mutations.forEach(m => {
+    if (m.target.classList.contains('visible')) drawContextGraphs();
+  });
+});
+document.querySelectorAll('.solution').forEach(el => {
+  solObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+});
+
+function drawContextGraphs() {
+  // Ex1: Stress au travail — X ~ N(55, 12)
+  drawMiniCurve('gex1q1', { mu:55, sigma:12, fillFrom:70, fillTo:55+4*12, fillColor:'rgba(192,57,43,0.2)', showX:true, height:130 });
+  drawMiniCurve('gex1q2', { mu:55, sigma:12, fillFrom:40, fillTo:65, fillColor:'rgba(29,122,78,0.2)', showX:true, height:130 });
+  drawMiniCurve('gex1q3', { mu:55, sigma:12, fillFrom:67.44, fillTo:55+4*12, fillColor:'rgba(192,57,43,0.2)', showX:true, height:130 });
+  drawMiniCurve('gex1q4', { mu:55, sigma:12, fillFrom:55-4*12, fillTo:35.26, fillColor:'rgba(192,57,43,0.2)', showX:true, height:130 });
+
+  // Ex2: Sommeil — X ~ N(7.5, 1.2)
+  drawMiniCurve('gex2q1', { mu:7.5, sigma:1.2, fillFrom:7.5-4*1.2, fillTo:6, fillColor:'rgba(192,57,43,0.2)', showX:true, height:130 });
+  drawMiniCurve('gex2q2', { mu:7.5, sigma:1.2, fillFrom:7, fillTo:9, fillColor:'rgba(29,122,78,0.2)', showX:true, height:130 });
+  drawMiniCurve('gex2q3', { mu:7.5, sigma:1.2, fillFrom:9, fillTo:7.5+4*1.2, fillColor:'rgba(192,57,43,0.2)', showX:true, height:130 });
+  drawMiniCurve('gex2q4', { mu:7.5, sigma:1.2, fillFrom:7.5-4*1.2, fillTo:6.49, fillColor:'rgba(192,57,43,0.2)', showX:true, height:130 });
+
+  // Ex3: Performance scolaire — X ~ N(65, 10)
+  drawMiniCurve('gex3q1', { mu:65, sigma:10, fillFrom:80, fillTo:65+4*10, fillColor:'rgba(192,57,43,0.2)', showX:true, height:130 });
+  drawMiniCurve('gex3q2', { mu:65, sigma:10, fillFrom:50, fillTo:75, fillColor:'rgba(29,122,78,0.2)', showX:true, height:130 });
+  drawMiniCurve('gex3q3', { mu:65, sigma:10, fillFrom:65-4*10, fillTo:52.18, fillColor:'rgba(192,57,43,0.2)', showX:true, height:130 });
+  drawMiniCurve('gex3q4', { mu:65, sigma:10, fillFrom:65-4*10, fillTo:48.55, fillColor:'rgba(192,57,43,0.2)', showX:true, height:130 });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outil interactif — Loi Normale</title>
+<style>
+/* ═══════════════════════════════════════
+   Loi Normale — Site de révisions L1 Psycho
+   Shared stylesheet
+   ═══════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&display=swap');
+
+:root {
+  --bg: #FAF9F6;
+  --bg-card: #FFFFFF;
+  --bg-accent: #F0EDE6;
+  --bg-input: #F7F5F0;
+  --text: #1A1A18;
+  --text-muted: #4A4840;
+  --text-hint: #7A7770;
+  --accent: #3D52A0;
+  --accent-hover: #2F4390;
+  --accent-light: #E8ECF8;
+  --accent-mid: #7B8EC8;
+  --teal: #1D7A4E;
+  --teal-light: #E6F4ED;
+  --danger: #C0392B;
+  --danger-light: #FBEAEA;
+  --warning: #B8860B;
+  --warning-light: #FDF5E1;
+  --border: #E2DFD6;
+  --border-strong: #C9C5B8;
+  --shadow: 0 1px 3px rgba(26,26,24,0.06), 0 4px 12px rgba(26,26,24,0.04);
+  --shadow-lg: 0 4px 16px rgba(26,26,24,0.08), 0 12px 40px rgba(26,26,24,0.06);
+  --radius: 10px;
+  --radius-lg: 16px;
+  --font-body: 'DM Sans', sans-serif;
+  --font-heading: 'Fraunces', serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  font-size: 16px;
+}
+
+/* ── Layout ── */
+.container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+/* ── Navigation ── */
+.site-nav {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.site-nav .nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 56px;
+  flex-wrap: wrap;
+}
+.site-nav .nav-brand {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+  margin-right: auto;
+}
+.site-nav .nav-links {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  list-style: none;
+}
+.site-nav .nav-links a {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: var(--radius);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.site-nav .nav-links a:hover { background: var(--bg-accent); color: var(--text); }
+.site-nav .nav-links a.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+
+/* ── Page header ── */
+.page-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, #3D52A0 0%, #5B6DB5 50%, #7B8EC8 100%);
+  border-radius: var(--radius-lg);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+.page-header h1 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+  position: relative;
+}
+.page-header p { font-size: 0.95rem; opacity: 0.85; position: relative; }
+.page-header .breadcrumb {
+  font-size: 0.82rem;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+.page-header .breadcrumb a { color: white; text-decoration: underline; }
+
+/* ── Section titles ── */
+.section-title {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.section-title .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+}
+.card.card-accent { border-left: 4px solid var(--accent); }
+.card.card-success { border-left: 4px solid var(--teal); }
+.card.card-warning { border-left: 4px solid var(--warning); }
+
+/* ── Formulas ── */
+.formula-card {
+  background: var(--warning-light);
+  border: 1px solid #E8D5A0;
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+.formula-card strong {
+  color: var(--warning);
+  font-family: var(--font-mono);
+}
+
+.formula-box {
+  background: var(--bg-accent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  margin: 0.75rem 0;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-secondary { background: var(--bg-accent); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+.btn-success { background: var(--teal); color: white; }
+.btn-success:hover { background: #166B41; }
+.btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+
+/* ── Form elements ── */
+.param-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+.param-group input, .param-group select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  background: var(--bg-input);
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.param-group input:focus, .param-group select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+/* ── Tables ── */
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+thead th {
+  background: var(--bg-accent);
+  padding: 0.7rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+tbody td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+}
+tbody tr:hover { background: var(--bg-accent); }
+
+/* ── Badges ── */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+}
+.badge-ok { background: var(--teal-light); color: var(--teal); }
+.badge-extreme { background: var(--danger-light); color: var(--danger); }
+.badge-info { background: var(--accent-light); color: var(--accent); }
+
+/* ── Exercise components ── */
+.exercise-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+.exercise-block .exercise-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.exercise-block .exercise-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.exercise-block .exercise-label {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+.exercise-block .exercise-difficulty {
+  margin-left: auto;
+}
+.exercise-block .exercise-context {
+  background: var(--bg-accent);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.exercise-block .question-block {
+  margin: 1rem 0;
+  padding: 0.75rem 0;
+}
+.exercise-block .question-text {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.exercise-block .answer-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+.exercise-block .answer-input input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  background: var(--bg-input);
+  flex: 1;
+  max-width: 300px;
+}
+.exercise-block .answer-input input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+/* ── Correction / solution reveal ── */
+.solution {
+  display: none;
+  margin-top: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--teal-light);
+  border: 1px solid #B8E0CC;
+  border-radius: var(--radius);
+  animation: slideDown 0.3s ease;
+}
+.solution.visible { display: block; }
+.solution .step {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  margin: 0.3rem 0;
+  padding: 0.2rem 0;
+  color: var(--text);
+}
+.solution .step-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--teal);
+  margin-top: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+.solution .result {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--teal);
+  font-family: var(--font-mono);
+  margin-top: 0.5rem;
+}
+.solution .explanation {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Feedback ── */
+.feedback-correct {
+  color: var(--teal);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+.feedback-incorrect {
+  color: var(--danger);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+/* ── Grid layouts ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .page-header h1 { font-size: 1.5rem; }
+  .site-nav .nav-links { gap: 0; }
+  .site-nav .nav-links a { padding: 0.3rem 0.5rem; font-size: 0.78rem; }
+}
+
+/* ── Home page cards ── */
+.nav-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.25s;
+  display: block;
+  box-shadow: var(--shadow);
+}
+.nav-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-mid);
+}
+.nav-card .card-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+.nav-card h3 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+.nav-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── Mini curve (canvas) ── */
+.mini-curve {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.mini-curve canvas { display: block; width: 100%; }
+
+/* ── Reveal btn ── */
+.btn-reveal {
+  background: none;
+  border: 1px dashed var(--border-strong);
+  color: var(--text-muted);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-reveal:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* ── Progress indicator ── */
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-accent);
+  border-radius: 3px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+.progress-bar .progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+/* ── Score tracker ── */
+.score-tracker {
+  position: sticky;
+  top: 60px;
+  z-index: 50;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+}
+.score-tracker .score-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.score-tracker .score-value {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.score-tracker .score-bar {
+  flex: 1;
+  min-width: 100px;
+  height: 8px;
+  background: var(--bg-accent);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.score-tracker .score-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+/* ── Footer ── */
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--text-hint);
+}
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* ── Tooltip style for rules ── */
+.rule-tag {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  margin-left: 0.25rem;
+}
+
+/* ── Table input for z-score exercises ── */
+.z-table-input {
+  width: 80px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  text-align: center;
+  background: var(--bg-input);
+}
+.z-table-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+.z-table-input.correct { border-color: var(--teal); background: var(--teal-light); }
+.z-table-input.incorrect { border-color: var(--danger); background: var(--danger-light); }
+
+</style>
+<style>
+.tool-tabs { display:flex; gap:0; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-bottom:1.5rem; }
+.tool-tab { flex:1; padding:0.7rem 1rem; text-align:center; font-size:0.88rem; font-weight:600; cursor:pointer; background:var(--bg-accent); color:var(--text-muted); border:none; border-right:1px solid var(--border); transition:all 0.2s; font-family:var(--font-body); }
+.tool-tab:last-child { border-right:none; }
+.tool-tab.active { background:var(--accent); color:white; }
+.tool-tab:hover:not(.active) { background:var(--border); }
+.mode-panel { display:none; } .mode-panel.active { display:block; }
+.params-row { display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-end; margin-bottom:1rem; }
+.params-row .param-group { flex:1; min-width:120px; }
+.graph-area { position:relative; width:100%; cursor:crosshair; }
+.graph-area canvas { display:block; width:100%; }
+.calc-result { background:var(--bg-accent); border:1px solid var(--border); border-radius:var(--radius); padding:1.25rem; margin-top:1rem; line-height:1.9; }
+.calc-result .formula { font-family:var(--font-mono); font-size:0.88rem; display:block; margin:0.15rem 0; }
+.calc-result .prob-result { font-size:1.6rem; font-weight:700; color:var(--accent); font-family:var(--font-mono); }
+.calc-type-tabs { display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap; }
+.calc-type-btn { padding:0.5rem 1rem; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-input); font-family:var(--font-body); font-size:0.85rem; font-weight:600; cursor:pointer; color:var(--text-muted); transition:all 0.2s; }
+.calc-type-btn.active { background:var(--accent-light); color:var(--accent); border-color:var(--accent); }
+.slider-section { margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border); }
+</style>
+</head>
+<body>
+<script>
+/* ═══════════════════════════════════════
+   Shared JS — Normal distribution math & UI utils
+   ═══════════════════════════════════════ */
+
+// ── Normal distribution functions ──
+function normalPDF(z) {
+  return Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
+}
+
+function normalCDF(z) {
+  const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
+  const s = z < 0 ? -1 : 1;
+  const x = Math.abs(z) / Math.sqrt(2);
+  const t = 1 / (1 + p * x);
+  const y = 1 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t * Math.exp(-x*x);
+  return 0.5 * (1 + s * y);
+}
+
+function normalInvCDF(p) {
+  if (p <= 0) return -Infinity;
+  if (p >= 1) return Infinity;
+  if (p < 0.5) return -normalInvCDF(1 - p);
+  const a = [-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02,
+             1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00];
+  const b = [-5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02,
+             6.680131188771972e+01, -1.328068155288572e+01];
+  const c = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00,
+             -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
+  const d = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00, 3.754408661907416e+00];
+  const pL = 0.02425, pH = 1 - pL;
+  let q, r;
+  if (p < pL) {
+    q = Math.sqrt(-2 * Math.log(p));
+    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  } else if (p <= pH) {
+    q = p - 0.5; r = q * q;
+    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+  } else {
+    q = Math.sqrt(-2 * Math.log(1 - p));
+    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  }
+}
+
+// ── Round to n decimals ──
+function R(val, n = 4) {
+  return Math.round(val * Math.pow(10, n)) / Math.pow(10, n);
+}
+function R2(val) { return R(val, 2); }
+
+// ── Navigation component ──
+function renderNav(activePage) {
+  const pages = [
+    { id: 'index', label: 'Accueil', href: 'index.html' },
+    { id: 'cours', label: 'Fiches', href: 'cours.html' },
+    { id: 'exercices-table', label: 'Exos table', href: 'exercices-table.html' },
+    { id: 'exercices-contexte', label: 'Exos contexte', href: 'exercices-contexte.html' },
+    { id: 'exercices-zscore', label: 'Exos z-scores', href: 'exercices-zscore.html' },
+    { id: 'outil', label: 'Outil courbe', href: 'outil.html' },
+  ];
+
+  const nav = document.createElement('nav');
+  nav.className = 'site-nav';
+  nav.innerHTML = `
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Loi Normale L1</a>
+      <ul class="nav-links">
+        ${pages.map(p => `<li><a href="${p.href}" class="${p.id === activePage ? 'active' : ''}">${p.label}</a></li>`).join('')}
+      </ul>
+    </div>
+  `;
+  document.body.prepend(nav);
+}
+
+// ── Solution toggle ──
+function toggleSolution(btn, solutionId) {
+  const sol = document.getElementById(solutionId);
+  if (sol.classList.contains('visible')) {
+    sol.classList.remove('visible');
+    btn.textContent = 'Voir le corrigé';
+  } else {
+    sol.classList.add('visible');
+    btn.textContent = 'Masquer le corrigé';
+  }
+}
+
+// ── Mini curve drawing ──
+function drawMiniCurve(canvasId, options = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const w = rect.width;
+  const h = options.height || 180;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const mu = options.mu || 0;
+  const sigma = options.sigma || 1;
+  const zRange = 4;
+  const pad = { top: 20, right: 20, bottom: 40, left: 20 };
+  const xMin = mu - zRange * sigma;
+  const xMax = mu + zRange * sigma;
+  const yMax = normalPDF(0) * 1.15;
+  const plotBottom = h - pad.bottom;
+
+  function xToPx(xVal) { return pad.left + ((xVal - xMin) / (xMax - xMin)) * (w - pad.left - pad.right); }
+  function yToPx(yVal) { return pad.top + (1 - yVal / yMax) * (h - pad.top - pad.bottom); }
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Fill area if specified
+  if (options.fillFrom !== undefined && options.fillTo !== undefined) {
+    const lo = Math.max(options.fillFrom, xMin);
+    const hi = Math.min(options.fillTo, xMax);
+    ctx.save();
+    ctx.beginPath();
+    const steps = 150;
+    for (let i = 0; i <= steps; i++) {
+      const xv = lo + (hi - lo) * i / steps;
+      const z = (xv - mu) / sigma;
+      if (i === 0) ctx.moveTo(xToPx(xv), plotBottom);
+      ctx.lineTo(xToPx(xv), yToPx(normalPDF(z)));
+    }
+    ctx.lineTo(xToPx(hi), plotBottom);
+    ctx.closePath();
+    ctx.fillStyle = options.fillColor || 'rgba(61, 82, 160, 0.18)';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Curve
+  ctx.save();
+  ctx.beginPath();
+  for (let i = 0; i <= 300; i++) {
+    const xv = xMin + (xMax - xMin) * i / 300;
+    const z = (xv - mu) / sigma;
+    const px = xToPx(xv), py = yToPx(normalPDF(z));
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = '#3D52A0';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  ctx.restore();
+
+  // Axis
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(pad.left, plotBottom);
+  ctx.lineTo(w - pad.right, plotBottom);
+  ctx.strokeStyle = '#1A1A18';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Ticks
+  ctx.font = "500 11px 'DM Mono', monospace";
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#3D52A0';
+  for (let z = -zRange; z <= zRange; z++) {
+    const xv = mu + z * sigma;
+    const px = xToPx(xv);
+    ctx.beginPath(); ctx.moveTo(px, plotBottom); ctx.lineTo(px, plotBottom + 5);
+    ctx.strokeStyle = '#6B6960'; ctx.lineWidth = 1; ctx.stroke();
+    if (options.showX) {
+      const label = Number.isInteger(xv) ? xv.toString() : xv.toFixed(1);
+      ctx.fillStyle = '#1A1A18';
+      ctx.fillText(label, px, plotBottom + 18);
+      ctx.fillStyle = '#3D52A0';
+      ctx.fillText(`z=${z}`, px, plotBottom + 30);
+    } else {
+      ctx.fillText(`${z}`, px, plotBottom + 18);
+    }
+  }
+  ctx.restore();
+
+  // Probability label if specified
+  if (options.probLabel) {
+    const midX = ((options.fillFrom || 0) + (options.fillTo || 0)) / 2;
+    const px = xToPx(midX);
+    const py = yToPx(normalPDF((midX - mu) / sigma)) - 10;
+    ctx.save();
+    ctx.font = "600 13px 'DM Mono', monospace";
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#3D52A0';
+    ctx.fillText(options.probLabel, px, Math.max(py, pad.top + 15));
+    ctx.restore();
+  }
+}
+
+// ── Check numeric answer ──
+function checkAnswer(inputId, expected, tolerance) {
+  const input = document.getElementById(inputId);
+  const val = parseFloat(input.value.replace(',', '.'));
+  const tol = tolerance || 0.02;
+  if (isNaN(val)) return null;
+  return Math.abs(val - expected) <= tol;
+}
+
+// ── Score tracker ──
+const ScoreTracker = {
+  total: 0,
+  correct: 0,
+  answered: new Set(),
+
+  init(totalQuestions) {
+    this.total = totalQuestions;
+    this.correct = 0;
+    this.answered = new Set();
+  },
+
+  record(questionId, isCorrect) {
+    if (this.answered.has(questionId)) return;
+    this.answered.add(questionId);
+    if (isCorrect) this.correct++;
+    this.update();
+  },
+
+  update() {
+    const valEl = document.getElementById('score-value');
+    const barEl = document.getElementById('score-bar-fill');
+    if (valEl) valEl.textContent = `${this.correct} / ${this.total}`;
+    if (barEl) barEl.style.width = `${(this.answered.size / this.total) * 100}%`;
+  },
+
+  renderWidget() {
+    return `<div class="score-tracker">
+      <span class="score-label">Score</span>
+      <span class="score-value" id="score-value">0 / ${this.total}</span>
+      <div class="score-bar"><div class="score-bar-fill" id="score-bar-fill" style="width:0%"></div></div>
+      <span style="font-size:0.78rem;color:var(--text-hint);">${this.total} questions</span>
+    </div>`;
+  }
+};
+
+// ── Validate answer with visual feedback + score ──
+function validateAnswer(inputId, expected, questionId, tolerance) {
+  const input = document.getElementById(inputId);
+  const val = parseFloat(input.value.replace(',', '.'));
+  const tol = tolerance || 0.025;
+  if (isNaN(val)) { input.style.borderColor = 'var(--warning)'; return; }
+  const correct = Math.abs(val - expected) <= tol;
+  input.classList.remove('correct', 'incorrect');
+  input.classList.add(correct ? 'correct' : 'incorrect');
+  input.style.borderColor = correct ? 'var(--teal)' : 'var(--danger)';
+  ScoreTracker.record(questionId, correct);
+  return correct;
+}
+
+</script>
+<script>renderNav('outil');</script>
+
+<div class="container">
+
+<div class="page-header">
+  <div class="breadcrumb"><a href="index.html">Accueil</a> → Outil interactif</div>
+  <h1>Outil interactif — Loi normale</h1>
+  <p>Visualise les probabilités et vérifie tes calculs</p>
+</div>
+
+<!-- Distribution mode -->
+<div class="card">
+  <h2 class="section-title"><span class="num">1</span> Choix de la distribution</h2>
+  <div class="tool-tabs">
+    <button class="tool-tab active" onclick="setMode('standard')">Z ~ N(0, 1)</button>
+    <button class="tool-tab" onclick="setMode('custom')">Paramètres personnalisés</button>
+    <button class="tool-tab" onclick="setMode('random')">Distribution aléatoire</button>
+  </div>
+
+  <div id="mode-custom" class="mode-panel">
+    <div class="params-row">
+      <div class="param-group"><label>Moyenne (m)</label><input type="number" id="custom-mu" value="100" step="any"></div>
+      <div class="param-group"><label>Écart-type (s)</label><input type="number" id="custom-sigma" value="15" step="any" min="0.01"></div>
+      <div class="param-group" style="flex:0;"><button class="btn btn-primary" onclick="applyParams()" style="margin-top:1.4rem;">Appliquer</button></div>
+    </div>
+  </div>
+
+  <div id="mode-random" class="mode-panel">
+    <div class="params-row">
+      <div class="param-group">
+        <label>Distribution actuelle</label>
+        <div id="random-display" style="font-family:var(--font-mono);font-size:1rem;padding:0.6rem 0;">X ~ N(?, ?)</div>
+      </div>
+      <div class="param-group" style="flex:0;"><button class="btn btn-primary" onclick="randomize()" style="margin-top:1.4rem;">Nouvelle distribution</button></div>
+    </div>
+  </div>
+
+  <div id="mode-standard" class="mode-panel active">
+    <p style="color:var(--text-muted);font-size:0.9rem;">Loi normale centrée réduite : moyenne = 0, écart-type = 1.</p>
+  </div>
+</div>
+
+<!-- Calculation mode -->
+<div class="card">
+  <h2 class="section-title"><span class="num">2</span> Que veux-tu calculer ?</h2>
+  <div class="calc-type-tabs">
+    <button class="calc-type-btn active" onclick="setCalcMode('prob')">Trouver une probabilité (P)</button>
+    <button class="calc-type-btn" onclick="setCalcMode('value')">Trouver une valeur (x ou z)</button>
+    <button class="calc-type-btn" onclick="setCalcMode('slider')">Sélection libre (slider)</button>
+  </div>
+
+  <!-- Prob mode -->
+  <div id="calc-prob" class="mode-panel active">
+    <div class="params-row">
+      <div class="param-group">
+        <label>Type</label>
+        <select id="prob-type" onchange="updateCalc()">
+          <option value="lt">P(X &lt; a)</option>
+          <option value="gt">P(X &gt; a)</option>
+          <option value="between">P(a &lt; X &lt; b)</option>
+        </select>
+      </div>
+      <div class="param-group"><label id="prob-label-a">Valeur a</label><input type="number" id="prob-a" step="any" onchange="updateCalc()"></div>
+      <div class="param-group" id="prob-b-group"><label>Valeur b</label><input type="number" id="prob-b" step="any" onchange="updateCalc()"></div>
+      <div class="param-group" style="flex:0;"><button class="btn btn-primary" onclick="updateCalc()" style="margin-top:1.4rem;">Calculer</button></div>
+    </div>
+  </div>
+
+  <!-- Value mode -->
+  <div id="calc-value" class="mode-panel">
+    <div class="params-row">
+      <div class="param-group">
+        <label>Type</label>
+        <select id="val-type" onchange="updateValCalc()">
+          <option value="lt">P(X &lt; x) = P → trouver x</option>
+          <option value="gt">P(X &gt; x) = P → trouver x</option>
+        </select>
+      </div>
+      <div class="param-group"><label>Probabilité P</label><input type="number" id="val-p" step="0.001" min="0.001" max="0.999" onchange="updateValCalc()"></div>
+      <div class="param-group" style="flex:0;"><button class="btn btn-primary" onclick="updateValCalc()" style="margin-top:1.4rem;">Calculer</button></div>
+    </div>
+  </div>
+
+  <!-- Slider mode -->
+  <div id="calc-slider" class="mode-panel">
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:0.5rem;">
+      <strong>Clique-glisse</strong> sur le graphique pour sélectionner un intervalle. Déplace les <strong>poignées</strong> ou glisse la zone colorée.
+    </p>
+  </div>
+</div>
+
+<!-- Graph -->
+<div class="card">
+  <h2 class="section-title"><span class="num">3</span> Visualisation</h2>
+  <div class="graph-area" id="graphArea">
+    <canvas id="mainCanvas"></canvas>
+  </div>
+  <div class="calc-result" id="resultBox">
+    <span style="color:var(--text-hint);">Configure tes paramètres ci-dessus et clique « Calculer ».</span>
+  </div>
+</div>
+
+<footer>Outil pédagogique — Statistiques L1 Psychologie — UCLy<br>Dr Adolphe Béquet · <a href="mailto:abequet@univ-catholyon.fr">abequet@univ-catholyon.fr</a></footer>
+</div>
+
+<script>
+// ═══ State ═══
+let mu = 0, sigma = 1;
+let selA = null, selB = null;
+let dragging = null, dragStartX = null, moveOffset = null;
+let currentMode = 'standard';
+let calcMode = 'prob';
+const Z_RANGE = 4;
+const PAD = { top: 45, right: 30, bottom: 90, left: 30 };
+
+// ═══ Mode switching ═══
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.tool-tab').forEach((t,i) => t.classList.toggle('active', ['standard','custom','random'][i]===mode));
+  document.querySelectorAll('#mode-standard,#mode-custom,#mode-random').forEach(el => el.classList.remove('active'));
+  document.getElementById('mode-'+mode).classList.add('active');
+  if (mode==='standard') { mu=0; sigma=1; }
+  else if (mode==='custom') applyParams();
+  else if (mode==='random') randomize();
+  selA=null; selB=null;
+  drawGraph(); clearResult();
+}
+
+function applyParams() {
+  mu = parseFloat(document.getElementById('custom-mu').value)||0;
+  sigma = parseFloat(document.getElementById('custom-sigma').value)||1;
+  if(sigma<=0) sigma=1;
+  selA=null; selB=null;
+  drawGraph(); clearResult();
+}
+
+function randomize() {
+  const contexts = [
+    { mu:100, sigma:15, label:'QI' },
+    { mu:65, sigma:10, label:'Score lecture' },
+    { mu:32, sigma:8, label:'Anxiété' },
+    { mu:11.5, sigma:3.2, label:'Âge premiers mots (mois)' },
+    { mu:20, sigma:6, label:'Litres de lait/mois' },
+    { mu:55, sigma:12, label:'Stress professionnel' },
+    { mu:7.5, sigma:1.2, label:'Heures de sommeil' },
+    { mu:503, sigma:50, label:'Temps réaction (ms)' },
+  ];
+  const c = contexts[Math.floor(Math.random()*contexts.length)];
+  mu=c.mu; sigma=c.sigma;
+  document.getElementById('random-display').innerHTML = `X ~ N(${mu}, ${sigma}) — <em>${c.label}</em>`;
+  selA=null; selB=null;
+  drawGraph(); clearResult();
+}
+
+function setCalcMode(mode) {
+  calcMode = mode;
+  document.querySelectorAll('.calc-type-btn').forEach((b,i) => b.classList.toggle('active', ['prob','value','slider'][i]===mode));
+  document.querySelectorAll('#calc-prob,#calc-value,#calc-slider').forEach(el => el.classList.remove('active'));
+  document.getElementById('calc-'+mode).classList.add('active');
+  selA=null; selB=null;
+  const canvas = document.getElementById('mainCanvas');
+  canvas.style.cursor = mode==='slider' ? 'crosshair' : 'default';
+  drawGraph(); clearResult();
+}
+
+function clearResult() {
+  document.getElementById('resultBox').innerHTML = '<span style="color:var(--text-hint);">Configure tes paramètres et clique « Calculer ».</span>';
+}
+
+// ═══ Probability calc ═══
+function updateCalc() {
+  const type = document.getElementById('prob-type').value;
+  const a = parseFloat(document.getElementById('prob-a').value);
+  document.getElementById('prob-b-group').style.display = type==='between' ? '' : 'none';
+  if (isNaN(a)) return;
+
+  const isStd = currentMode==='standard';
+  const zA = isStd ? a : (a - mu) / sigma;
+  const aLabel = isStd ? a : a;
+  let prob, html, fillFrom, fillTo, fillColor;
+
+  if (type === 'lt') {
+    prob = normalCDF(zA);
+    fillFrom = mu-Z_RANGE*sigma; fillTo = isStd ? a : a;
+    html = `<div class="step-label">Étape 1 — Identifier ce qu'on cherche</div>`;
+    if (!isStd) {
+      html += `<span class="formula">On cherche P(X &lt; ${a}) avec X ~ N(${mu}, ${sigma})</span>`;
+      html += `<div class="step-label">Étape 2 — Transformer x en z</div>`;
+      html += `<span class="formula">z = (${a} − ${mu}) / ${sigma} = <strong>${R2(zA)}</strong></span>`;
+    } else {
+      html += `<span class="formula">On cherche P(Z &lt; ${R2(a)})</span>`;
+    }
+    if (zA >= 0) {
+      html += `<div class="step-label">Étape ${isStd?2:3} — Identifier le cas</div>`;
+      html += `<span class="formula">P(Z &lt; z) avec z ≥ 0 → <span class="rule-tag">Cas 1 : lecture directe</span></span>`;
+      html += `<span class="formula">= P(Z &lt; ${R2(zA)}) = <strong>${R(prob)}</strong></span>`;
+    } else {
+      html += `<div class="step-label">Étape ${isStd?2:3} — Identifier le cas</div>`;
+      html += `<span class="formula">P(Z &lt; ${R2(zA)}) → z négatif → <span class="rule-tag">Cas 3 : P(Z &lt; −z) = 1 − P(Z &lt; z)</span></span>`;
+      html += `<span class="formula">= 1 − P(Z &lt; ${R2(-zA)}) = 1 − ${R(normalCDF(-zA))} = <strong>${R(prob)}</strong></span>`;
+    }
+  } else if (type === 'gt') {
+    prob = 1 - normalCDF(zA);
+    fillFrom = isStd ? a : a; fillTo = mu+Z_RANGE*sigma;
+    fillColor = 'rgba(192,57,43,0.18)';
+    html = `<div class="step-label">Étape 1 — Identifier ce qu'on cherche</div>`;
+    if (!isStd) {
+      html += `<span class="formula">On cherche P(X &gt; ${a}) avec X ~ N(${mu}, ${sigma})</span>`;
+      html += `<div class="step-label">Étape 2 — Transformer x en z</div>`;
+      html += `<span class="formula">z = (${a} − ${mu}) / ${sigma} = <strong>${R2(zA)}</strong></span>`;
+    } else {
+      html += `<span class="formula">On cherche P(Z &gt; ${R2(a)})</span>`;
+    }
+    if (zA >= 0) {
+      html += `<div class="step-label">Étape ${isStd?2:3} — Identifier le cas</div>`;
+      html += `<span class="formula">P(Z &gt; z) avec z ≥ 0 → <span class="rule-tag">Cas 2 : 1 − P(Z &lt; z)</span></span>`;
+      html += `<span class="formula">= 1 − P(Z &lt; ${R2(zA)})</span>`;
+      html += `<span class="formula">= 1 − ${R(normalCDF(zA))} = <strong>${R(prob)}</strong></span>`;
+    } else {
+      html += `<div class="step-label">Étape ${isStd?2:3} — Identifier le cas</div>`;
+      html += `<span class="formula">P(Z &gt; ${R2(zA)}) → z négatif → <span class="rule-tag">Cas 4 : P(Z &gt; −z) = P(Z &lt; z)</span></span>`;
+      html += `<span class="formula">= P(Z &lt; ${R2(-zA)}) = <strong>${R(prob)}</strong></span>`;
+    }
+  } else {
+    const b = parseFloat(document.getElementById('prob-b').value);
+    if (isNaN(b)) return;
+    const zB = isStd ? b : (b - mu) / sigma;
+    const lo = Math.min(a,b), hi = Math.max(a,b);
+    const zLo = Math.min(zA,zB), zHi = Math.max(zA,zB);
+    prob = normalCDF(zHi) - normalCDF(zLo);
+    fillFrom = isStd ? lo : lo; fillTo = isStd ? hi : hi;
+    fillColor = 'rgba(29,122,78,0.2)';
+    html = `<div class="step-label">Étape 1 — Identifier ce qu'on cherche</div>`;
+    if (!isStd) {
+      html += `<span class="formula">On cherche P(${R2(lo)} &lt; X &lt; ${R2(hi)}) avec X ~ N(${mu}, ${sigma})</span>`;
+      html += `<div class="step-label">Étape 2 — Transformer les bornes en z</div>`;
+      html += `<span class="formula">z₁ = (${R2(lo)} − ${mu}) / ${sigma} = <strong>${R2(zLo)}</strong></span>`;
+      html += `<span class="formula">z₂ = (${R2(hi)} − ${mu}) / ${sigma} = <strong>${R2(zHi)}</strong></span>`;
+    } else {
+      html += `<span class="formula">On cherche P(${R2(zLo)} &lt; Z &lt; ${R2(zHi)})</span>`;
+    }
+    html += `<div class="step-label">Étape ${isStd?2:3} — Appliquer la règle d'encadrement</div>`;
+    html += `<span class="formula"><span class="rule-tag">Cas 5 : P(z₁ &lt; Z &lt; z₂) = P(Z &lt; z₂) − P(Z &lt; z₁)</span></span>`;
+    // Handle negative z values in the sub-calculations
+    let pHiHtml, pLoHtml;
+    if (zHi >= 0) {
+      pHiHtml = `P(Z &lt; ${R2(zHi)}) = ${R(normalCDF(zHi))}`;
+    } else {
+      pHiHtml = `P(Z &lt; ${R2(zHi)}) = 1 − P(Z &lt; ${R2(-zHi)}) = 1 − ${R(normalCDF(-zHi))} = ${R(normalCDF(zHi))}`;
+    }
+    if (zLo >= 0) {
+      pLoHtml = `P(Z &lt; ${R2(zLo)}) = ${R(normalCDF(zLo))}`;
+    } else {
+      pLoHtml = `P(Z &lt; ${R2(zLo)}) = 1 − P(Z &lt; ${R2(-zLo)}) = 1 − ${R(normalCDF(-zLo))} = ${R(normalCDF(zLo))}`;
+    }
+    html += `<span class="formula" style="color:var(--text-muted);">${pHiHtml}</span>`;
+    html += `<span class="formula" style="color:var(--text-muted);">${pLoHtml}</span>`;
+    html += `<span class="formula">= ${R(normalCDF(zHi))} − ${R(normalCDF(zLo))} = <strong>${R(prob)}</strong></span>`;
+  }
+
+  selA = fillFrom; selB = fillTo;
+  drawGraph(fillColor);
+  document.getElementById('resultBox').innerHTML = html + `<div style="margin-top:0.5rem;"><span class="prob-result">≈ ${(prob*100).toFixed(2)} %</span></div>`;
+}
+
+// ═══ Value calc ═══
+function updateValCalc() {
+  const type = document.getElementById('val-type').value;
+  const raw = document.getElementById('val-p').value;
+  const p = parseFloat(raw);
+
+  if (raw === '' || isNaN(p)) {
+    document.getElementById('resultBox').innerHTML = '<span style="color:var(--text-hint);">Entre une probabilité pour calculer.</span>';
+    return;
+  }
+  if (p <= 0 || p >= 1) {
+    document.getElementById('resultBox').innerHTML = '<span style="color:var(--danger);font-weight:600;">⚠ La probabilité doit être strictement comprise entre 0 et 1 (ex : 0.05, 0.75, 0.95).</span><br><span style="color:var(--text-muted);font-size:0.85rem;">Tu as entré P = ' + p + ' — une probabilité de 0 ou 1 n\'a pas de z fini associé, et une valeur négative ou supérieure à 1 n\'est pas une probabilité.</span>';
+    return;
+  }
+
+  const isStd = currentMode==='standard';
+  let z, x, html;
+
+  if (type === 'lt') {
+    z = normalInvCDF(p);
+    x = mu + z * sigma;
+    selA = mu-Z_RANGE*sigma; selB = isStd ? z : x;
+
+    html = `<div class="step-label">Étape 1 — Ce qu'on cherche</div>`;
+    html += `<span class="formula">${isStd ? 'z' : 'x'} ? sachant P(${isStd?'Z':'X'} &lt; ${isStd?'z':'x'}) = ${p}</span>`;
+    html += `<div class="step-label">Étape 2 — Identifier le cas (table inverse)</div>`;
+
+    if (p >= 0.5) {
+      html += `<span class="formula">P = ${p} &gt; 0.5 → <span class="rule-tag">Cas A : lecture directe, z positif</span></span>`;
+      html += `<span class="formula">Table inverse → z = <strong>${R(z)}</strong></span>`;
+    } else {
+      html += `<span class="formula">P = ${p} &lt; 0.5 → <span class="rule-tag">Cas B : lecture directe puis z négatif (−z)</span></span>`;
+      html += `<span class="formula">Table inverse → lecture : ${R(-z)} → z = <strong>${R(z)}</strong></span>`;
+    }
+
+    if (!isStd) {
+      html += `<div class="step-label">Étape 3 — Retransformer z en x (formule 2)</div>`;
+      html += `<span class="formula">x = (z × s) + m = (${R(z)} × ${sigma}) + ${mu}</span>`;
+      html += `<span class="formula">x = <strong>${R2(x)}</strong></span>`;
+    }
+  } else {
+    // P(X > x) = p
+    html = `<div class="step-label">Étape 1 — Ce qu'on cherche</div>`;
+    html += `<span class="formula">${isStd ? 'z' : 'x'} ? sachant P(${isStd?'Z':'X'} &gt; ${isStd?'z':'x'}) = ${p}</span>`;
+    html += `<div class="step-label">Étape 2 — Identifier le cas (table inverse)</div>`;
+
+    if (p > 0.5) {
+      // Cas C: P(Z>z) = P > 0.5 → z négatif
+      z = -normalInvCDF(p);
+      x = mu + z * sigma;
+      selA = isStd ? z : x; selB = mu+Z_RANGE*sigma;
+      html += `<span class="formula">P(Z &gt; z) = ${p} avec P &gt; 0.5 → <span class="rule-tag">Cas C : lecture puis −z (z négatif)</span></span>`;
+      html += `<span class="formula">Table inverse pour P = ${p} → lecture : ${R(-z)} → z = <strong>${R(z)}</strong></span>`;
+    } else {
+      // Cas D: P(Z>z) = P < 0.5 → z positif (2 changements s'annulent)
+      z = normalInvCDF(1-p);
+      x = mu + z * sigma;
+      selA = isStd ? z : x; selB = mu+Z_RANGE*sigma;
+      html += `<span class="formula">P(Z &gt; z) = ${p} avec P &lt; 0.5 → <span class="rule-tag">Cas D : 2 changements s'annulent → z positif</span></span>`;
+      html += `<span class="formula">Table inverse pour P = ${p} → z = <strong>${R(z)}</strong></span>`;
+      html += `<span class="formula explanation" style="font-style:italic;color:var(--text-muted);">(P &lt; 0.5 → −z, et P(&gt;) → −z, soit 2 inversions = z reste positif)</span>`;
+    }
+
+    if (!isStd) {
+      html += `<div class="step-label">Étape 3 — Retransformer z en x (formule 2)</div>`;
+      html += `<span class="formula">x = (${R(z)} × ${sigma}) + ${mu} = <strong>${R2(x)}</strong></span>`;
+    }
+  }
+
+  drawGraph(type==='gt' ? 'rgba(192,57,43,0.18)' : undefined);
+  document.getElementById('resultBox').innerHTML = html + `<div style="margin-top:0.5rem;"><span class="prob-result">${isStd?'z':'x'} ≈ ${isStd ? R(z) : R2(x)}</span></div>`;
+}
+
+// ═══ Canvas ═══
+function setupCanvas() {
+  const canvas = document.getElementById('mainCanvas');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio||1;
+  const w = rect.width, h = Math.max(380, w*0.42);
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  canvas.style.width = w+'px'; canvas.style.height = h+'px';
+  const ctx = canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,w,h};
+}
+function xToPixel(xVal,w){const xMin=mu-Z_RANGE*sigma,xMax=mu+Z_RANGE*sigma;return PAD.left+((xVal-xMin)/(xMax-xMin))*(w-PAD.left-PAD.right);}
+function pixelToX(px,w){const xMin=mu-Z_RANGE*sigma,xMax=mu+Z_RANGE*sigma;return xMin+((px-PAD.left)/(w-PAD.left-PAD.right))*(xMax-xMin);}
+function yToPixel(yVal,h){const yMax=normalPDF(0)*1.15;return PAD.top+(1-yVal/yMax)*(h-PAD.top-PAD.bottom);}
+
+function drawGraph(fillColor) {
+  const {ctx,w,h} = setupCanvas();
+  const xMin=mu-Z_RANGE*sigma, xMax=mu+Z_RANGE*sigma;
+  const plotBottom=h-PAD.bottom;
+  ctx.clearRect(0,0,w,h);
+
+  // Grid
+  for(let z=-Z_RANGE;z<=Z_RANGE;z++){
+    const px=xToPixel(mu+z*sigma,w);
+    ctx.beginPath();ctx.moveTo(px,PAD.top);ctx.lineTo(px,plotBottom);
+    ctx.strokeStyle=z===0?'rgba(61,82,160,0.3)':'rgba(0,0,0,0.06)';ctx.lineWidth=z===0?2:1;ctx.stroke();
+  }
+
+  // Fill
+  if(selA!==null&&selB!==null){
+    const lo=Math.max(Math.min(selA,selB),xMin), hi=Math.min(Math.max(selA,selB),xMax);
+    ctx.save();ctx.beginPath();
+    for(let i=0;i<=200;i++){const xv=lo+(hi-lo)*i/200,z=(xv-mu)/sigma;const px=xToPixel(xv,w),py=yToPixel(normalPDF(z),h);if(i===0)ctx.moveTo(px,plotBottom);ctx.lineTo(px,py);}
+    ctx.lineTo(xToPixel(hi,w),plotBottom);ctx.closePath();
+    ctx.fillStyle=fillColor||'rgba(61,82,160,0.18)';ctx.fill();ctx.restore();
+
+    // Handles (slider mode only)
+    if(calcMode==='slider'){
+      [{xVal:Math.min(selA,selB)},{xVal:Math.max(selA,selB)}].forEach(handle=>{
+        const px=xToPixel(handle.xVal,w);
+        ctx.save();ctx.beginPath();ctx.moveTo(px,PAD.top);ctx.lineTo(px,plotBottom);
+        ctx.strokeStyle='#3D52A0';ctx.lineWidth=2;ctx.setLineDash([6,4]);ctx.stroke();ctx.setLineDash([]);
+        const gy=PAD.top+(plotBottom-PAD.top)*0.12;
+        ctx.beginPath();ctx.roundRect(px-5,gy-18,10,36,5);ctx.fillStyle='#3D52A0';ctx.fill();
+        ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1;
+        for(let dy=-8;dy<=8;dy+=4){ctx.beginPath();ctx.moveTo(px-2,gy+dy);ctx.lineTo(px+2,gy+dy);ctx.stroke();}
+        const zH=(handle.xVal-mu)/sigma;
+        ctx.font="600 10px 'DM Mono',monospace";ctx.textAlign='center';
+        ctx.fillStyle='#3D52A0';ctx.fillText(currentMode==='standard'?`z=${zH.toFixed(2)}`:`x=${handle.xVal.toFixed(1)}`,px,plotBottom-6);
+        ctx.restore();
+      });
+    }
+  }
+
+  // Curve
+  ctx.save();ctx.beginPath();
+  for(let i=0;i<=400;i++){const xv=xMin+(xMax-xMin)*i/400,z=(xv-mu)/sigma;const px=xToPixel(xv,w),py=yToPixel(normalPDF(z),h);if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);}
+  ctx.strokeStyle='#3D52A0';ctx.lineWidth=3;ctx.stroke();ctx.restore();
+
+  // Axes
+  ctx.save();ctx.beginPath();ctx.moveTo(PAD.left,plotBottom);ctx.lineTo(w-PAD.right,plotBottom);ctx.strokeStyle='#1A1A18';ctx.lineWidth=1;ctx.stroke();
+  ctx.font="500 12px 'DM Mono',monospace";ctx.textAlign='center';
+  // Z-scores axis
+  ctx.fillStyle='#3D52A0';
+  for(let z=-Z_RANGE;z<=Z_RANGE;z++){
+    const px=xToPixel(mu+z*sigma,w);
+    ctx.beginPath();ctx.moveTo(px,plotBottom);ctx.lineTo(px,plotBottom+6);ctx.strokeStyle='#1A1A18';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='#3D52A0';ctx.fillText(`z=${z}`,px,plotBottom+20);
+  }
+  ctx.font="600 12px 'DM Sans',sans-serif";ctx.fillText('z-scores',w/2,plotBottom+35);
+  // X-values axis (if not standard)
+  if(currentMode!=='standard'){
+    const a2Y=plotBottom+44;
+    ctx.beginPath();ctx.moveTo(PAD.left,a2Y);ctx.lineTo(w-PAD.right,a2Y);ctx.strokeStyle='#4A4840';ctx.lineWidth=1;ctx.stroke();
+    ctx.font="500 12px 'DM Mono',monospace";ctx.fillStyle='#1A1A18';
+    for(let z=-Z_RANGE;z<=Z_RANGE;z++){
+      const xv=mu+z*sigma,px=xToPixel(xv,w);
+      ctx.beginPath();ctx.moveTo(px,a2Y);ctx.lineTo(px,a2Y+6);ctx.strokeStyle='#4A4840';ctx.lineWidth=1;ctx.stroke();
+      ctx.fillText(Number.isInteger(xv)?xv.toString():xv.toFixed(1),px,a2Y+20);
+    }
+    ctx.font="600 12px 'DM Sans',sans-serif";ctx.fillStyle='#4A4840';ctx.fillText('valeurs x',w/2,a2Y+35);
+  }
+  ctx.restore();
+}
+
+// ═══ Slider interaction ═══
+const canvas = document.getElementById('mainCanvas');
+function getEvtX(e){const r=canvas.getBoundingClientRect();return(e.touches?e.touches[0].clientX:e.clientX)-r.left;}
+function hitTest(px){
+  if(calcMode!=='slider'||selA===null) return 'new';
+  const w=canvas.getBoundingClientRect().width;
+  const lo=Math.min(selA,selB),hi=Math.max(selA,selB);
+  const pxLo=xToPixel(lo,w),pxHi=xToPixel(hi,w);
+  if(Math.abs(px-pxLo)<16) return 'left';
+  if(Math.abs(px-pxHi)<16) return 'right';
+  if(px>pxLo+16&&px<pxHi-16) return 'move';
+  return 'new';
+}
+function onDown(e){
+  if(calcMode!=='slider') return;
+  e.preventDefault();
+  const px=getEvtX(e),w=canvas.getBoundingClientRect().width,xv=pixelToX(px,w);
+  dragging=hitTest(px);
+  if(dragging==='new'){selA=xv;selB=xv;}
+  else if(dragging==='move'){dragStartX=xv;moveOffset={a:selA,b:selB};}
+  drawGraph();
+}
+function onMove(e){
+  if(calcMode!=='slider') return;
+  if(!dragging){const px=getEvtX(e),hit=hitTest(px);canvas.style.cursor=hit==='left'||hit==='right'?'ew-resize':hit==='move'?'grab':'crosshair';return;}
+  e.preventDefault();
+  const px=getEvtX(e),w=canvas.getBoundingClientRect().width;
+  const xMin=mu-Z_RANGE*sigma,xMax=mu+Z_RANGE*sigma;
+  const xv=Math.max(xMin,Math.min(xMax,pixelToX(px,w)));
+  if(dragging==='new') selB=xv;
+  else if(dragging==='left'){const hi=Math.max(selA,selB);selA=Math.min(xv,hi-0.01);selB=hi;}
+  else if(dragging==='right'){const lo=Math.min(selA,selB);selB=Math.max(xv,lo+0.01);selA=lo;}
+  else if(dragging==='move'){
+    const dx=xv-dragStartX;let nA=moveOffset.a+dx,nB=moveOffset.b+dx;const sp=Math.abs(nB-nA);
+    if(Math.min(nA,nB)<xMin){nA=xMin;nB=xMin+sp;} if(Math.max(nA,nB)>xMax){nB=xMax;nA=xMax-sp;}
+    selA=nA;selB=nB;
+  }
+  drawGraph(); updateSliderResult();
+}
+function onUp(){if(dragging&&calcMode==='slider'){if(selA>selB){const t=selA;selA=selB;selB=t;}dragging=null;drawGraph();updateSliderResult();}}
+
+function updateSliderResult(){
+  if(selA===null||selB===null) return;
+  const lo=Math.min(selA,selB),hi=Math.max(selA,selB);
+  const zLo=(lo-mu)/sigma,zHi=(hi-mu)/sigma;
+  const prob=normalCDF(zHi)-normalCDF(zLo);
+  const isStd = currentMode==='standard';
+  let html = '';
+  if(!isStd){
+    html += `<span class="formula">P(${R2(lo)} ≤ X ≤ ${R2(hi)})</span>`;
+    html += `<span class="formula" style="color:var(--text-muted);">z₁ = (${R2(lo)} − ${mu}) / ${sigma} = <strong>${R2(zLo)}</strong></span>`;
+    html += `<span class="formula" style="color:var(--text-muted);">z₂ = (${R2(hi)} − ${mu}) / ${sigma} = <strong>${R2(zHi)}</strong></span>`;
+  }
+  html += `<span class="formula"><span class="rule-tag">Cas 5 : P(z₁ &lt; Z &lt; z₂) = P(Z &lt; z₂) − P(Z &lt; z₁)</span></span>`;
+  // Detail sub-calculations for negative z
+  let pHiStr = `P(Z &lt; ${R2(zHi)})`;
+  let pLoStr = `P(Z &lt; ${R2(zLo)})`;
+  if (zHi < 0) pHiStr += ` = 1 − P(Z &lt; ${R2(-zHi)}) = ${R(normalCDF(zHi))}`;
+  else pHiStr += ` = ${R(normalCDF(zHi))}`;
+  if (zLo < 0) pLoStr += ` = 1 − P(Z &lt; ${R2(-zLo)}) = ${R(normalCDF(zLo))}`;
+  else pLoStr += ` = ${R(normalCDF(zLo))}`;
+  html += `<span class="formula" style="color:var(--text-muted);">${pHiStr}</span>`;
+  html += `<span class="formula" style="color:var(--text-muted);">${pLoStr}</span>`;
+  html += `<span class="formula">= ${R(normalCDF(zHi))} − ${R(normalCDF(zLo))} = <strong>${R(prob)}</strong></span>`;
+  html += `<div style="margin-top:0.5rem;"><span class="prob-result">≈ ${(prob*100).toFixed(2)} %</span></div>`;
+  document.getElementById('resultBox').innerHTML = html;
+}
+
+canvas.addEventListener('mousedown',onDown);
+window.addEventListener('mousemove',onMove);
+window.addEventListener('mouseup',onUp);
+canvas.addEventListener('touchstart',onDown,{passive:false});
+window.addEventListener('touchmove',onMove,{passive:false});
+window.addEventListener('touchend',onUp);
+window.addEventListener('resize',()=>drawGraph());
+
+// Hide prob-b-group initially
+document.getElementById('prob-b-group').style.display='none';
+document.getElementById('prob-type').addEventListener('change',function(){
+  document.getElementById('prob-b-group').style.display=this.value==='between'?'':'none';
+});
+
+// Init
+drawGraph();
+</script>
+</body>
+</html>

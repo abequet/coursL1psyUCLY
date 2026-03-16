@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Révisions Loi Normale — L1 Psychologie</title>
+<style>
+/* ═══════════════════════════════════════
+   Loi Normale — Site de révisions L1 Psycho
+   Shared stylesheet
+   ═══════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&display=swap');
+
+:root {
+  --bg: #FAF9F6;
+  --bg-card: #FFFFFF;
+  --bg-accent: #F0EDE6;
+  --bg-input: #F7F5F0;
+  --text: #1A1A18;
+  --text-muted: #4A4840;
+  --text-hint: #7A7770;
+  --accent: #3D52A0;
+  --accent-hover: #2F4390;
+  --accent-light: #E8ECF8;
+  --accent-mid: #7B8EC8;
+  --teal: #1D7A4E;
+  --teal-light: #E6F4ED;
+  --danger: #C0392B;
+  --danger-light: #FBEAEA;
+  --warning: #B8860B;
+  --warning-light: #FDF5E1;
+  --border: #E2DFD6;
+  --border-strong: #C9C5B8;
+  --shadow: 0 1px 3px rgba(26,26,24,0.06), 0 4px 12px rgba(26,26,24,0.04);
+  --shadow-lg: 0 4px 16px rgba(26,26,24,0.08), 0 12px 40px rgba(26,26,24,0.06);
+  --radius: 10px;
+  --radius-lg: 16px;
+  --font-body: 'DM Sans', sans-serif;
+  --font-heading: 'Fraunces', serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  font-size: 16px;
+}
+
+/* ── Layout ── */
+.container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+/* ── Navigation ── */
+.site-nav {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.site-nav .nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 56px;
+  flex-wrap: wrap;
+}
+.site-nav .nav-brand {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+  margin-right: auto;
+}
+.site-nav .nav-links {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  list-style: none;
+}
+.site-nav .nav-links a {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: var(--radius);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.site-nav .nav-links a:hover { background: var(--bg-accent); color: var(--text); }
+.site-nav .nav-links a.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+
+/* ── Page header ── */
+.page-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, #3D52A0 0%, #5B6DB5 50%, #7B8EC8 100%);
+  border-radius: var(--radius-lg);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+.page-header h1 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+  position: relative;
+}
+.page-header p { font-size: 0.95rem; opacity: 0.85; position: relative; }
+.page-header .breadcrumb {
+  font-size: 0.82rem;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+.page-header .breadcrumb a { color: white; text-decoration: underline; }
+
+/* ── Section titles ── */
+.section-title {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.section-title .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+}
+.card.card-accent { border-left: 4px solid var(--accent); }
+.card.card-success { border-left: 4px solid var(--teal); }
+.card.card-warning { border-left: 4px solid var(--warning); }
+
+/* ── Formulas ── */
+.formula-card {
+  background: var(--warning-light);
+  border: 1px solid #E8D5A0;
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+.formula-card strong {
+  color: var(--warning);
+  font-family: var(--font-mono);
+}
+
+.formula-box {
+  background: var(--bg-accent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  margin: 0.75rem 0;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-secondary { background: var(--bg-accent); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+.btn-success { background: var(--teal); color: white; }
+.btn-success:hover { background: #166B41; }
+.btn-row { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+
+/* ── Form elements ── */
+.param-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+}
+.param-group input, .param-group select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  background: var(--bg-input);
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.param-group input:focus, .param-group select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+/* ── Tables ── */
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+thead th {
+  background: var(--bg-accent);
+  padding: 0.7rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+tbody td {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+}
+tbody tr:hover { background: var(--bg-accent); }
+
+/* ── Badges ── */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+}
+.badge-ok { background: var(--teal-light); color: var(--teal); }
+.badge-extreme { background: var(--danger-light); color: var(--danger); }
+.badge-info { background: var(--accent-light); color: var(--accent); }
+
+/* ── Exercise components ── */
+.exercise-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+.exercise-block .exercise-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.exercise-block .exercise-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.exercise-block .exercise-label {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+.exercise-block .exercise-difficulty {
+  margin-left: auto;
+}
+.exercise-block .exercise-context {
+  background: var(--bg-accent);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.exercise-block .question-block {
+  margin: 1rem 0;
+  padding: 0.75rem 0;
+}
+.exercise-block .question-text {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.exercise-block .answer-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+.exercise-block .answer-input input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  background: var(--bg-input);
+  flex: 1;
+  max-width: 300px;
+}
+.exercise-block .answer-input input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+/* ── Correction / solution reveal ── */
+.solution {
+  display: none;
+  margin-top: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--teal-light);
+  border: 1px solid #B8E0CC;
+  border-radius: var(--radius);
+  animation: slideDown 0.3s ease;
+}
+.solution.visible { display: block; }
+.solution .step {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  margin: 0.3rem 0;
+  padding: 0.2rem 0;
+  color: var(--text);
+}
+.solution .step-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--teal);
+  margin-top: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+.solution .result {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--teal);
+  font-family: var(--font-mono);
+  margin-top: 0.5rem;
+}
+.solution .explanation {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Feedback ── */
+.feedback-correct {
+  color: var(--teal);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+.feedback-incorrect {
+  color: var(--danger);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+/* ── Grid layouts ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .page-header h1 { font-size: 1.5rem; }
+  .site-nav .nav-links { gap: 0; }
+  .site-nav .nav-links a { padding: 0.3rem 0.5rem; font-size: 0.78rem; }
+}
+
+/* ── Home page cards ── */
+.nav-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.25s;
+  display: block;
+  box-shadow: var(--shadow);
+}
+.nav-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-mid);
+}
+.nav-card .card-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+.nav-card h3 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+.nav-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── Mini curve (canvas) ── */
+.mini-curve {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.mini-curve canvas { display: block; width: 100%; }
+
+/* ── Reveal btn ── */
+.btn-reveal {
+  background: none;
+  border: 1px dashed var(--border-strong);
+  color: var(--text-muted);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-reveal:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* ── Progress indicator ── */
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-accent);
+  border-radius: 3px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+.progress-bar .progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+/* ── Score tracker ── */
+.score-tracker {
+  position: sticky;
+  top: 60px;
+  z-index: 50;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+}
+.score-tracker .score-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.score-tracker .score-value {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.score-tracker .score-bar {
+  flex: 1;
+  min-width: 100px;
+  height: 8px;
+  background: var(--bg-accent);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.score-tracker .score-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--teal));
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+/* ── Footer ── */
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--text-hint);
+}
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* ── Tooltip style for rules ── */
+.rule-tag {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  margin-left: 0.25rem;
+}
+
+/* ── Table input for z-score exercises ── */
+.z-table-input {
+  width: 80px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  text-align: center;
+  background: var(--bg-input);
+}
+.z-table-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+.z-table-input.correct { border-color: var(--teal); background: var(--teal-light); }
+.z-table-input.incorrect { border-color: var(--danger); background: var(--danger-light); }
+
+</style>
+</head>
+<body>
+<script>
+/* ═══════════════════════════════════════
+   Shared JS — Normal distribution math & UI utils
+   ═══════════════════════════════════════ */
+
+// ── Normal distribution functions ──
+function normalPDF(z) {
+  return Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
+}
+
+function normalCDF(z) {
+  const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
+  const s = z < 0 ? -1 : 1;
+  const x = Math.abs(z) / Math.sqrt(2);
+  const t = 1 / (1 + p * x);
+  const y = 1 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t * Math.exp(-x*x);
+  return 0.5 * (1 + s * y);
+}
+
+function normalInvCDF(p) {
+  if (p <= 0) return -Infinity;
+  if (p >= 1) return Infinity;
+  if (p < 0.5) return -normalInvCDF(1 - p);
+  const a = [-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02,
+             1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00];
+  const b = [-5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02,
+             6.680131188771972e+01, -1.328068155288572e+01];
+  const c = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00,
+             -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
+  const d = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00, 3.754408661907416e+00];
+  const pL = 0.02425, pH = 1 - pL;
+  let q, r;
+  if (p < pL) {
+    q = Math.sqrt(-2 * Math.log(p));
+    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  } else if (p <= pH) {
+    q = p - 0.5; r = q * q;
+    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+  } else {
+    q = Math.sqrt(-2 * Math.log(1 - p));
+    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+  }
+}
+
+// ── Round to n decimals ──
+function R(val, n = 4) {
+  return Math.round(val * Math.pow(10, n)) / Math.pow(10, n);
+}
+function R2(val) { return R(val, 2); }
+
+// ── Navigation component ──
+function renderNav(activePage) {
+  const pages = [
+    { id: 'index', label: 'Accueil', href: 'index.html' },
+    { id: 'cours', label: 'Fiches', href: 'cours.html' },
+    { id: 'exercices-table', label: 'Exos table', href: 'exercices-table.html' },
+    { id: 'exercices-contexte', label: 'Exos contexte', href: 'exercices-contexte.html' },
+    { id: 'exercices-zscore', label: 'Exos z-scores', href: 'exercices-zscore.html' },
+    { id: 'outil', label: 'Outil courbe', href: 'outil.html' },
+  ];
+
+  const nav = document.createElement('nav');
+  nav.className = 'site-nav';
+  nav.innerHTML = `
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Loi Normale L1</a>
+      <ul class="nav-links">
+        ${pages.map(p => `<li><a href="${p.href}" class="${p.id === activePage ? 'active' : ''}">${p.label}</a></li>`).join('')}
+      </ul>
+    </div>
+  `;
+  document.body.prepend(nav);
+}
+
+// ── Solution toggle ──
+function toggleSolution(btn, solutionId) {
+  const sol = document.getElementById(solutionId);
+  if (sol.classList.contains('visible')) {
+    sol.classList.remove('visible');
+    btn.textContent = 'Voir le corrigé';
+  } else {
+    sol.classList.add('visible');
+    btn.textContent = 'Masquer le corrigé';
+  }
+}
+
+// ── Mini curve drawing ──
+function drawMiniCurve(canvasId, options = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const w = rect.width;
+  const h = options.height || 180;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const mu = options.mu || 0;
+  const sigma = options.sigma || 1;
+  const zRange = 4;
+  const pad = { top: 20, right: 20, bottom: 40, left: 20 };
+  const xMin = mu - zRange * sigma;
+  const xMax = mu + zRange * sigma;
+  const yMax = normalPDF(0) * 1.15;
+  const plotBottom = h - pad.bottom;
+
+  function xToPx(xVal) { return pad.left + ((xVal - xMin) / (xMax - xMin)) * (w - pad.left - pad.right); }
+  function yToPx(yVal) { return pad.top + (1 - yVal / yMax) * (h - pad.top - pad.bottom); }
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Fill area if specified
+  if (options.fillFrom !== undefined && options.fillTo !== undefined) {
+    const lo = Math.max(options.fillFrom, xMin);
+    const hi = Math.min(options.fillTo, xMax);
+    ctx.save();
+    ctx.beginPath();
+    const steps = 150;
+    for (let i = 0; i <= steps; i++) {
+      const xv = lo + (hi - lo) * i / steps;
+      const z = (xv - mu) / sigma;
+      if (i === 0) ctx.moveTo(xToPx(xv), plotBottom);
+      ctx.lineTo(xToPx(xv), yToPx(normalPDF(z)));
+    }
+    ctx.lineTo(xToPx(hi), plotBottom);
+    ctx.closePath();
+    ctx.fillStyle = options.fillColor || 'rgba(61, 82, 160, 0.18)';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Curve
+  ctx.save();
+  ctx.beginPath();
+  for (let i = 0; i <= 300; i++) {
+    const xv = xMin + (xMax - xMin) * i / 300;
+    const z = (xv - mu) / sigma;
+    const px = xToPx(xv), py = yToPx(normalPDF(z));
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = '#3D52A0';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  ctx.restore();
+
+  // Axis
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(pad.left, plotBottom);
+  ctx.lineTo(w - pad.right, plotBottom);
+  ctx.strokeStyle = '#1A1A18';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Ticks
+  ctx.font = "500 11px 'DM Mono', monospace";
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#3D52A0';
+  for (let z = -zRange; z <= zRange; z++) {
+    const xv = mu + z * sigma;
+    const px = xToPx(xv);
+    ctx.beginPath(); ctx.moveTo(px, plotBottom); ctx.lineTo(px, plotBottom + 5);
+    ctx.strokeStyle = '#6B6960'; ctx.lineWidth = 1; ctx.stroke();
+    if (options.showX) {
+      const label = Number.isInteger(xv) ? xv.toString() : xv.toFixed(1);
+      ctx.fillStyle = '#1A1A18';
+      ctx.fillText(label, px, plotBottom + 18);
+      ctx.fillStyle = '#3D52A0';
+      ctx.fillText(`z=${z}`, px, plotBottom + 30);
+    } else {
+      ctx.fillText(`${z}`, px, plotBottom + 18);
+    }
+  }
+  ctx.restore();
+
+  // Probability label if specified
+  if (options.probLabel) {
+    const midX = ((options.fillFrom || 0) + (options.fillTo || 0)) / 2;
+    const px = xToPx(midX);
+    const py = yToPx(normalPDF((midX - mu) / sigma)) - 10;
+    ctx.save();
+    ctx.font = "600 13px 'DM Mono', monospace";
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#3D52A0';
+    ctx.fillText(options.probLabel, px, Math.max(py, pad.top + 15));
+    ctx.restore();
+  }
+}
+
+// ── Check numeric answer ──
+function checkAnswer(inputId, expected, tolerance) {
+  const input = document.getElementById(inputId);
+  const val = parseFloat(input.value.replace(',', '.'));
+  const tol = tolerance || 0.02;
+  if (isNaN(val)) return null;
+  return Math.abs(val - expected) <= tol;
+}
+
+// ── Score tracker ──
+const ScoreTracker = {
+  total: 0,
+  correct: 0,
+  answered: new Set(),
+
+  init(totalQuestions) {
+    this.total = totalQuestions;
+    this.correct = 0;
+    this.answered = new Set();
+  },
+
+  record(questionId, isCorrect) {
+    if (this.answered.has(questionId)) return;
+    this.answered.add(questionId);
+    if (isCorrect) this.correct++;
+    this.update();
+  },
+
+  update() {
+    const valEl = document.getElementById('score-value');
+    const barEl = document.getElementById('score-bar-fill');
+    if (valEl) valEl.textContent = `${this.correct} / ${this.total}`;
+    if (barEl) barEl.style.width = `${(this.answered.size / this.total) * 100}%`;
+  },
+
+  renderWidget() {
+    return `<div class="score-tracker">
+      <span class="score-label">Score</span>
+      <span class="score-value" id="score-value">0 / ${this.total}</span>
+      <div class="score-bar"><div class="score-bar-fill" id="score-bar-fill" style="width:0%"></div></div>
+      <span style="font-size:0.78rem;color:var(--text-hint);">${this.total} questions</span>
+    </div>`;
+  }
+};
+
+// ── Validate answer with visual feedback + score ──
+function validateAnswer(inputId, expected, questionId, tolerance) {
+  const input = document.getElementById(inputId);
+  const val = parseFloat(input.value.replace(',', '.'));
+  const tol = tolerance || 0.025;
+  if (isNaN(val)) { input.style.borderColor = 'var(--warning)'; return; }
+  const correct = Math.abs(val - expected) <= tol;
+  input.classList.remove('correct', 'incorrect');
+  input.classList.add(correct ? 'correct' : 'incorrect');
+  input.style.borderColor = correct ? 'var(--teal)' : 'var(--danger)';
+  ScoreTracker.record(questionId, correct);
+  return correct;
+}
+
+</script>
+<script>renderNav('index');</script>
+
+<div class="container">
+
+<div class="page-header">
+  <h1>Révisions — Loi Normale</h1>
+  <p>L1 Psychologie &middot; UCLy &middot; Statistiques</p>
+</div>
+
+<div class="card" style="text-align:center; padding: 2rem;">
+  <p style="font-size: 1.05rem; max-width: 650px; margin: 0 auto; color: var(--text-muted);">
+    Ce site t'aide à réviser la loi normale centrée réduite pour le contrôle terminal.
+    Tu y trouveras des fiches de rappel, des exercices corrigés pas-à-pas, et un outil interactif pour visualiser les probabilités.
+  </p>
+  <p style="margin-top: 0.75rem; font-size: 0.88rem; color: var(--text-hint);">
+    N'oublie pas ta <strong>table de la loi normale</strong> (directe + inverse) à côté de toi pour t'entraîner dans les conditions de l'examen !
+  </p>
+</div>
+
+<div class="card" style="margin-top: 1rem;">
+  <h2 class="section-title"><span class="num">?</span> Comment utiliser ce site</h2>
+  <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.8;">
+    <strong>1.</strong> Commence par relire les <a href="cours.html" style="color: var(--accent);">fiches de cours</a> pour bien revoir les règles de lecture de table.<br>
+    <strong>2.</strong> Fais les exercices dans l'ordre : d'abord la <a href="exercices-table.html" style="color: var(--accent);">lecture de table</a> (les bases), puis les <a href="exercices-contexte.html" style="color: var(--accent);">problèmes contextualisés</a> (comme à l'examen), puis les <a href="exercices-zscore.html" style="color: var(--accent);">tableaux z-scores</a>.<br>
+    <strong>3.</strong> Utilise ta table papier pour résoudre, puis clique sur « Voir le corrigé » pour vérifier.<br>
+    <strong>4.</strong> L'<a href="outil.html" style="color: var(--accent);">outil interactif</a> est là pour t'aider à visualiser ce que tu calcules.
+  </p>
+</div>
+
+<div class="formula-card" style="margin-top: 1.5rem;">
+  <strong>Formule 1 : z = (x − m) / s</strong> &nbsp;|&nbsp;
+  <strong>Formule 2 : x = (z × s) + m</strong> &nbsp;|&nbsp;
+  Valeur atypique si <strong>|z| &gt; 2</strong>
+</div>
+
+<div class="grid-3" style="margin-top: 2rem;">
+
+  <a href="cours.html" class="nav-card">
+    <div class="card-icon" style="background: var(--accent-light); color: var(--accent);">1</div>
+    <h3>Fiches de cours</h3>
+    <p>Les 5 cas de la table directe, les 4 cas de la table inverse, propriété de symétrie, valeurs atypiques.</p>
+  </a>
+
+  <a href="exercices-table.html" class="nav-card">
+    <div class="card-icon" style="background: var(--warning-light); color: var(--warning);">2</div>
+    <h3>Exercices — Lecture de table</h3>
+    <p>Entraîne-toi sur P(Z&lt;z), P(Z&gt;z), P(Z&lt;-z), encadrements, et table inverse. Corrigés détaillés.</p>
+  </a>
+
+  <a href="exercices-contexte.html" class="nav-card">
+    <div class="card-icon" style="background: var(--teal-light); color: var(--teal);">3</div>
+    <h3>Exercices — Problèmes contextualisés</h3>
+    <p>QI, mémoire, attention... Des exercices comme à l'examen avec transformation x→z et interprétation.</p>
+  </a>
+
+  <a href="exercices-zscore.html" class="nav-card">
+    <div class="card-icon" style="background: var(--danger-light); color: var(--danger);">4</div>
+    <h3>Exercices — Tableaux z-scores</h3>
+    <p>Complète des tableaux de transformation x↔z et identifie les valeurs atypiques.</p>
+  </a>
+
+  <a href="outil.html" class="nav-card">
+    <div class="card-icon" style="background: #E8ECF8; color: var(--accent);">&#x2261;</div>
+    <h3>Outil interactif</h3>
+    <p>Visualise la courbe normale, sélectionne un intervalle à la souris et vois la probabilité se calculer en direct.</p>
+  </a>
+
+</div>
+
+<footer>
+  Outil pédagogique — Statistiques L1 Psychologie — UCLy<br>
+  Dr Adolphe Béquet · <a href="mailto:abequet@univ-catholyon.fr">abequet@univ-catholyon.fr</a>
+</footer>
+
+</div>
+</body>
+</html>
