@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loi Normale — Outil pédagogique L1 Psycho</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAF9F6;
+  --bg-card: #FFFFFF;
+  --bg-accent: #F0EDE6;
+  --bg-input: #F7F5F0;
+  --text: #1A1A18;
+  --text-muted: #6B6960;
+  --text-hint: #9E9B90;
+  --accent: #3D52A0;
+  --accent-light: #E8ECF8;
+  --danger: #C0392B;
+  --danger-light: #FBEAEA;
+  --success: #1D7A4E;
+  --success-light: #E6F4ED;
+  --warning: #B8860B;
+  --warning-light: #FDF5E1;
+  --border: #E2DFD6;
+  --shadow: 0 1px 3px rgba(26,26,24,0.06), 0 4px 12px rgba(26,26,24,0.04);
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+header {
+  text-align: center; margin-bottom: 2.5rem; padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, #3D52A0 0%, #5B6DB5 50%, #7B8EC8 100%);
+  border-radius: var(--radius-lg); color: white; position: relative; overflow: hidden;
+}
+header::before { content:''; position:absolute; top:-50%; right:-20%; width:400px; height:400px; border-radius:50%; background:rgba(255,255,255,0.06); }
+header h1 { font-family:'Fraunces',serif; font-weight:700; font-size:2rem; letter-spacing:-0.02em; margin-bottom:0.25rem; }
+header p { font-size:0.95rem; opacity:0.85; }
+
+.section-title { font-family:'Fraunces',serif; font-weight:500; font-size:1.25rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem; }
+.section-title .num { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:var(--accent); color:white; font-family:'DM Mono',monospace; font-size:0.8rem; font-weight:500; flex-shrink:0; }
+
+.card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.5rem; margin-bottom:1.5rem; box-shadow:var(--shadow); }
+
+.params-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-bottom:1rem; }
+.param-group label { display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.35rem; }
+.param-group input, .param-group select { width:100%; padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:var(--radius); font-family:'DM Mono',monospace; font-size:1rem; background:var(--bg-input); color:var(--text); transition:border-color 0.2s,box-shadow 0.2s; }
+.param-group input:focus, .param-group select:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+
+.values-input-area { margin-top:1rem; }
+.values-input-area label { display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.35rem; }
+.values-input-area input { width:100%; padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:var(--radius); font-family:'DM Mono',monospace; font-size:1rem; background:var(--bg-input); color:var(--text); }
+.values-input-area input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.values-input-area .hint { font-size:0.78rem; color:var(--text-hint); margin-top:0.3rem; }
+
+.btn { display:inline-flex; align-items:center; gap:0.4rem; padding:0.6rem 1.2rem; border:none; border-radius:var(--radius); font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-primary { background:var(--accent); color:white; }
+.btn-primary:hover { background:#2F4390; transform:translateY(-1px); }
+.btn-secondary { background:var(--bg-accent); color:var(--text); border:1px solid var(--border); }
+.btn-secondary:hover { background:var(--border); }
+.btn-row { display:flex; gap:0.75rem; margin-top:1rem; flex-wrap:wrap; }
+
+table { width:100%; border-collapse:collapse; font-size:0.9rem; }
+thead th { background:var(--bg-accent); padding:0.7rem 1rem; text-align:left; font-weight:600; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); border-bottom:2px solid var(--border); white-space:nowrap; }
+tbody td { padding:0.65rem 1rem; border-bottom:1px solid var(--border); font-family:'DM Mono',monospace; font-size:0.88rem; }
+tbody tr:hover { background:var(--bg-accent); }
+tbody tr.row-extreme { background:var(--danger-light); }
+tbody tr.row-extreme:hover { background:#F6D6D3; }
+
+.badge { display:inline-block; padding:0.15rem 0.6rem; border-radius:99px; font-size:0.75rem; font-weight:600; font-family:'DM Sans',sans-serif; }
+.badge-ok { background:var(--success-light); color:var(--success); }
+.badge-extreme { background:var(--danger-light); color:var(--danger); }
+
+.graph-area { position:relative; width:100%; }
+.graph-area canvas { display:block; width:100%; }
+.graph-instructions { text-align:center; padding:0.6rem; font-size:0.82rem; color:var(--text-hint); background:var(--bg-accent); border-radius:var(--radius); margin-bottom:1rem; }
+.graph-instructions strong { color:var(--text-muted); }
+
+.result-box { background:var(--bg-accent); border:1px solid var(--border); border-radius:var(--radius); padding:1.25rem; margin-top:1rem; line-height:1.9; }
+.result-box .formula { font-family:'DM Mono',monospace; font-size:0.88rem; color:var(--text); display:block; margin:0.15rem 0; }
+.result-box .prob-result { font-size:1.6rem; font-weight:700; color:var(--accent); font-family:'DM Mono',monospace; }
+
+.formula-card { background:var(--warning-light); border:1px solid #E8D5A0; border-radius:var(--radius); padding:1rem 1.25rem; margin-bottom:1.5rem; font-size:0.9rem; }
+.formula-card strong { color:var(--warning); font-family:'DM Mono',monospace; }
+
+.inverse-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem; }
+@media (max-width:600px) { .inverse-grid { grid-template-columns:1fr; } .params-grid { grid-template-columns:1fr 1fr; } header h1 { font-size:1.5rem; } }
+.inverse-box { background:var(--bg-accent); border-radius:var(--radius); padding:1rem; }
+.inverse-box label { display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.3rem; }
+.inverse-box input { width:100%; padding:0.5rem 0.7rem; border:1px solid var(--border); border-radius:var(--radius); font-family:'DM Mono',monospace; font-size:0.95rem; background:white; }
+.inverse-box input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.inverse-result { margin-top:0.75rem; padding:0.75rem; background:white; border-radius:var(--radius); font-family:'DM Mono',monospace; font-size:0.88rem; min-height:2.5rem; border:1px solid var(--border); }
+
+footer { text-align:center; margin-top:3rem; padding-top:2rem; border-top:1px solid var(--border); font-size:0.82rem; color:var(--text-hint); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Loi Normale — Z-scores &amp; Probabilités</h1>
+  <p>Outil interactif — L1 Psychologie</p>
+</header>
+
+<div class="formula-card">
+  Rappel :
+  <strong>z = (x − μ) / σ</strong> &nbsp;|&nbsp;
+  <strong>x = μ + z × σ</strong> &nbsp;|&nbsp;
+  Valeur extrême si <strong>|z| &gt; 2</strong> &nbsp;|&nbsp;
+  <strong>P(a ≤ X ≤ b) = P(Z ≤ z<sub>b</sub>) − P(Z ≤ z<sub>a</sub>)</strong>
+</div>
+
+<div class="card">
+  <h2 class="section-title"><span class="num">1</span> Paramètres de la distribution</h2>
+  <div class="params-grid">
+    <div class="param-group"><label>Moyenne (μ)</label><input type="number" id="mu" value="30" step="any"></div>
+    <div class="param-group"><label>Écart-type (σ)</label><input type="number" id="sigma" value="5" step="any" min="0.01"></div>
+  </div>
+  <div class="values-input-area">
+    <label>Valeurs x (séparées par des virgules ou espaces)</label>
+    <input type="text" id="valuesInput" value="22, 27, 30, 33, 35, 38, 44">
+    <div class="hint">Exemple : 22, 27, 30, 33, 35, 38, 44</div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="compute()">Calculer</button>
+    <button class="btn btn-secondary" onclick="resetAll()">Réinitialiser</button>
+  </div>
+</div>
+
+<div class="card">
+  <h2 class="section-title"><span class="num">2</span> Tableau des z-scores</h2>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>Valeur x</th><th>Calcul</th><th>Z-score</th><th>P(Z ≤ z)</th><th>Statut</th></tr></thead>
+      <tbody id="dataBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <h2 class="section-title"><span class="num">3</span> Courbe &amp; sélection de probabilité</h2>
+  <div class="graph-instructions">
+    <strong>Cliquez-glissez</strong> sur le graphique pour créer un intervalle. Déplacez les <strong>poignées</strong> pour l'ajuster, ou <strong>glissez la zone</strong> colorée pour la déplacer.
+  </div>
+  <div class="graph-area" id="graphArea">
+    <canvas id="mainCanvas"></canvas>
+  </div>
+  <div class="result-box" id="resultBox">
+    <span style="color:var(--text-hint);">Sélectionnez un intervalle sur le graphique ci-dessus.</span>
+  </div>
+</div>
+
+<div class="card">
+  <h2 class="section-title"><span class="num">4</span> Convertisseurs rapides</h2>
+  <div class="inverse-grid">
+    <div class="inverse-box"><label>x → z-score</label><input type="number" id="xToZ" placeholder="Valeur x" step="any" oninput="convertXtoZ()"><div class="inverse-result" id="xToZResult">—</div></div>
+    <div class="inverse-box"><label>z-score → x</label><input type="number" id="zToX" placeholder="Z-score" step="any" oninput="convertZtoX()"><div class="inverse-result" id="zToXResult">—</div></div>
+    <div class="inverse-box"><label>Probabilité → z (table inverse)</label><input type="number" id="pToZ" placeholder="P (entre 0 et 1)" step="0.0001" min="0.0001" max="0.9999" oninput="convertPtoZ()"><div class="inverse-result" id="pToZResult">—</div></div>
+    <div class="inverse-box"><label>Probabilité → x (table inverse)</label><input type="number" id="pToX" placeholder="P (entre 0 et 1)" step="0.0001" min="0.0001" max="0.9999" oninput="convertPtoX()"><div class="inverse-result" id="pToXResult">—</div></div>
+  </div>
+</div>
+
+<footer>Outil pédagogique — Statistiques L1 Psychologie</footer>
+</div>
+
+<script>
+// ── Math ──
+function normalPDF(z) { return Math.exp(-0.5*z*z)/Math.sqrt(2*Math.PI); }
+function normalCDF(z) {
+  const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  const s=z<0?-1:1, x=Math.abs(z)/Math.sqrt(2), t=1/(1+p*x);
+  const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return 0.5*(1+s*y);
+}
+function normalInvCDF(p) {
+  if(p<=0)return -Infinity; if(p>=1)return Infinity;
+  if(p<0.5)return -normalInvCDF(1-p);
+  const a=[-3.969683028665376e1,2.209460984245205e2,-2.759285104469687e2,1.383577518672690e2,-3.066479806614716e1,2.506628277459239e0];
+  const b=[-5.447609879822406e1,1.615858368580409e2,-1.556989798598866e2,6.680131188771972e1,-1.328068155288572e1];
+  const c=[-7.784894002430293e-3,-3.223964580411365e-1,-2.400758277161838e0,-2.549732539343734e0,4.374664141464968e0,2.938163982698783e0];
+  const d=[7.784695709041462e-3,3.224671290700398e-1,2.445134137142996e0,3.754408661907416e0];
+  const pL=0.02425,pH=1-pL; let q,r;
+  if(p<pL){q=Math.sqrt(-2*Math.log(p));return(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);}
+  else if(p<=pH){q=p-0.5;r=q*q;return(((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);}
+  else{q=Math.sqrt(-2*Math.log(1-p));return-(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);}
+}
+
+// ── State ──
+let mu, sigma, values, dataRows;
+const Z_RANGE = 4;
+let selA = null, selB = null;
+let dragging = null, dragStartX = null, moveOffset = null;
+const PAD = { top: 45, right: 30, bottom: 90, left: 30 };
+
+// ── Compute ──
+function compute() {
+  mu = parseFloat(document.getElementById('mu').value)||0;
+  sigma = parseFloat(document.getElementById('sigma').value)||1;
+  if(sigma<=0){sigma=1;document.getElementById('sigma').value=1;}
+  const raw = document.getElementById('valuesInput').value;
+  values = raw.split(/[\s,;]+/).map(Number).filter(n=>!isNaN(n));
+  values.sort((a,b)=>a-b);
+  dataRows = values.map(x=>{const z=(x-mu)/sigma; return {x,z,prob:normalCDF(z),extreme:Math.abs(z)>2};});
+  if(dataRows.length>=2){selA=dataRows[0].x;selB=dataRows[dataRows.length-1].x;}
+  else if(dataRows.length===1){selA=mu-sigma;selB=dataRows[0].x;}
+  else{selA=mu-sigma;selB=mu+sigma;}
+  renderTable(); drawGraph(); updateResult();
+}
+function resetAll(){document.getElementById('mu').value=30;document.getElementById('sigma').value=5;document.getElementById('valuesInput').value='22, 27, 30, 33, 35, 38, 44';compute();}
+
+// ── Table ──
+function renderTable(){
+  const tbody=document.getElementById('dataBody'); tbody.innerHTML='';
+  dataRows.forEach(d=>{
+    const tr=document.createElement('tr');
+    if(d.extreme)tr.classList.add('row-extreme');
+    tr.innerHTML=`<td>${d.x}</td><td>(${d.x} − ${mu}) / ${sigma}</td><td>${d.z.toFixed(2)}</td><td>${d.prob.toFixed(4)}</td><td><span class="badge ${d.extreme?'badge-extreme':'badge-ok'}">${d.extreme?'|z| > 2 — Extrême':'Normal'}</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── Canvas helpers ──
+function setupCanvas(){
+  const canvas=document.getElementById('mainCanvas');
+  const rect=canvas.parentElement.getBoundingClientRect();
+  const dpr=window.devicePixelRatio||1;
+  const w=rect.width, h=Math.max(400,w*0.44);
+  canvas.width=w*dpr; canvas.height=h*dpr;
+  canvas.style.width=w+'px'; canvas.style.height=h+'px';
+  const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,w,h};
+}
+function xToPixel(xVal,w){const xMin=mu-Z_RANGE*sigma,xMax=mu+Z_RANGE*sigma;return PAD.left+((xVal-xMin)/(xMax-xMin))*(w-PAD.left-PAD.right);}
+function pixelToX(px,w){const xMin=mu-Z_RANGE*sigma,xMax=mu+Z_RANGE*sigma;return xMin+((px-PAD.left)/(w-PAD.left-PAD.right))*(xMax-xMin);}
+function yToPixel(yVal,h){const yMax=normalPDF(0)*1.15;return PAD.top+(1-yVal/yMax)*(h-PAD.top-PAD.bottom);}
+
+// ── Draw ──
+function drawGraph(){
+  const {ctx,w,h}=setupCanvas();
+  const xMin=mu-Z_RANGE*sigma,xMax=mu+Z_RANGE*sigma;
+  const plotBottom=h-PAD.bottom, plotTop=PAD.top;
+  ctx.clearRect(0,0,w,h);
+
+  // Grid
+  for(let z=-Z_RANGE;z<=Z_RANGE;z++){
+    const px=xToPixel(mu+z*sigma,w);
+    ctx.beginPath(); ctx.moveTo(px,plotTop); ctx.lineTo(px,plotBottom);
+    ctx.strokeStyle=z===0?'rgba(61,82,160,0.3)':'rgba(0,0,0,0.06)';
+    ctx.lineWidth=z===0?2:1; ctx.stroke();
+  }
+
+  // Filled selection area
+  if(selA!==null&&selB!==null){
+    const lo=Math.max(Math.min(selA,selB),xMin), hi=Math.min(Math.max(selA,selB),xMax);
+    ctx.save(); ctx.beginPath();
+    const steps=200;
+    for(let i=0;i<=steps;i++){
+      const xv=lo+(hi-lo)*i/steps, z=(xv-mu)/sigma;
+      const px=xToPixel(xv,w), py=yToPixel(normalPDF(z),h);
+      if(i===0)ctx.moveTo(px,plotBottom); ctx.lineTo(px,py);
+    }
+    ctx.lineTo(xToPixel(hi,w),plotBottom); ctx.closePath();
+    ctx.fillStyle='rgba(61,82,160,0.18)'; ctx.fill(); ctx.restore();
+
+    // Handles
+    [{xVal:Math.min(selA,selB)},{xVal:Math.max(selA,selB)}].forEach(handle=>{
+      const px=xToPixel(handle.xVal,w);
+      ctx.save();
+      ctx.beginPath(); ctx.moveTo(px,plotTop); ctx.lineTo(px,plotBottom);
+      ctx.strokeStyle='#3D52A0'; ctx.lineWidth=2; ctx.setLineDash([6,4]); ctx.stroke(); ctx.setLineDash([]);
+      // Grip tab
+      const gy=plotTop+(plotBottom-plotTop)*0.12;
+      ctx.beginPath(); ctx.roundRect(px-5,gy-18,10,36,5);
+      ctx.fillStyle='#3D52A0'; ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=1;
+      for(let dy=-8;dy<=8;dy+=4){ctx.beginPath();ctx.moveTo(px-2,gy+dy);ctx.lineTo(px+2,gy+dy);ctx.stroke();}
+
+      // x and z label at bottom near handle
+      const zH=(handle.xVal-mu)/sigma;
+      ctx.font="600 10px 'DM Mono',monospace"; ctx.textAlign='center';
+      ctx.fillStyle='#3D52A0';
+      ctx.fillText(`x=${handle.xVal.toFixed(1)}`,px,plotBottom-10);
+      ctx.fillText(`z=${zH.toFixed(2)}`,px,plotBottom-1);
+      ctx.restore();
+    });
+  }
+
+  // Bell curve
+  ctx.save(); ctx.beginPath();
+  for(let i=0;i<=400;i++){
+    const xv=xMin+(xMax-xMin)*i/400, z=(xv-mu)/sigma;
+    const px=xToPixel(xv,w), py=yToPixel(normalPDF(z),h);
+    if(i===0)ctx.moveTo(px,py); else ctx.lineTo(px,py);
+  }
+  ctx.strokeStyle='#3D52A0'; ctx.lineWidth=3; ctx.stroke(); ctx.restore();
+
+  // Data markers
+  dataRows.forEach(d=>{
+    const px=xToPixel(d.x,w), py=yToPixel(normalPDF(d.z),h);
+    ctx.save();
+    ctx.setLineDash([3,3]);
+    ctx.strokeStyle=d.extreme?'rgba(192,57,43,0.3)':'rgba(61,82,160,0.2)';
+    ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(px,plotBottom); ctx.lineTo(px,py); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(px,py,5,0,2*Math.PI);
+    ctx.fillStyle=d.extreme?'#C0392B':'#3D52A0'; ctx.fill();
+    ctx.strokeStyle='white'; ctx.lineWidth=2; ctx.stroke();
+    ctx.font="500 10px 'DM Mono',monospace"; ctx.textAlign='center';
+    ctx.fillStyle='#1A1A18'; ctx.fillText(`x=${d.x}`,px,py-16);
+    ctx.fillStyle='#3D52A0'; ctx.fillText(`z=${d.z.toFixed(2)}`,px,py-6);
+    ctx.restore();
+  });
+
+  // Bottom axis 1: z-scores
+  ctx.save();
+  ctx.beginPath(); ctx.moveTo(PAD.left,plotBottom); ctx.lineTo(w-PAD.right,plotBottom);
+  ctx.strokeStyle='#1A1A18'; ctx.lineWidth=1; ctx.stroke();
+  ctx.font="500 12px 'DM Mono',monospace"; ctx.textAlign='center'; ctx.fillStyle='#3D52A0';
+  for(let z=-Z_RANGE;z<=Z_RANGE;z++){
+    const px=xToPixel(mu+z*sigma,w);
+    ctx.beginPath();ctx.moveTo(px,plotBottom);ctx.lineTo(px,plotBottom+6);ctx.strokeStyle='#1A1A18';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='#3D52A0'; ctx.fillText(`z = ${z}`,px,plotBottom+20);
+  }
+  ctx.font="600 12px 'DM Sans',sans-serif"; ctx.fillStyle='#3D52A0'; ctx.fillText('z-scores',w/2,plotBottom+35);
+  ctx.restore();
+
+  // Bottom axis 2: x values
+  const a2Y=plotBottom+44;
+  ctx.save();
+  ctx.beginPath(); ctx.moveTo(PAD.left,a2Y); ctx.lineTo(w-PAD.right,a2Y);
+  ctx.strokeStyle='#6B6960'; ctx.lineWidth=1; ctx.stroke();
+  ctx.font="500 12px 'DM Mono',monospace"; ctx.textAlign='center'; ctx.fillStyle='#1A1A18';
+  for(let z=-Z_RANGE;z<=Z_RANGE;z++){
+    const xv=mu+z*sigma, px=xToPixel(xv,w);
+    ctx.beginPath();ctx.moveTo(px,a2Y);ctx.lineTo(px,a2Y+6);ctx.strokeStyle='#6B6960';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillText(Number.isInteger(xv)?xv.toString():xv.toFixed(1),px,a2Y+20);
+  }
+  ctx.font="600 12px 'DM Sans',sans-serif"; ctx.fillStyle='#6B6960'; ctx.fillText('valeurs x',w/2,a2Y+35);
+  ctx.restore();
+}
+
+// ── Result ──
+function updateResult(){
+  const box=document.getElementById('resultBox');
+  if(selA===null||selB===null){box.innerHTML='<span style="color:var(--text-hint);">Sélectionnez un intervalle sur le graphique.</span>';return;}
+  const lo=Math.min(selA,selB), hi=Math.max(selA,selB);
+  const zLo=((lo-mu)/sigma), zHi=((hi-mu)/sigma);
+  const pLo=normalCDF(zLo), pHi=normalCDF(zHi);
+  const prob=pHi-pLo;
+  box.innerHTML=`
+    <span class="formula">P(${lo.toFixed(2)} ≤ X ≤ ${hi.toFixed(2)})</span>
+    <span class="formula" style="color:var(--text-muted);">  z<sub>a</sub> = (${lo.toFixed(2)} − ${mu}) / ${sigma} = <b>${zLo.toFixed(2)}</b></span>
+    <span class="formula" style="color:var(--text-muted);">  z<sub>b</sub> = (${hi.toFixed(2)} − ${mu}) / ${sigma} = <b>${zHi.toFixed(2)}</b></span>
+    <span class="formula">= P(${zLo.toFixed(2)} ≤ Z ≤ ${zHi.toFixed(2)})</span>
+    <span class="formula">= P(Z ≤ ${zHi.toFixed(2)}) − P(Z ≤ ${zLo.toFixed(2)})</span>
+    <span class="formula">= ${pHi.toFixed(4)} − ${pLo.toFixed(4)}</span>
+    <div style="margin-top:0.5rem;"><span class="prob-result">≈ ${(prob*100).toFixed(2)} %</span></div>
+  `;
+}
+
+// ── Mouse / Touch interaction ──
+const canvas=document.getElementById('mainCanvas');
+function getEvtX(e){const r=canvas.getBoundingClientRect();return(e.touches?e.touches[0].clientX:e.clientX)-r.left;}
+function hitTest(px){
+  const w=canvas.getBoundingClientRect().width;
+  if(selA===null)return 'new';
+  const lo=Math.min(selA,selB), hi=Math.max(selA,selB);
+  const pxLo=xToPixel(lo,w), pxHi=xToPixel(hi,w);
+  if(Math.abs(px-pxLo)<16)return 'left';
+  if(Math.abs(px-pxHi)<16)return 'right';
+  if(px>pxLo+16&&px<pxHi-16)return 'move';
+  return 'new';
+}
+
+function onDown(e){
+  e.preventDefault();
+  const px=getEvtX(e), w=canvas.getBoundingClientRect().width, xv=pixelToX(px,w);
+  dragging=hitTest(px);
+  if(dragging==='new'){selA=xv;selB=xv;}
+  else if(dragging==='move'){dragStartX=xv;moveOffset={a:selA,b:selB};}
+  drawGraph();
+}
+function onMove(e){
+  if(!dragging){const px=getEvtX(e),hit=hitTest(px);canvas.style.cursor=hit==='left'||hit==='right'?'ew-resize':hit==='move'?'grab':'crosshair';return;}
+  e.preventDefault();
+  const px=getEvtX(e), w=canvas.getBoundingClientRect().width;
+  const xMin=mu-Z_RANGE*sigma, xMax=mu+Z_RANGE*sigma;
+  const xv=Math.max(xMin,Math.min(xMax,pixelToX(px,w)));
+  if(dragging==='new'){selB=xv;}
+  else if(dragging==='left'){const hi=Math.max(selA,selB);selA=Math.min(xv,hi-0.01);selB=hi;}
+  else if(dragging==='right'){const lo=Math.min(selA,selB);selB=Math.max(xv,lo+0.01);selA=lo;}
+  else if(dragging==='move'){
+    const dx=xv-dragStartX;let nA=moveOffset.a+dx,nB=moveOffset.b+dx;const sp=Math.abs(nB-nA);
+    if(Math.min(nA,nB)<xMin){nA=xMin;nB=xMin+sp;} if(Math.max(nA,nB)>xMax){nB=xMax;nA=xMax-sp;}
+    selA=nA;selB=nB;
+  }
+  drawGraph(); updateResult();
+}
+function onUp(){if(dragging){if(selA>selB){const t=selA;selA=selB;selB=t;}dragging=null;drawGraph();updateResult();}}
+
+canvas.addEventListener('mousedown',onDown);
+window.addEventListener('mousemove',onMove);
+window.addEventListener('mouseup',onUp);
+canvas.addEventListener('touchstart',onDown,{passive:false});
+window.addEventListener('touchmove',onMove,{passive:false});
+window.addEventListener('touchend',onUp);
+window.addEventListener('resize',()=>{drawGraph();});
+
+// ── Converters ──
+function getMuSigma(){mu=parseFloat(document.getElementById('mu').value)||0;sigma=parseFloat(document.getElementById('sigma').value)||1;}
+function convertXtoZ(){const x=parseFloat(document.getElementById('xToZ').value),el=document.getElementById('xToZResult');if(isNaN(x)){el.textContent='—';return;}getMuSigma();const z=(x-mu)/sigma,p=normalCDF(z);el.innerHTML=`z = (${x} − ${mu}) / ${sigma} = <b>${z.toFixed(4)}</b><br>P(Z ≤ ${z.toFixed(2)}) = <b>${p.toFixed(4)}</b>`;}
+function convertZtoX(){const z=parseFloat(document.getElementById('zToX').value),el=document.getElementById('zToXResult');if(isNaN(z)){el.textContent='—';return;}getMuSigma();const x=mu+z*sigma,p=normalCDF(z);el.innerHTML=`x = ${mu} + ${z} × ${sigma} = <b>${x.toFixed(4)}</b><br>P(Z ≤ ${z.toFixed(2)}) = <b>${p.toFixed(4)}</b>`;}
+function convertPtoZ(){const p=parseFloat(document.getElementById('pToZ').value),el=document.getElementById('pToZResult');if(isNaN(p)||p<=0||p>=1){el.textContent='—';return;}const z=normalInvCDF(p);el.innerHTML=`P(Z ≤ z) = ${p.toFixed(4)}  →  z = <b>${z.toFixed(4)}</b>`;}
+function convertPtoX(){const p=parseFloat(document.getElementById('pToX').value),el=document.getElementById('pToXResult');if(isNaN(p)||p<=0||p>=1){el.textContent='—';return;}getMuSigma();const z=normalInvCDF(p),x=mu+z*sigma;el.innerHTML=`z = ${z.toFixed(4)}<br>x = ${mu} + ${z.toFixed(4)} × ${sigma} = <b>${x.toFixed(4)}</b>`;}
+
+// ── Init ──
+compute();
+</script>
+</body>
+</html>
