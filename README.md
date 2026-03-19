@@ -4,6 +4,8 @@
 
 Site web pédagogique pour réviser la loi normale centrée réduite avant le contrôle terminal. Conçu pour les étudiants de L1 Psychologie / Sciences Cognitives.
 
+Créé par A. Béquet, Chargé de recherche au Laboratoire Ergonomie et Sciences Cognitives pour les Transports (LESCOT), Université Gustave Eiffel
+
 🌐 **Accès en ligne** : [https://abequet.github.io/coursL1psyUCLY/](https://abequet.github.io/coursL1psyUCLY/)
 
 ---
@@ -123,8 +125,7 @@ Les étudiants sont encouragés à utiliser leur **table papier** de la loi norm
 **Dr Adolphe Béquet**  
 Chercheur — Laboratoire LESCOT (Ergonomie, Sciences Cognitives pour les Transports)  
 Université Gustave Eiffel  
-📧 abequet@univ-catholyon.fr
-
+📧 adolphe.bequet@univ-eiffel.fr 
 ---
 
 ## Licence
