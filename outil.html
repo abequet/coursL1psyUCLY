@@ -1058,7 +1058,8 @@ function updateCalc() {
   if (isNaN(a)) return;
 
   const isStd = currentMode==='standard';
-  const zA = isStd ? a : (a - mu) / sigma;
+  let zA = isStd ? a : (a - mu) / sigma;
+  if (!isStd) zA = R2(zA);
   const aLabel = isStd ? a : a;
   let prob, html, fillFrom, fillTo, fillColor;
 
@@ -1107,7 +1108,8 @@ function updateCalc() {
   } else {
     const b = parseFloat(document.getElementById('prob-b').value);
     if (isNaN(b)) return;
-    const zB = isStd ? b : (b - mu) / sigma;
+    let zB = isStd ? b : (b - mu) / sigma;
+    if (!isStd) zB = R2(zB);
     const lo = Math.min(a,b), hi = Math.max(a,b);
     const zLo = Math.min(zA,zB), zHi = Math.max(zA,zB);
     prob = normalCDF(zHi) - normalCDF(zLo);
@@ -1348,7 +1350,8 @@ function onUp(){if(dragging&&calcMode==='slider'){if(selA>selB){const t=selA;sel
 function updateSliderResult(){
   if(selA===null||selB===null) return;
   const lo=Math.min(selA,selB),hi=Math.max(selA,selB);
-  const zLo=(lo-mu)/sigma,zHi=(hi-mu)/sigma;
+  let zLo=(lo-mu)/sigma, zHi=(hi-mu)/sigma;
+  if(currentMode!=='standard'){ zLo=R2(zLo); zHi=R2(zHi); }
   const prob=normalCDF(zHi)-normalCDF(zLo);
   const isStd = currentMode==='standard';
   let html = '';
